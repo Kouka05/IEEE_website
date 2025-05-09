@@ -15,8 +15,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "mongodb": "^6.15.0",
-    "server": "file:"
+    "mongodb": "^6.15.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

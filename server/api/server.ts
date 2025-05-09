@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { connectToDb, getDb } from '../db';
 import { Db } from 'mongodb';
+import authRoutes from './routes/auth/auth.routes';
 require('dotenv').config();
 
 let db: Db;
@@ -43,6 +44,8 @@ const initializeServer = () => {
   server.get('/', (req: Request, res: Response) => {
     res.send('IEEE sayes hello world!');
   });
+
+  server.use('/api/auth', authRoutes);
 
   // ...
 
