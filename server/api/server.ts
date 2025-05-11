@@ -45,7 +45,7 @@ const initializeServer = () => {
     res.send('IEEE sayes hello world!');
   });
 
-  server.use('/api/auth', authRoutes);
+  server.use('/auth', authRoutes);
 
   // ...
 

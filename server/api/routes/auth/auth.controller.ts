@@ -2,6 +2,8 @@ import {Request, Response, NextFunction} from 'express';
 import {User} from '../../models/User';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 if(!JWT_SECRET) {
@@ -9,6 +11,7 @@ throw new Error('JWT_SECRET is not defined in environment variables');
 }
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
+  console.log('Signup request received:', req.body);
   try {
     const {
       email,
@@ -50,6 +53,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   } 
   catch (error) 
   {
+    console.error('Error during signup:', error);
     next(error);
   }
 };
