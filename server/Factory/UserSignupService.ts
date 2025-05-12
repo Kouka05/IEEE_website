@@ -47,7 +47,6 @@ class UserSignupService {
       leaveDate = null,
     } = userData;
 
-    // validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return { success: false, error: 'Invalid email format' };
@@ -59,14 +58,10 @@ class UserSignupService {
     });
     if (existingUser) {
       if (existingUser.email === email) {
-        return { success: false, error: 'Email already exists' };
-      }
-      if (existingUser.phoneNo === phoneNo) {
-        return { success: false, error: 'Phone number already exists' };
+        return { success: false, error: 'email already exists' };
       }
     }
 
-    // create domain user object
     const user = await this.userFactory.createUser(
       name,
       email,
@@ -81,7 +76,6 @@ class UserSignupService {
       leaveDate
     );
 
-    // prepare mongoose document
     const userDoc = {
       email: user.getEmail(),
       name: user.getName(),

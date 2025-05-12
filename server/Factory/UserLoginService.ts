@@ -15,16 +15,14 @@ class UserLoginService {
   constructor() {}
 
   async login(email: string, password: string): Promise<LoginResult> {
-    // find user by email using Mongoose
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return { success: false, error: 'Invalid email or password' };
+      return { success: false, error: 'Invalid email' };
     }
 
-    // compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return { success: false, error: 'Invalid email or password' };
+      return { success: false, error: 'Invalid password' };
     }
 
     const token = jwt.sign(
