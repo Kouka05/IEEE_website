@@ -1,0 +1,67 @@
+import { Types } from 'mongoose';
+import UserModel from '../models/user.model';
+import Outsider from '../Factory/Outsider';
+import Volunteer from '../Factory/Volunteer';
+import Head from '../Factory/Head';
+import Chairman from '../Factory/Chairman';
+import User from './User';
+
+export type Role = 'Outsider' | 'Volunteer' | 'Head' | 'Chairman';
+
+class UserFactory {
+  public async createUser(
+    name: string,
+    email: string,
+    phoneNo: string,
+    password: string,
+    warnings: number,
+    role: Role,
+    enrollDate: Date,
+    departmendId: string,
+    permissionsId: string,
+    roleHistory: { role: string; dateAssigned: Date }[] = [],
+    leaveDate?: Date | null
+  ): Promise<User> {
+    let user: User;
+
+    switch (role) {
+      case 'Chairman':
+        user = new Chairman(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        break;
+      case 'Head':
+        user = new Head(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        break;
+      case 'Volunteer':
+        user = new Volunteer(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        break;
+      case 'Outsider':
+        user = new Outsider(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        break;
+      default:
+        throw new Error('Invalid user type');
+    }
+
+    // hash pass
+    await user.hashPassword();
+
+    // save to db
+    const newUser = new UserModel({
+      email: user.getEmail(),
+      phoneNo: user.getPhoneNo(),
+      warnings: user.getWarnings(),
+      name: user.getName(),
+      role: user.getRole(),
+      enrollDate: user.getEnrollDate(),
+      password: user.getPassword(),
+      departmendId: user.getDepartmendId(),
+      permissionsId: user.getPermissionsId(),
+      roleHistory: user.getRoleHistory(),
+      leaveDate: user.getLeaveDate() ?? null,
+    });
+
+    await newUser.save();
+    return user;
+  }
+}
+
+export default UserFactory;
