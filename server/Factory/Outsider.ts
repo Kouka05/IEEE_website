@@ -8,8 +8,8 @@ class Outsider extends User {
     password: string,
     warnings: number,
     enrollDate: Date,
-    departmendId: string,
-    permissionsId: string,
+    department: string,
+    permissions: string,
     roleHistory: { role: string; dateAssigned: Date }[],
     leaveDate?: Date | null
   ) {
@@ -20,8 +20,8 @@ class Outsider extends User {
       password,
       warnings,
       enrollDate,
-      departmendId,
-      permissionsId,
+      department,
+      permissions,
       roleHistory,
       leaveDate
     );

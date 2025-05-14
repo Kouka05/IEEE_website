@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import UserModel from '../models/user.model';
 import Outsider from '../Factory/Outsider';
 import Volunteer from '../Factory/Volunteer';
@@ -17,8 +16,8 @@ class UserFactory {
     warnings: number,
     role: Role,
     enrollDate: Date,
-    departmendId: string,
-    permissionsId: string,
+    department: string,
+    permissions: string,
     roleHistory: { role: string; dateAssigned: Date }[] = [],
     leaveDate?: Date | null
   ): Promise<User> {
@@ -26,23 +25,20 @@ class UserFactory {
 
     switch (role) {
       case 'Chairman':
-        user = new Chairman(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        user = new Chairman(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
         break;
       case 'Head':
-        user = new Head(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        user = new Head(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
         break;
       case 'Volunteer':
-        user = new Volunteer(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        user = new Volunteer(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
         break;
       case 'Outsider':
-        user = new Outsider(name, email, phoneNo, password, warnings, enrollDate, departmendId, permissionsId, roleHistory, leaveDate);
+        user = new Outsider(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
         break;
       default:
         throw new Error('Invalid user type');
     }
-
-    // hash pass
-    await user.hashPassword();
 
     // save to db
     const newUser = new UserModel({
@@ -53,8 +49,8 @@ class UserFactory {
       role: user.getRole(),
       enrollDate: user.getEnrollDate(),
       password: user.getPassword(),
-      departmendId: user.getDepartmendId(),
-      permissionsId: user.getPermissionsId(),
+      department: user.getDepartment(),
+      permissions: user.getPermissions(),
       roleHistory: user.getRoleHistory(),
       leaveDate: user.getLeaveDate() ?? null,
     });

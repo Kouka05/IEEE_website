@@ -1,3 +1,4 @@
+// import { UserDocument } from '../models/user.model';
 import bcrypt from 'bcrypt';
 
 abstract class User {
@@ -9,9 +10,10 @@ abstract class User {
   protected warnings: number;
   protected enrollDate: Date;
   protected leaveDate?: Date | null;
-  protected departmendId: string;
-  protected permissionsId: string;
+  protected department: string;
+  protected permissions: string;
   protected roleHistory: { role: string; dateAssigned: Date }[];
+  // protected userDoc?: UserDocument;
 
   constructor(
     name: string,
@@ -20,10 +22,11 @@ abstract class User {
     password: string,
     warnings: number,
     enrollDate: Date,
-    departmendId: string,
-    permissionsId: string,
+    department: string,
+    permissions: string,
     roleHistory: { role: string; dateAssigned: Date }[],
-    leaveDate?: Date | null
+    leaveDate?: Date | null,
+    // userDoc?: UserDocument
   ) {
     this.name = name;
     this.email = email;
@@ -31,10 +34,11 @@ abstract class User {
     this.password = password;
     this.warnings = warnings;
     this.enrollDate = enrollDate;
-    this.departmendId = departmendId;
-    this.permissionsId = permissionsId;
+    this.department = department;
+    this.permissions = permissions;
     this.roleHistory = roleHistory;
     this.leaveDate = leaveDate;
+    // this.userDoc = userDoc;
   }
 
   public getName(): string {
@@ -57,12 +61,12 @@ abstract class User {
     return this.enrollDate;
   }
 
-  public getDepartmendId(): string {
-    return this.departmendId;
+  public getDepartment(): string {
+    return this.department;
   }
 
-  public getPermissionsId(): string {
-    return this.permissionsId;
+  public getPermissions(): string {
+    return this.permissions;
   }
 
   public getRoleHistory(): { role: string; dateAssigned: Date }[] {
@@ -81,13 +85,16 @@ abstract class User {
     return this.password;
   }
 
-  public async validatePassword(password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password);
-  }
+  /*public async validatePassword(password: string): Promise<boolean> {
+    if (this.userDoc && typeof this.userDoc.comparePassword === 'function') {
+      return await this.userDoc.comparePassword(password);
+    }
+    throw new Error('user not available for password validation.');
+  }*/
 
-  public async hashPassword(): Promise<void> {
+  /*public async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 8);
-  }
+  }*/
 }
 
 export default User;

@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import UserModel from '../models/user.model'; 
+import UserModel from '../models/user.model';
 
 interface LoginResult {
   success: boolean;
@@ -15,29 +14,39 @@ class UserLoginService {
   constructor() {}
 
   async login(email: string, password: string): Promise<LoginResult> {
-    const user = await UserModel.findOne({ email });
-    if (!user) {
-      return { success: false, error: 'Invalid email' };
+
+    try {
+      const user = await UserModel.findOne({ email });
+      // Check if user exists
+      if (!user) {
+        return { success: false, error: 'Invalid email' };
+      }
+      console.log('comparing password:', password, user.password);
+      const isMatch = await user.comparePassword(password);
+      console.log('password match:', isMatch);
+      
+      if (!isMatch) {
+        return { success: false, error: 'Invalid password' };
+      }
+
+      // Create JWT token
+      const token = jwt.sign(
+        { userId: user._id.toString(), role: user.role },
+        process.env.JWT_SECRET || 'changeme',  // It’s important to use a strong secret in production
+        { expiresIn: '7d' }
+      );
+
+      return {
+        success: true,
+        userId: user._id.toString(),
+        email: user.email,
+        role: user.role,
+        token,
+      };
+    } catch (error) {
+      console.error(error);
+      return { success: false, error: 'An error occurred during login.' };
     }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return { success: false, error: 'Invalid password' };
-    }
-
-    const token = jwt.sign(
-      { userId: user._id.toString(), role: user.role },
-      process.env.JWT_SECRET || 'changeme',
-      { expiresIn: '7d' }
-    );
-
-    return {
-      success: true,
-      userId: user._id.toString(),
-      email: user.email,
-      role: user.role,
-      token,
-    };
   }
 }
 

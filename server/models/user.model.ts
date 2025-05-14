@@ -14,12 +14,12 @@ export interface UserDocument extends mongoose.Document {
     leaveDate?: Date | null;
     state?: 'active' | 'left';
     password: string;
-    departmendId: Types.ObjectId;
+    department: string;
     roleHistory: {
         role: Role;
         dateAssigned: Date;
     }[];
-    permissionsId: Types.ObjectId;
+    permissions: string;
     comparePassword(val: string): Promise<boolean>;
 }
 
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     enrollDate: {type: Date, required: true, default: Date.now},
     leaveDate: {type: Date, default: null},
     password: {type: String, required: true},
-    departmendId: {type: Schema.Types.ObjectId, ref: 'Department', required: true},
+    department: {type: String, required: true},
     roleHistory: [{
         role: {
             type: String,
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
         },
         dateAssigned: {type: Date, required: true}
     }],
-    permissionsId: {type: Schema.Types.ObjectId, ref: 'Permissions', required: true}
+    permissions: {type: String, required: true}
   },
   {
     timestamps: true,
