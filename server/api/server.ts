@@ -1,10 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { connectToDb, getDb } from '../db';
-import { Db } from 'mongodb';
+import mongoose from 'mongoose';
+import authRouter from '../routes/auth.route';
 require('dotenv').config();
 
-let db: Db;
 
 const initializeServer = () => {
   const server = express();
@@ -17,6 +16,8 @@ const initializeServer = () => {
       exposedHeaders: ['Authorization'],
     })
   );
+
+  server.use('/api/auth', authRouter);
 
   // Optional origin restriction middleware (when deployment)
   /*
@@ -49,30 +50,20 @@ const initializeServer = () => {
   return server;
 };
 
-let serverReady = (async (): Promise<express.Express> => {
-  return new Promise((resolve, reject) => {
-    connectToDb((err?: Error) => {
-      if (err) {
-        console.error('DB Connection Error:', err);
-        return reject(err);
-      }
-      db = getDb();
-      const server = initializeServer();
-      console.log('Connected to DB and server ready.');
-      resolve(server);
-    });
-  });
-})();
+const MONGO_URI = process.env.MONGO_URI || '';
+const DB_NAME = 'IEEEAlexBranch'; 
 
-serverReady
-  .then((server) => {
+mongoose.connect(MONGO_URI, { dbName: DB_NAME })
+  .then(() => {
+    console.log('Mongoose connected');
+    const server = initializeServer();
     const PORT = Number(process.env.PORT) || 8081;
     server.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running`);
     });
   })
-  .catch((error) => {
-    console.error('Failed to start server: ', error);
+  .catch((err) => {
+    console.error('Failed to connect to MongoDB:', err);
   });
 
 // For Vercel deployment (serverless)
