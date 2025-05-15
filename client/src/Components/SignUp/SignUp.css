@@ -1,0 +1,19 @@
+.signup{
+    display: flex;
+}
+.signup > *{
+   width: 50%;
+}
+.signup_form{
+
+    background-color: #1E1E1E;
+    align-content: center;
+    text-align: center; 
+}
+
+.form_container{
+    background-color: #FFFFFF;
+    width: 40%;
+    margin: auto;
+    
+}
