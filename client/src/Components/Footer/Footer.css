@@ -1,0 +1,17 @@
+.footer{
+    background-color: #434343;
+    padding: 5%;
+}
+.logos_container{
+    display: flex;
+    justify-content: space-between;
+}
+.copyright{
+    color:#79747E;
+    align-items: center;
+    text-align: center;
+}
+hr{
+    color:#79747E;
+    width: 80%;
+}

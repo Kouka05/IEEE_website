@@ -1,0 +1,12 @@
+.JoinUs{
+    display: flex;
+}
+
+.JoinUs> *{
+    width: 50%;
+}
+
+.join_left{
+    padding: 5%;
+    text-align: center;
+}
