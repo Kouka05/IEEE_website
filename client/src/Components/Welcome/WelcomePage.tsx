@@ -1,12 +1,12 @@
 import './WelcomePage.css'
-// import Navbar from '../Navbar/Navbar'
+import Navbar from '../Navbar/Navbar'
 import JoinUs from '../JoinUs/JoinUs'
 import Footer from '../Footer/Footer'
 
 export default function Welcome(){
     return(
         <div className="welcompage">  
-          {/* <Navbar/> */}
+          <Navbar/>
           <div className='hero'>
             <h3>IEEE SSCS Alexandria 
             Powering the Future of Electronics</h3>

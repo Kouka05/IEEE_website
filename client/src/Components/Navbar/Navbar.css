@@ -1,0 +1,119 @@
+.navbar {
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 24px;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+
+.navbar-logo {
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+.logo {
+  height: 24px;
+  object-fit: contain;
+  display: block;
+  color: black;
+  filter: 
+  grayscale(100%);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  font-weight: 400;
+  color: #374151;
+  font-size: 0.95rem;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 6px 14px;
+  border-radius: 9999px; 
+}
+
+.navbar-links a:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.navbar-links .active {
+  background-color: #f3f4f6;
+}
+
+.navbar-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-outline {
+  padding: 4px 16px;
+  font-size: 0.9rem;
+  color: #374151;
+  background-color: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: #f3f4f6;
+}
+
+.btn-filled {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  color: white;
+  background-color: #111827;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  padding-left: 4px;
+}
+
+.api-error {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.input-field.error {
+  border-color: #dc3545;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
