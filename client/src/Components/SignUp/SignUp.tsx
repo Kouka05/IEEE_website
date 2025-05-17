@@ -27,7 +27,7 @@ export default function SignUp(){
         try {
          const response = await axios.post('http://localhost:8081/api/auth/signup', formData);
          console.log(response.data); 
-         let token= response.data;
+         const token= response.data;
          localStorage.setItem('token',token["token"]);
 
         //  if (localStorage.getItem('token',token["access-token"]))
