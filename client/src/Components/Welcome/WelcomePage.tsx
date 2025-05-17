@@ -2,8 +2,10 @@ import './WelcomePage.css'
 import Navbar from '../Navbar/Navbar'
 import JoinUs from '../JoinUs/JoinUs'
 import Footer from '../Footer/Footer'
+import { useNavigate } from 'react-router-dom'
 
 export default function Welcome(){
+    const navigate = useNavigate();
     return(
         <div className="welcompage">  
           <Navbar/>
@@ -14,7 +16,7 @@ export default function Welcome(){
             education in solid-state circuits.</p>
             <div className='hero_btns_container'>
                 <button className='white_btn'>Learn More</button>
-                <button className='black_btn'>Join SSCS</button>
+                <button className='black_btn' onClick={()=>navigate("/signup")}>Join SSCS</button>
             </div>
            </div>
         <JoinUs/>

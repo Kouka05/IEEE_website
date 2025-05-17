@@ -11,7 +11,8 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Routes>
-          <Route path="/" element={< Welcome/>}/>
+            {/* change this into Layout component and add inside the children components and get signup, login and error (*) components out */}
+          <Route path="/" element={< Welcome/>}/> 
              <Route path="/signup" element={<SignUp/>}/>
              <Route path="/login" element={<Login/>} />
              <Route path="/*" element={<Welcome/>}/>
