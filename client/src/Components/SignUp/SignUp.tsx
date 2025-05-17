@@ -2,10 +2,11 @@ import './SignUp.css'
 import React from 'react';
 import { useState } from "react"
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp(){
 
-
+    const navigate = useNavigate();
     const [formData,setformData]=useState({
       name:'',
       email:'',
@@ -95,7 +96,7 @@ export default function SignUp(){
           <button type="submit" className='black_btn'>Continue</button>
         </div>
 
-          <a>Already Have an Account?</a>
+          <a onClick={()=>navigate("/login")} style={{cursor:"pointer"}}>Already Have an Account?</a>
 
         </form>
         </div>
