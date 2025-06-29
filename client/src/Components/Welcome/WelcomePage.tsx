@@ -1,7 +1,9 @@
-import './WelcomePage.css';
-import JoinUs from '../JoinUs/JoinUs';
+import './WelcomePage.css'
+import JoinUs from '../JoinUs/JoinUs'
+import { useNavigate } from 'react-router-dom'
 
 export default function Welcome() {
+  const navigate = useNavigate();
   return (
     <div className="welcompage">  
       <div className='hero'>
@@ -12,7 +14,7 @@ export default function Welcome() {
         </p>
         <div className='hero_btns_container'>
           <button className='white_btn'>Learn More</button>
-          <button className='black_btn'>Join SSCS</button>
+          <button className='black_btn' onClick={() => navigate("/signup")}>Join SSCS</button>
         </div>
       </div>
       <JoinUs/>
