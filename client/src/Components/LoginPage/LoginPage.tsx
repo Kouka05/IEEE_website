@@ -66,6 +66,7 @@ const LoginPage: React.FC = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="input-group">
+              {/* Make the color black */}
               <input
                 id="email"
                 type="email"
