@@ -65,47 +65,51 @@ const LoginPage: React.FC = () => {
           <h2 className="card-title">Login</h2>
           
           <form onSubmit={handleSubmit}>
-            <input
-              id="email"
-              type="email"
-              placeholder="Email Address"
-              className={`input-field ${emailError ? 'error' : ''}`}
-              value={email}
-              onChange={e => {
-                setEmail(e.target.value);
-                setEmailError('');
-                setApiError('');
-              }}
-              onBlur={() => {
-                if (email && !validateEmail(email)) {
-                  setEmailError('Please enter a valid email address');
-                }
-              }}
-              required
-            />
-            {emailError && <div className="error-message">{emailError}</div>}
-            
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              className={`input-field ${passwordError ? 'error' : ''}`}
-              value={password}
-              onChange={e => {
-                setPassword(e.target.value);
-                setPasswordError('');
-                setApiError('');
-              }}
-              required
-            />
-            {passwordError && <div className="error-message">{passwordError}</div>}
-            
-            {apiError && <div className="error-message api-error">{apiError}</div>}
-            
-            <button type="submit" className="btn-signin">
-              Sign In
-            </button>
-          </form>
+  <div className="input-group">
+    <input
+      id="email"
+      type="email"
+      placeholder="Email Address"
+      className={`input-field ${emailError ? 'error' : ''}`}
+      value={email}
+      onChange={e => {
+        setEmail(e.target.value);
+        setEmailError('');
+        setApiError('');
+      }}
+      onBlur={() => {
+        if (email && !validateEmail(email)) {
+          setEmailError('Please enter a valid email address');
+        }
+      }}
+      required
+    />
+    {emailError && <div className="error-message">{emailError}</div>}
+  </div>
+
+  <div className="input-group">
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      className={`input-field ${passwordError ? 'error' : ''}`}
+      value={password}
+      onChange={e => {
+        setPassword(e.target.value);
+        setPasswordError('');
+        setApiError('');
+      }}
+      required
+    />
+    {passwordError && <div className="error-message">{passwordError}</div>}
+  </div>
+  
+  {apiError && <div className="error-message api-error">{apiError}</div>}
+  
+  <button type="submit" className="btn-signin">
+    Sign In
+  </button>
+</form>
           
           <div className="links-container">
             <a href="#" className="forgot-link">
