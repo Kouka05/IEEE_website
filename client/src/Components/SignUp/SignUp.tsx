@@ -23,7 +23,6 @@ const SignUp: React.FC = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
-    // Clear errors when user types
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
