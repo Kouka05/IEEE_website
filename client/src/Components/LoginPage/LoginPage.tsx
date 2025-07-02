@@ -116,7 +116,7 @@ const LoginPage: React.FC = () => {
               Forgot password?
             </a>
             <a href="/signup" className="signup-link">
-              Already Have an Account?
+              Don't have an account? Sign Up
             </a>
           </div>
         </div>
