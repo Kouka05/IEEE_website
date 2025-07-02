@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../LoginPage/LoginPage.css';
+import { Link } from 'react-router-dom';
 
 const SignUp: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -74,7 +75,9 @@ const SignUp: React.FC = () => {
   return (
     <div className="login-page">
       <div className="login-left">
+        <Link to="/">
         <img src="ieee-sscs-sm-ko-logo2x 1.png" alt="SSCS Logo" className="login-logo" />
+        </Link>
         <div className="login-card">
           <h2 className="card-title">Sign Up to IEEE</h2>
           

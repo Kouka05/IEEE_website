@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './LoginPage.css';
 
@@ -60,7 +61,9 @@ const LoginPage: React.FC = () => {
   return (
     <div className="login-page">
       <div className="login-left">
+        <Link to="/">
         <img src="ieee-sscs-sm-ko-logo2x 1.png" alt="SSCS Logo" className="login-logo" />
+        </Link>
         <div className="login-card">
           <h2 className="card-title">Login</h2>
           
