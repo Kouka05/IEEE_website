@@ -1,17 +1,72 @@
-.footer{
-    background-color: #434343;
-    padding: 5%;
+.footer {
+  background-color: #333333;
+  color: white;
 }
-.logos_container{
-    display: flex;
-    justify-content: space-between;
+
+.mainFooter {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
 }
-.copyright{
-    color:#79747E;
-    align-items: center;
-    text-align: center;
+
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
 }
-hr{
-    color:#79747E;
-    width: 80%;
+
+@media (min-width: 768px) { /* md breakpoint */
+  .footerContent {
+    flex-direction: row;
+    gap: 0;
+  }
+}
+
+.rightContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .rightContent {
+    align-items: flex-end;
+  }
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.socialLink {
+  color: white;
+  transition: color 0.2s;
+}
+
+.socialLink:hover {
+  color: #9ca3af; /* hover:text-gray-400 */
+}
+
+/* --- NEW RULE TO RESIZE SVG ICONS --- */
+.socialLink svg {
+  width: 30px;
+  height: 30px;
+}
+
+.subFooter {
+  background-color: black;
+  padding: 1rem;
+}
+
+.copyright {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+  font-size: 0.75rem; /* text-xs */
+  color: #9ca3af; /* text-gray-400 */
 }

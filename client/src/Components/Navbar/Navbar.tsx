@@ -14,9 +14,9 @@ const Navbar: React.FC = () => {
 
     <ul className="navbar-links">
       <li><a href="#" className="nav-link">Training</a></li>
-      <li><a href="#" className="nav-link">Events</a></li>
+      <li><a href="../Events" className="nav-link">Events</a></li>
       <li><a href="#" className="nav-link">Committee</a></li>
-      <li><a href="#" className="nav-link">News</a></li>
+      <li><a href="../News" className="nav-link">News</a></li>
     </ul>
   </div>
 
