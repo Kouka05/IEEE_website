@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
 <div className="navbar-container">
   <div className="navbar-left">
     <div className="navbar-logo">
-      <img src="./SSCS_small.jpg" alt="IEEE SSCS" className="logo" />
+      <img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" />
     </div>
 
     <ul className="navbar-links">
