@@ -1,106 +1,170 @@
-import './SignUp.css'
-import React from 'react';
-import { useState } from "react"
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import '../LoginPage/LoginPage.css';
+import { Link } from 'react-router-dom';
 
-export default function SignUp(){
+const SignUp: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phoneNo: '',
+    password: '',
+    role: '',
+    department: '',
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [apiError, setApiError] = useState('');
 
-    const navigate = useNavigate();
-    const [formData,setformData]=useState({
-      name:'',
-      email:'',
-      phoneNo:'',
-      password:'',
-      role:'',
-      department:'',
-    })
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
 
-    function handleChange (event: React.ChangeEvent<HTMLInputElement>){
-            const { name, value } = event.target;
-            setformData({...formData,[name]: value, 
-            });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
     }
+    setApiError('');
+  };
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>){
-        event.preventDefault();
-        console.log(formData);
-        try {
-         const response = await axios.post('http://localhost:8081/api/auth/signup', formData);
-         console.log(response.data); 
-         const token= response.data;
-         localStorage.setItem('token',token["token"]);
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    if (!formData.phoneNo.trim()) newErrors.phoneNo = 'Phone number is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (!formData.role.trim()) newErrors.role = 'Role is required';
+    if (!formData.department.trim()) newErrors.department = 'Department is required';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-        //  if (localStorage.getItem('token',token["access-token"]))
-        //  {
-        //    navigate('/home');
-        //  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
 
-          } catch (error) {
-            console.error('Error submitting the form:', error);
-          }
-        };
+    try {
+      const response = await axios.post('http://localhost:8081/api/auth/signup', formData);
+      console.log('Signup successful:', response.data);
+      const token = response.data.token;
+      localStorage.setItem('token', token);      
+    } 
+    catch (err) {
+      if (axios.isAxiosError(err)) {
+        setApiError(err.response?.data?.message || 'Signup failed. Please try again.');
+      } else {
+        setApiError('An unexpected error occurred');
+      }
+    }
+  };
 
-    return(
-    <div className="signup">
-             
-          <head>
-            <title>Sign Up</title>
-          </head>
-
-         <div className="signup_img">
-            <img src="./Image_1.png"></img>
-         </div>
-         
-       <div className="signup_form">
-         <div className="form_logo">
-            <img src='./ieee-sscs-sm-ko-logo2x 1.png'></img>
-         </div>
-
-    <div className="form_container">
-         <h2>Sign up to IEEE</h2>
-         <form onSubmit={handleSubmit}>
-         {/* Name */}
-        <div>
-          <input type="text" placeholder='Username' name="name" value={formData.name} onChange={handleChange} required/>
+  return (
+    <div className="login-page">
+      <div className="login-left">
+        <Link to="/">
+        <img src="ieee-sscs-sm-ko-logo2x 1.png" alt="SSCS Logo" className="login-logo" />
+        </Link>
+        <div className="login-card">
+          <h2 className="card-title">Sign Up to IEEE</h2>
+          
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Username"
+              className={`input-field ${errors.name ? 'error' : ''}`}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+            {errors.name && <div className="error-message">{errors.name}</div>}
+            
+            <input
+              type="email"
+              placeholder="Email Address"
+              className={`input-field ${errors.email ? 'error' : ''}`}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            {errors.email && <div className="error-message">{errors.email}</div>}
+            
+            <input
+              type="tel"
+              placeholder="WhatsApp Number"
+              className={`input-field ${errors.phoneNo ? 'error' : ''}`}
+              name="phoneNo"
+              value={formData.phoneNo}
+              onChange={handleChange}
+              required
+            />
+            {errors.phoneNo && <div className="error-message">{errors.phoneNo}</div>}
+            
+            <input
+              type="password"
+              placeholder="Password"
+              className={`input-field ${errors.password ? 'error' : ''}`}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+            {errors.password && <div className="error-message">{errors.password}</div>}
+            
+            <input
+              type="text"
+              placeholder="Role"
+              className={`input-field ${errors.role ? 'error' : ''}`}
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              required
+            />
+            {errors.role && <div className="error-message">{errors.role}</div>}
+            
+            <input
+              type="text"
+              placeholder="Department"
+              className={`input-field ${errors.department ? 'error' : ''}`}
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              required
+            />
+            {errors.department && <div className="error-message">{errors.department}</div>}
+            
+            {apiError && <div className="error-message api-error">{apiError}</div>}
+            
+            <button type="submit" className="btn-signin">
+              Continue
+            </button>
+          </form>
+          
+          <div className="links-container">
+            <a href="/login" className="signup-link">
+              Already Have an Account?
+            </a>
+          </div>
         </div>
+      </div>
+      <div className="login-right" />
+    </div>
+  );
+};
 
-        {/* Email */}
-        <div>
-          <input type="email" placeholder='Email Address' name="email" value={formData.email} onChange={handleChange} required/>
-        </div>
-
-        {/* PhoneNo*/}
-        <div>
-          <input type="tel" placeholder='WhatsApp Number' name="phoneNo" value={formData.phoneNo} onChange={handleChange} required/>
-        </div>
-
-        {/* Password */}
-        <div>
-          <input type="password" placeholder='Password'  name="password" value={formData.password} onChange={handleChange} required/>
-        </div>
-
-         {/* Role */}
-         <div>
-          <input type="text" placeholder='Role' name="role" value={formData.role} onChange={handleChange} required/>
-        </div>
-
-         {/*Department*/}
-         <div>
-          <input type="text" placeholder='Department' name="department" value={formData.department} onChange={handleChange} required/>
-        </div>
-
-
-        {/* Submit Button */}
-        <div>
-          <button type="submit" className='black_btn'>Continue</button>
-        </div>
-
-          <a onClick={()=>navigate("/login")} style={{cursor:"pointer"}}>Already Have an Account?</a>
-
-        </form>
-        </div>
-       </div>
-    </div>   
-    )
-}
+export default SignUp;
