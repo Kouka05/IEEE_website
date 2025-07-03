@@ -19,14 +19,14 @@ class UserLoginService {
       const user = await UserModel.findOne({ email });
       // Check if user exists
       if (!user) {
-        return { success: false, error: 'Invalid email' };
+        return { success: false, error: 'Invalid email or password' };
       }
       console.log('comparing password:', password, user.password);
       const isMatch = await user.comparePassword(password);
       console.log('password match:', isMatch);
       
       if (!isMatch) {
-        return { success: false, error: 'Invalid password' };
+        return { success: false, error: 'Invalid email or password' };
       }
 
       // Create JWT token
