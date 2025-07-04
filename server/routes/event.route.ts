@@ -97,6 +97,15 @@ router.put('/edit/:id', asyncHandler(async (req: Request, res: Response) => {
     }
   }
 }));
+ router.get('/getevents', asyncHandler(async (req: Request, res: Response) => {
+  try { 
+    const events = await EventService.getEvents();
+    res.json({ success: true, events });
+  } catch (error: any) {
+    console.error('Error fetching events:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch events' });
+  }
+}));
 
 // GET EVENT ROUTE (if needed)
 router.get('/:id', asyncHandler(async (req: Request, res: Response) => {
@@ -151,5 +160,33 @@ router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
     }
   }
 }));
+ 
+//  router.put('/addparticipant/:id', asyncHandler(async (req: Request, res: Response) => {        
+//   const { userId } = req.body;  
+//   const eventId = req.params.id;  
+//   if (!userId) {
+//     res.status(400).json({ success: false, error: 'Missing userId' });
+//     return;
+//   } 
+//   try {
+//     const user = await getUserFromDatabase(userId);
+//     const eventDoc = await EventModel
+//       .findById(eventId);
+//     if (!eventDoc) {
+//       res.status(404).json({ success: false, error: 'Event not found'
+//       });
+//       return;
+//     }
+
+//   } catch (error: any) {
+//     if (error.message === 'User not found') {
+//       res.status(404).json({ success: false, error: error.message });
+//     } else if (error.name === 'UnauthorizedError') {
+//       res.status(403).json({ success: false, error: error.message });
+//     } else {
+//       throw error; // Let asyncHandler catch it
+//     }
+//   }
+// }));
 
 export default router;

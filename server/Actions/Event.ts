@@ -4,6 +4,7 @@ import Actions from './Actions';
 import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
 import { hasPermission, withPermission } from './UserActions';
+import EventModel from '../models/event.model';
 
 enum EventStatus {
     DRAFT = 'DRAFT',
@@ -178,7 +179,7 @@ class Event extends Actions {
     public getId() : string | undefined {
         return this.id;
     }
-    static fromDocument(doc: any): Event {
+    static fromDocument(doc: any): Event  {
     // Helper to filter out Mongoose internal keys
     const filterMap = (obj: any) =>
         Object.entries(obj || {})
@@ -205,6 +206,18 @@ class Event extends Actions {
     event.id = doc._id?.toString();
     return event;
 }
+ 
+ public static async getEvents(): Promise<Array<Event>> {
+        try {
+            // Fetch all events from database
+           
+            const events = await EventModel.find({}).lean().exec();
+            return events.map((eventDoc: any) => Event.fromDocument(eventDoc));
+        } catch (error) {
+            console.error("Error fetching events:", error);
+            throw new Error("Failed to fetch events");
+        }
+    }
 }
 
 export default Event;
