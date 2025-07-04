@@ -58,6 +58,7 @@ import User from '../Factory/User';
 import EventModel from '../models/event.model';
 import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
+import { APP_ORIGIN } from '../constants/env';
 
 class EventService {
   static async createEvent(data: any, createdBy: User) {
@@ -75,7 +76,8 @@ class EventService {
       timeline,
       eventForm,
       registrationDeadline,
-      maxParticipants
+      maxParticipants,
+      shareableLink 
     } = data;
 
     // Use the UserActions pattern for event creation
@@ -108,7 +110,8 @@ class EventService {
       maxParticipants: event.maxParticipants,
       status: event.getStatus(),
       participants: event.getParticipants().map((user) => user.getId?.()?? null), // Adjust as per your User model
-      createdBy: createdBy.getId?.() ?? null // Adjust as per your User model
+      createdBy: createdBy.getId?.() ?? null, // Adjust as per your User model
+      shareableLink // Store the provided shareableLink
     };
 
     const savedEvent = await EventModel.create(eventDocument);

@@ -4,6 +4,7 @@ import UserModel from '../models/user.model';
 import UserFactory, { Role } from '../Factory/UserFactory';
 import EventModel from '../models/event.model';
 import Event from '../Actions/Event';
+import { requireAuth, AuthenticatedRequest } from '../utils/authMiddleware';
 
 const router = Router();
 
@@ -97,7 +98,8 @@ router.put('/edit/:id', asyncHandler(async (req: Request, res: Response) => {
     }
   }
 }));
- router.get('/getevents', asyncHandler(async (req: Request, res: Response) => {
+
+router.get('/getevents', asyncHandler(async (req: Request, res: Response) => {
   try { 
     const events = await EventService.getEvents();
     res.json({ success: true, events });
@@ -160,33 +162,33 @@ router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
     }
   }
 }));
- 
-//  router.put('/addparticipant/:id', asyncHandler(async (req: Request, res: Response) => {        
-//   const { userId } = req.body;  
-//   const eventId = req.params.id;  
-//   if (!userId) {
-//     res.status(400).json({ success: false, error: 'Missing userId' });
-//     return;
-//   } 
-//   try {
-//     const user = await getUserFromDatabase(userId);
-//     const eventDoc = await EventModel
-//       .findById(eventId);
-//     if (!eventDoc) {
-//       res.status(404).json({ success: false, error: 'Event not found'
-//       });
-//       return;
-//     }
 
-//   } catch (error: any) {
-//     if (error.message === 'User not found') {
-//       res.status(404).json({ success: false, error: error.message });
-//     } else if (error.name === 'UnauthorizedError') {
-//       res.status(403).json({ success: false, error: error.message });
-//     } else {
-//       throw error; // Let asyncHandler catch it
-//     }
-//   }
-// }));
+router.put('/addparticipant/:id', requireAuth, asyncHandler(async (req: AuthenticatedRequest, res: Response) => {        
+  const eventId = req.params.id;  
+  // req.user is set by requireAuth middleware
+  if (!req.user || !req.user.userId) {
+    res.status(401).json({ success: false, error: 'Unauthorized: No user info in token' });
+    return;
+  }
+  try {
+    const user = await getUserFromDatabase(req.user.userId);
+    const eventDoc = await EventModel.findById(eventId);
+    if (!eventDoc) {
+      res.status(404).json({ success: false, error: 'Event not found' });
+      return;
+    }
+    const event = Event.fromDocument(eventDoc);
+    const updatedEvent = await EventService.addParticipant(event, user);
+    res.json({ success: true, event: updatedEvent });
+  } catch (error: any) {
+    if (error.message === 'User not found') {
+      res.status(404).json({ success: false, error: error.message });
+    } else if (error.name === 'UnauthorizedError') {
+      res.status(403).json({ success: false, error: error.message });
+    } else {
+      throw error; // Let asyncHandler catch it
+    }
+  }
+}));
 
 export default router;
