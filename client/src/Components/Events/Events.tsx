@@ -12,8 +12,6 @@ export interface Event {
   locationUrl: string;
 }
 
-
-
 // --- 3. HELPER FUNCTIONS ---
 const formatEventDate = (date: Date, includeDay: boolean = true): string => {
   const day = includeDay ? date.getDate() : '';
