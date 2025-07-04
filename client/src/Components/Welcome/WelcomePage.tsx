@@ -5,7 +5,7 @@ import Hero from '../HeroSection/Hero';
 export default function Welcome() {
   return (
     <div>  
-      <Hero/>
+      <Hero navigate={(path: string) => { window.location.href = path; }} />
       <LatestNews/>
       <JoinUs/>
     </div>
