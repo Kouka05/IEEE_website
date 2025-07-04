@@ -1,7 +1,6 @@
-/* Hero.css */
 .hero-section {
-    background-color: #f7fafc; /* bg-gray-100 */
-    padding: 5rem 1.5rem; /* py-20 px-6 */
+    background-color: #f7fafc; 
+    padding: 5rem 1.5rem; 
     text-align: center;
 }
 
@@ -11,25 +10,25 @@
 }
 
 .hero-title {
-    font-size: 2.25rem; /* text-4xl */
+    font-size: 2.25rem; 
     font-weight: 700;
-    color: #2d3748; /* text-gray-800 */
+    color: #2d3748; 
 }
 
 .hero-subtitle {
-    font-size: 1.875rem; /* text-3xl */
+    font-size: 1.875rem; 
     font-weight: 300;
-    color: #4a5568; /* text-gray-700 */
+    color: #4a5568; 
     margin-top: 0.5rem;
 }
 
 .hero-description {
     margin-top: 1.5rem;
-    max-width: 42rem; /* max-w-2xl */
+    max-width: 42rem; 
     margin-left: auto;
     margin-right: auto;
-    color: #718096; /* text-gray-600 */
-    font-size: 1.125rem; /* text-lg */
+    color: #718096; 
+    font-size: 1.125rem; 
 }
 
 .hero-buttons {
@@ -50,41 +49,41 @@
 
 .learn-more {
     background-color: #ffffff;
-    border-color: #d2d6dc; /* border-gray-300 */
-    color: #2d3748; /* text-gray-800 */
+    border-color: #d2d6dc; 
+    color: #2d3748; 
 }
 
 .learn-more:hover {
-    background-color: #f9fafb; /* hover:bg-gray-50 */
+    background-color: #f9fafb; 
 }
 
 .join-scs {
-    background-color: #2d3748; /* bg-gray-800 */
+    background-color: #2d3748;
     color: #ffffff;
 }
 
 .join-scs:hover {
-    background-color: #1a202c; /* hover:bg-gray-900 */
+    background-color: #1a202c;
 }
 
-/* Responsive adjustments */
+
 @media (min-width: 640px) {
     .hero-title {
-        font-size: 3rem; /* sm:text-5xl */
+        font-size: 3rem; 
     }
     .hero-subtitle {
-        font-size: 2.25rem; /* sm:text-4xl */
+        font-size: 2.25rem; 
     }
 }
 
 @media (min-width: 1024px) {
     .hero-section {
-        padding: 8rem 1.5rem; /* lg:py-32 */
+        padding: 8rem 1.5rem; 
     }
     .hero-title {
-        font-size: 3.75rem; /* lg:text-6xl */
+        font-size: 3.75rem; 
     }
     .hero-subtitle {
-        font-size: 3rem; /* lg:text-5xl */
+        font-size: 3rem;
     }
 }

@@ -22,19 +22,7 @@ const LatestNews: React.FC = () => {
         <section className="news-section">
             <div className="news-container">
                 <div className="news-header">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 256 256"
-                        className="news-header-icon"
-                    >
-                        <path
-                            fill="currentColor"
-                            d="M228.44 106.69a16 16 0 0 0-15.55-6.1L161.6 109.4a80 80 0 0 0-67.2 0l-51.29-8.81a16 16 0 0 0-15.55 6.1a15.86 15.86 0 0 0 2 16.84l33.69 49.07a16 16 0 0 0 13.52 7.4h112.82a16 16 0 0 0 13.52-7.4l33.69-49.07a15.86 15.86 0 0 0 2-16.84ZM128 144a16 16 0 1 1 16-16a16 16 0 0 1-16 16Zm88-37.31l-33.69 49.07a.1.1 0 0 1-.09 0H73.78a.1.1 0 0 1-.09 0L40 106.69a.2.2 0 0 1 0-.09l51.29 8.81a96.11 96.11 0 0 1 81.42 0l51.29-8.81a.2.2 0 0 1 0 .09Z"
-                        ></path>
-                    </svg>
-                    <h2 className="news-title">Latest from SSCS Alexandria</h2>
+                    <h2 className="news-title">📡 Latest from SSCS Alexandria</h2>
                 </div>
 
                 {/* Grid for Desktop */}
