@@ -44,8 +44,13 @@ const JoinUs = () => {
                 </div>
                 
                 <div className="journey-image-container">
-                    <div className="journey-image-placeholder">
-                        {/* Image */}
+                    <div className="journey-image-placeholder" style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <img
+                            src="https://images.unsplash.com/photo-1580584126903-c17d41830450?q=80&w=1039&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Abstract solid-state circuits"
+                            className="journey-image"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '16px' }}
+                        />
                     </div>
                 </div>
             </div>

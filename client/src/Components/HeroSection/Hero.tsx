@@ -2,7 +2,7 @@ import React from 'react';
 import './Hero.css';
 
 interface HeroProps {
-  navigate: (path: string) => void;
+    navigate: (path: string) => void;
 }
 
 const Hero: React.FC<HeroProps> = ({ navigate }) => {
@@ -15,10 +15,11 @@ const Hero: React.FC<HeroProps> = ({ navigate }) => {
                     Empowering students, researchers, and professionals through innovation, collaboration, and cutting-edge education in solid-state circuits.
                 </p>
                 <div className="hero-buttons">
-                    <button onClick={() => navigate('/about')} className="hero-button learn-more">
+                    {/* Fix loading issue for buttons */}
+                    <button type="button" onClick={() => navigate('/about')} className="hero-button learn-more">
                         Learn More
                     </button>
-                    <button onClick={() => navigate('/signIn')} className="hero-button join-scs">
+                    <button type="button" onClick={() => navigate('/signup')} className="hero-button join-scs">
                         Join SSCS
                     </button>
                 </div>
