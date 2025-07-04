@@ -1,0 +1,90 @@
+/* Hero.css */
+.hero-section {
+    background-color: #f7fafc; /* bg-gray-100 */
+    padding: 5rem 1.5rem; /* py-20 px-6 */
+    text-align: center;
+}
+
+.hero-container {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 700;
+    color: #2d3748; /* text-gray-800 */
+}
+
+.hero-subtitle {
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 300;
+    color: #4a5568; /* text-gray-700 */
+    margin-top: 0.5rem;
+}
+
+.hero-description {
+    margin-top: 1.5rem;
+    max-width: 42rem; /* max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    color: #718096; /* text-gray-600 */
+    font-size: 1.125rem; /* text-lg */
+}
+
+.hero-buttons {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.hero-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.learn-more {
+    background-color: #ffffff;
+    border-color: #d2d6dc; /* border-gray-300 */
+    color: #2d3748; /* text-gray-800 */
+}
+
+.learn-more:hover {
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+.join-scs {
+    background-color: #2d3748; /* bg-gray-800 */
+    color: #ffffff;
+}
+
+.join-scs:hover {
+    background-color: #1a202c; /* hover:bg-gray-900 */
+}
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+    .hero-title {
+        font-size: 3rem; /* sm:text-5xl */
+    }
+    .hero-subtitle {
+        font-size: 2.25rem; /* sm:text-4xl */
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-section {
+        padding: 8rem 1.5rem; /* lg:py-32 */
+    }
+    .hero-title {
+        font-size: 3.75rem; /* lg:text-6xl */
+    }
+    .hero-subtitle {
+        font-size: 3rem; /* lg:text-5xl */
+    }
+}
