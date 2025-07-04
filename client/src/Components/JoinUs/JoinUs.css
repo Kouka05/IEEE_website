@@ -1,6 +1,5 @@
-/* Journey.css */
 .journey-section {
-    background-color: #f7fafc; /* bg-gray-100 */
+    background-color: #f7fafc;
     padding: 4rem 1.5rem;
 }
 
@@ -35,6 +34,10 @@
 
 .journey-title-link:hover .journey-arrow {
     transform: translateX(0.5rem);
+    color:crimson
+}
+.journey-title-link:hover {
+    color: crimson;
 }
 
 .journey-description {
@@ -64,11 +67,12 @@
 
 .journey-image-container {
     width: 100%;
+    display: none; 
 }
 
 .journey-image-placeholder {
     aspect-ratio: 1 / 1;
-    max-width: 32rem; /* max-w-lg */
+    max-width: 32rem;
     margin: 0 auto;
     background-color: #e2e8f0;
     display: flex;
@@ -81,6 +85,12 @@
 @media (min-width: 640px) {
     .journey-title-link {
         font-size: 2.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .journey-image-container {
+        display: block; 
     }
 }
 

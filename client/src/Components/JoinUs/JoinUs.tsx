@@ -11,7 +11,6 @@ const JoinUs = () => {
     return (
         <section className="journey-section">
             <div className="journey-container">
-                {/* Text Content */}
                 <div className="journey-content">
                     <a href="#" className="journey-title-link">
                         Your Journey in Solid-State Starts Here
@@ -44,10 +43,9 @@ const JoinUs = () => {
                     </div>
                 </div>
                 
-                {/* Image Placeholder */}
                 <div className="journey-image-container">
                     <div className="journey-image-placeholder">
-                        {/* Image would go here */}
+                        {/* Image */}
                     </div>
                 </div>
             </div>
