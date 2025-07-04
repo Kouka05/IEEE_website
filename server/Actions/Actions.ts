@@ -10,7 +10,7 @@ abstract class Actions{
         this.createdBy = createdBy ;
         this.date = date ;
     }
-    abstract publish():void;
+   
     public setDate(date: Date): void {
         this.date = date;
     }
