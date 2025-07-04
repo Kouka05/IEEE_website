@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import authRouter from '../routes/auth.route';
+import eventRouter from '../routes/event.route';
 require('dotenv').config();
 
 
@@ -18,6 +19,7 @@ const initializeServer = () => {
   );
 
   server.use('/api/auth', authRouter);
+  server.use('/api/events', eventRouter);
 
   // Optional origin restriction middleware (when deployment)
   /*

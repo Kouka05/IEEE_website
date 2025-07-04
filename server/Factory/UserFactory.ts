@@ -58,6 +58,35 @@ class UserFactory {
     await newUser.save();
     return user;
   }
+
+  public fromDocument(userDoc: any): User {
+    const {
+      name,
+      email,
+      phoneNo,
+      password,
+      warnings,
+      enrollDate,
+      department,
+      permissions,
+      roleHistory,
+      leaveDate,
+      role
+    } = userDoc;
+
+    switch (role) {
+      case 'Chairman':
+        return new Chairman(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
+      case 'Head':
+        return new Head(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
+      case 'Volunteer':
+        return new Volunteer(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
+      case 'Outsider':
+        return new Outsider(name, email, phoneNo, password, warnings, enrollDate, department, permissions, roleHistory, leaveDate);
+      default:
+        throw new Error('Invalid user type');
+    }
+  }
 }
 
 export default UserFactory;
