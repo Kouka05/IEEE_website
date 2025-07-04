@@ -1,17 +1,132 @@
-.footer{
+.footer {
     background-color: #434343;
     padding: 5%;
 }
-.logos_container{
+
+.logos_container {
     display: flex;
     justify-content: space-between;
-}
-.copyright{
-    color:#79747E;
     align-items: center;
-    text-align: center;
+    flex-wrap: wrap; 
 }
-hr{
-    color:#79747E;
+
+.right_logo,
+.left_logo {
+    display: flex;
+    align-items: center;
+}
+
+.left_logo {
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.footer-logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.social_icons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-icon {
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.copyright {
+    color: #79747E;
+    text-align: center;
+    margin-top: 30px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #79747E;
     width: 80%;
+    margin: 0 auto 20px;
+}
+
+.copyright p {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .logos_container {
+        flex-direction: row; 
+        gap: 15px; 
+        flex-wrap: nowrap; 
+        justify-content: space-between; 
+        align-items: center;
+    }
+    
+    .right_logo,
+    .left_logo {
+        width: auto;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .footer-logo {
+        max-width: 120px;
+        height: auto;
+    }
+    
+    .right_logo img {
+        max-width: 100px; 
+        height: auto;
+    }
+    
+    .social_icons {
+        justify-content: center;
+        gap: 5px; 
+    }
+    
+    .social_icons svg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    hr {
+        width: 95%;
+    }
+    
+    .copyright p {
+        font-size: 0.85rem; 
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 8% 5%; 
+    }
+    
+    .footer-logo {
+        max-width: 100px; 
+    }
+    
+    .right_logo img {
+        max-width: 80px; 
+    }
+    
+    .social_icons svg {
+        width: 25px; 
+        height: 25px;
+    }
+    
+    .copyright p {
+        font-size: 0.8rem; 
+        line-height: 1.5; 
+    }
 }
