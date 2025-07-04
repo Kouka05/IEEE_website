@@ -8,7 +8,7 @@ export default function Footer(){
                    <img src='./ieee-sscs-sm-ko-logo2x 1.png' alt="IEEE SSCS logo"></img>
                 </div>
                 <div className="left_logo">
-                    <a href='https://www.ieee.org/'><img src='./IEEE-logo.png' alt='IEEE logo' ></img></a>
+                    <a href='https://www.ieee.org/' target='_blank' rel='noopener noreferrer'><img src='./IEEE-logo.png' alt='IEEE logo' ></img></a>
                     <div className="social_icons">
                        {/* Instagram */}
                        <a href="https://www.instagram.com/sscsalex?igsh=MXdrcW9yaGR6dWoyOA==" target="_blank" rel="noopener noreferrer">
