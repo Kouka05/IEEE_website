@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './LoginPage.css';
 
@@ -46,6 +47,7 @@ const LoginPage: React.FC = () => {
       console.log('Login successful:', response.data);
       const token = response.data.token;
       localStorage.setItem('token', token);
+      // Add navigation to dashboard/home here
 
     } catch (err) {
       if (axios.isAxiosError(err)) {
@@ -59,65 +61,69 @@ const LoginPage: React.FC = () => {
   return (
     <div className="login-page">
       <div className="login-left">
+        <Link to="/">
         <img src="ieee-sscs-sm-ko-logo2x 1.png" alt="SSCS Logo" className="login-logo" />
-
+        </Link>
         <div className="login-card">
           <h2 className="card-title">Login</h2>
-
+          
           <form onSubmit={handleSubmit}>
-            <div className="input-group">
-              {/* Make the color black */}
-              <input
-                id="email"
-                type="email"
-                placeholder="Email Address"
-                className={`input-field ${emailError ? 'error' : ''}`}
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value);
-                  setEmailError('');
-                  setApiError('');
-                }}
-                onBlur={() => {
-                  if (email && !validateEmail(email)) {
-                    setEmailError('Please enter a valid email address');
-                  }
-                }}
-                required
-              />
-              
-            </div>
+  <div className="input-group">
+    <input
+      id="email"
+      type="email"
+      placeholder="Email Address"
+      className={`input-field ${emailError ? 'error' : ''}`}
+      value={email}
+      onChange={e => {
+        setEmail(e.target.value);
+        setEmailError('');
+        setApiError('');
+      }}
+      onBlur={() => {
+        if (email && !validateEmail(email)) {
+          setEmailError('Please enter a valid email address');
+        }
+      }}
+      required
+    />
+    {emailError && <div className="error-message">{emailError}</div>}
+  </div>
 
-            <div className="input-group">
-              <input
-                id="password"
-                type="password"
-                placeholder="Password"
-                className={`input-field ${passwordError ? 'error' : ''}`}
-                value={password}
-                onChange={e => {
-                  setPassword(e.target.value);
-                  setPasswordError('');
-                  setApiError('');
-                }}
-                required
-              />
-              {passwordError && <div className="error-message">{passwordError}</div>}
-            </div>
-            {emailError && <div className="error-message">{emailError}</div>}
-            {apiError && <div className="error-message api-error">{apiError}</div>}
-
-            <button type="submit" className="btn-signin">
-              Sign In
-            </button>
-          </form>
-
-          <a href="#" className="forgot-link">
-            Forgot password?
-          </a>
+  <div className="input-group">
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      className={`input-field ${passwordError ? 'error' : ''}`}
+      value={password}
+      onChange={e => {
+        setPassword(e.target.value);
+        setPasswordError('');
+        setApiError('');
+      }}
+      required
+    />
+    {passwordError && <div className="error-message">{passwordError}</div>}
+  </div>
+  
+  {apiError && <div className="error-message api-error">{apiError}</div>}
+  
+  <button type="submit" className="btn-signin">
+    Sign In
+  </button>
+</form>
+          
+          <div className="links-container">
+            <a href="#" className="forgot-link">
+              Forgot password?
+            </a>
+            <a href="/signup" className="signup-link">
+              Don't have an account? Sign Up
+            </a>
+          </div>
         </div>
       </div>
-      <div className="login-right" />
     </div>
   );
 };
