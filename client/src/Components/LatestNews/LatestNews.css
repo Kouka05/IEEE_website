@@ -1,7 +1,7 @@
 /* LatestNews.css */
 .news-section {
     background-color: #ffffff;
-    padding: 4rem 1.5rem;
+    padding: 2rem 1.5rem;
 }
 
 .news-container {
@@ -61,18 +61,18 @@
     font-size: 1.25rem;
     font-weight: 600;
     color: #2d3748;
-    height: 4rem; /* To maintain consistent height */
+    height: 4rem; 
 }
 
 /* --- Slider and Grid Layout --- */
 .news-slider {
-    display: block; /* Visible by default on mobile */
+    display: block; 
     position: relative;
     height: 24rem;
 }
 
 .news-grid {
-    display: none; /* Hidden by default on mobile */
+    display: none; 
 }
 
 .slider-item {
@@ -130,13 +130,13 @@
 
 @media (min-width: 1024px) {
     .news-section {
-        padding: 6rem 1.5rem;
+        padding: 3rem 1.5rem;
     }
     .news-slider {
-        display: none; /* Hide slider on desktop */
+        display: none; 
     }
     .news-grid {
-        display: grid; /* Show grid on desktop */
+        display: grid; 
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
     }
