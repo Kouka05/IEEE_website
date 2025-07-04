@@ -161,7 +161,15 @@ class EventService {
     );
     return deletedEvent;
   }
+  static async getEventById(eventId: string) {
+    const eventDoc = await EventModel.findById(eventId);
+    if (!eventDoc) {  
+      throw new Error('Event not found');
+    }
+    const event = Event.fromDocument(eventDoc);
+    return event;
 }
 
+}
 
 export default EventService;
