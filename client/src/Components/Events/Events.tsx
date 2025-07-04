@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import './Events.css'; // Import the separated CSS file
 
-// --- 1. TYPE DEFINITIONS ---
+// --- 1. TYPE DEFINITIONS (Updated to match backend model) ---
 export interface Event {
- id: string;                      // CHANGED: from number to string
-  date: Date;                      // The type in our state will be a Date object
+  id: string;
+  date: Date;
   title: string;
   description: string;
-  abstract?: string;               // NEW: Optional abstract property
-  location: string;                // CHANGED: from 'Online' | 'Offline' to a general string
-  sponsors: string[];              // NEW
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'; // NEW: Assuming these possible values
-  registrationDeadline: Date | null; // NEW
-  // You can add speakers, timeline, etc. here with more specific types if needed
-  // For now, they are not used in the UI.
+  location: string;
+  speakers: { [key: string]: string }; // Maps from backend become objects
+  sponsors: string[];
+  timeline: { [key: string]: string }; // Maps from backend become objects
+  status: 'DRAFT' | 'PUBLISHED' | 'CANCELLED' | 'COMPLETED';
+  registrationDeadline: Date | null;
+  // Other fields like participants, maxParticipants can be added if needed for the UI
 }
 
-// --- 3. HELPER FUNCTIONS ---
+// --- 2. HELPER FUNCTIONS (Unchanged) ---
 const formatEventDate = (date: Date, includeDay: boolean = true): string => {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
   const day = includeDay ? date.getDate() : '';
   const month = date.toLocaleString('default', { month: 'long' });
   const startTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).replace(' ', '');
@@ -37,8 +39,7 @@ const groupEventsByMonth = (events: Event[]): Record<string, Event[]> => {
   }, {} as Record<string, Event[]>);
 };
 
-
-// --- 4. REUSABLE COMPONENTS ---
+// --- 3. REUSABLE COMPONENTS (Unchanged) ---
 const CalendarIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -46,7 +47,6 @@ const CalendarIcon: React.FC = () => (
 );
 
 const EventItem: React.FC<{ event: Event; onSelect: (event: Event) => void; }> = ({ event, onSelect }) => {
-
   return (
     <div className="event-item-clickable" onClick={() => onSelect(event)}>
       <div className="event-item">
@@ -64,145 +64,223 @@ const EventItem: React.FC<{ event: Event; onSelect: (event: Event) => void; }> =
   );
 };
 
+// --- 4. PAGE COMPONENTS (Updated to fetch data) ---
+
 const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ onSelectEvent }) => {
+  const [eventsData, setEventsData] = useState<Event[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-      // Updated with more details for the description page
-  const [eventsData, setEventsData] = useState<Event[]>([
-  {
-    id: '6866e6d302961ce1799f06d7',
-    title: 'Awesome Tech Conference',
-    description: 'A deep dive into modern web technologies.',
-    date: new Date('2025-07-28T20:00:00.000Z'),
-    location: 'Main Auditorium',
-    sponsors: ['TechCorp', 'Innovate LLC'],
-    status: 'PUBLISHED',
-    registrationDeadline: new Date('2025-07-20T23:59:00.000Z'),
-  },
-  {
-    id: '789a0c3b1e8d4f9a2b5c6d7e',
-    title: 'Design Systems Meetup',
-    description: 'Exploring the future of digital product design.',
-    date: new Date('2025-08-15T18:30:00.000Z'),
-    location: 'Online',
-    sponsors: ['Creative Minds'],
-    status: 'PUBLISHED',
-    registrationDeadline: null,
-  },
-]);
-
-    useEffect(() => {
-      // Simulate fetching data from an API
-      const fetchEvents = async () => {
-        const response = await fetch('/api/events'); // Replace with your API endpoint
-        if (response.ok) {
-          const data = await response.json();
-          setEventsData(data);
-        }
-      };
-      fetchEvents();
-    }, []);
-    const sortedEvents = [...eventsData].sort((a, b) => a.date.getTime() - b.date.getTime());
-    const groupedEvents = groupEventsByMonth(sortedEvents);
-
-    return (
-        <div className="events-container">
-            <header className="events-header">
-                <div className="header-content">
-                <h1 className="header-title">Upcoming Events</h1>
-                <button className="header-button">Event Archive</button>
-                </div>
-            </header>
-            <main className="events-main">
-                <div className="events-list-card">
-                {Object.keys(groupedEvents).length === 0 ? (
-                    <p className="no-events-message">No upcoming events.</p>
-                ) : (
-                    Object.entries(groupedEvents).map(([monthYear, eventsInMonth], groupIndex) => (
-                    <div key={monthYear} className={`month-group ${groupIndex > 0 ? 'month-group-spaced' : ''}`}>
-                        <div className="month-header">
-                        <h2 className="month-title">{monthYear}</h2>
-                        <div className="month-divider"></div>
-                        </div>
-                        <div>
-                        {eventsInMonth.map((event, eventIndex) => (
-                            <div key={event.id}>
-                            <EventItem event={event} onSelect={onSelectEvent} />
-                            {eventIndex < eventsInMonth.length - 1 && <hr className="event-divider"/>}
-                            </div>
-                        ))}
-                        </div>
-                    </div>
-                    ))
-                )}
-                </div>
-            </main>
-        </div>
-    );
-};
-
-const EventDescriptionPage: React.FC<{ event: Event; onBack: () => void; }> = ({ event, onBack }) => {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  
-  useEffect(() => { 
-    // Simulate fetching data from an API
+  useEffect(() => {
     const fetchEvents = async () => {
-      const response = await fetch(`http://localhost:8081/api/events/6866e6d302961ce1799f06d7`); // Replace with your API endpoint
-      if (response.ok) {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch('http://localhost:8081/api/events/getevents');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
-        setSelectedEvent(data);
+
+        // Check if the received data is an array.
+        const eventsArray = Array.isArray(data) ? data : data.events;
+
+        if (!Array.isArray(eventsArray)) {
+          throw new Error("API response did not contain an array of events.");
+        }
+
+        // Process data to convert date strings to Date objects and handle IDs
+        const processedEvents = eventsArray.map((event: any) => ({
+          ...event,
+          id: event._id || event.id, // Use _id from MongoDB or id if present
+          date: new Date(event.date),
+          registrationDeadline: event.registrationDeadline ? new Date(event.registrationDeadline) : null,
+        }));
+        setEventsData(processedEvents);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "An unknown error occurred");
+        console.error("Failed to fetch events:", e);
+      } finally {
+        setLoading(false);
       }
     };
     fetchEvents();
   }, []);
 
-    return (
-        <div className="event-detail-container">
-            <button onClick={onBack} className="back-button">← Back to Events</button>
-            {selectedEvent!=null ? (<>
-            <header className="event-detail-header">
-                <div className="event-detail-header-content">
-                    <h1 className="event-detail-title">{selectedEvent.title}</h1>
-                    <p className="event-detail-time">{formatEventDate(selectedEvent.date, true)}</p>
-                </div>
-            </header>
-            
-            <main className="event-detail-body">
-                <div className="event-detail-body-content">
-                    <p className="event-detail-abstract">
-                        <strong>Abstract:</strong> {selectedEvent.abstract}
-                    </p>
-                    <p className="event-detail-location">
-                        <strong>Location:</strong> <a href={selectedEvent.location} target="_blank" rel="noopener noreferrer">{selectedEvent.location}</a>
-                    </p>
-                </div>
-            </main>
-            </>):<p style={{color:'black', textAlign:'center'}}>Loading event details...</p>}
+  if (loading) {
+    return <p>Loading events...</p>;
+  }
+
+  if (error) {
+    return <p>Error fetching events: {error}</p>;
+  }
+
+  const sortedEvents = [...eventsData].sort((a, b) => a.date.getTime() - b.date.getTime());
+  const groupedEvents = groupEventsByMonth(sortedEvents);
+
+  return (
+    <div className="events-container">
+      <header className="events-header">
+        <div className="header-content">
+          <h1 className="header-title">Upcoming Events</h1>
+          <button className="header-button">Event Archive</button>
         </div>
-    );
+      </header>
+      <main className="events-main">
+        <div className="events-list-card">
+          {Object.keys(groupedEvents).length === 0 ? (
+            <p className="no-events-message">No upcoming events.</p>
+          ) : (
+            Object.entries(groupedEvents).map(([monthYear, eventsInMonth]) => (
+              <div key={monthYear} className={`month-group`}>
+                <div className="month-header">
+                  <h2 className="month-title">{monthYear}</h2>
+                  <div className="month-divider"></div>
+                </div>
+                <div>
+                  {eventsInMonth.map((event, eventIndex) => (
+                    <div key={event.id}>
+                      <EventItem event={event} onSelect={onSelectEvent} />
+                      {eventIndex < eventsInMonth.length - 1 && <hr className="event-divider" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> = ({ eventId, onBack }) => {
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      if (!eventId) return;
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await fetch(`http://localhost:8081/api/events/${eventId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        // The backend might return the event inside an "event" property or directly
+        const eventData = data.event || data;
+
+        // Process the single event data
+        const processedEvent: Event = {
+          ...eventData,
+          id: eventData._id || eventData.id,
+          date: new Date(eventData.date),
+          registrationDeadline: eventData.registrationDeadline ? new Date(eventData.registrationDeadline) : null,
+        };
+        setEvent(processedEvent);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "An unknown error occurred");
+        console.error(`Failed to fetch event ${eventId}:`, e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEventDetails();
+  }, [eventId]);
+
+  if (loading) {
+    return <p>Loading event details...</p>;
+  }
+
+  if (error) {
+    return <p>Error fetching event details: {error}</p>;
+  }
+
+  if (!event) {
+    return <p>Event not found.</p>;
+  }
+  
+  const isRegistrationOpen = event.registrationDeadline && new Date() < event.registrationDeadline;
+
+  return (
+    <div className="event-detail-container">
+      <button onClick={onBack} className="back-button">← Back to Events</button>
+      <header className="event-detail-header">
+        <div className="event-detail-header-content">
+          <h1 className="event-detail-title">{event.title}</h1>
+          <p className="event-detail-time">{formatEventDate(event.date, true)}</p>
+        </div>
+      </header>
+      <main className="event-detail-body">
+        <div className="event-detail-body-content">
+          <p className="event-detail-description">
+            <strong>Description:</strong> {event.description}
+          </p>
+          <p className="event-detail-location">
+            <strong>Location:</strong> {event.location}
+          </p>
+          {event.sponsors && event.sponsors.length > 0 && (
+            <div>
+              <strong>Sponsors:</strong>
+              <ul>
+                {event.sponsors.map(sponsor => <li key={sponsor}>{sponsor}</li>)}
+              </ul>
+            </div>
+          )}
+          {event.timeline && Object.keys(event.timeline).length > 0 && (
+            <div>
+              <strong>Timeline:</strong>
+              <ul>
+                {Object.entries(event.timeline).map(([time, details]) => (
+                  <li key={time}><strong>{time}:</strong> {details}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <div className="button-container">
+            {isRegistrationOpen ? (
+              <>
+                <button className="guest-button">Reserve as guest</button>
+                <button className="speaker-button">Reserve as speaker</button>
+              </>
+            ) : (
+              <p className="registration-closed">Registration has closed.</p>
+            )}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 };
 
 // --- 5. MAIN COMPONENT TO EXPORT ---
 const Events: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<'list' | 'details'>('list');
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   const handleSelectEvent = (event: Event) => {
-    setSelectedEvent(event);
+    setSelectedEventId(event.id);
     setCurrentPage('details');
   };
 
   const handleBackToList = () => {
-    setSelectedEvent(null);
+    setSelectedEventId(null);
     setCurrentPage('list');
   };
 
   return (
     <div>
-        {currentPage === 'list' ? (
-            <EventListPage onSelectEvent={handleSelectEvent} />
-        ) : selectedEvent ? (
-            <EventDescriptionPage event={selectedEvent} onBack={handleBackToList} />
-        ) : null}
+      {currentPage === 'list' ? (
+        <EventListPage onSelectEvent={handleSelectEvent} />
+      ) : selectedEventId ? (
+        <EventDescriptionPage eventId={selectedEventId} onBack={handleBackToList} />
+      ) : null}
     </div>
   );
 };
