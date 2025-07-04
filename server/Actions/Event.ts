@@ -75,7 +75,7 @@ class Event extends Actions {
         return true;
     }
 
-    // Fixed editDetails method with proper structure and completion
+   
     public editDetails = withPermission((
         user: User,
         updates: Partial<{
@@ -90,7 +90,7 @@ class Event extends Actions {
             eventForm: any;
         }>
     ): void => {
-        // Update allowed properties
+      
         if (updates.title) this.title = updates.title;
         if (updates.description) this.description = updates.description;
         if (updates.location) this.location = updates.location;
@@ -115,14 +115,12 @@ class Event extends Actions {
         console.log(`Event "${this.title}" has been deleted by ${user.getName()}`);
         return true;
     });
-
-    // Fixed addSpeaker method using withPermission wrapper
     public addSpeaker = withPermission((user: User, name: string, details: string): void => {
         this.speakers.set(name, details);
         console.log(`Speaker "${name}" added to event "${this.title}"`);
     });
 
-    // Fixed removeSpeaker method using withPermission wrapper
+   
     public removeSpeaker = withPermission((user: User, name: string): void => {
         this.speakers.delete(name);
         console.log(`Speaker "${name}" removed from event "${this.title}"`);
@@ -142,7 +140,7 @@ class Event extends Actions {
         }
     });
 
-    // Sponsor management methods
+
     public removeSponsor = withPermission((user: User, sponsor: string): void => {
         const index = this.sponsors.indexOf(sponsor);
         if (index > -1) {
@@ -169,7 +167,7 @@ class Event extends Actions {
         return this.eventForm;
     }
 
-    // Getter methods for accessing private/protected properties
+   
     public getStatus(): EventStatus {
         return this.status;
     }

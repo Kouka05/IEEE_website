@@ -37,7 +37,7 @@ class UserActions {
         timeline: Map<string, string> = new Map(),
         eventForm: string = '',
         registrationDeadline: Date,
-        maxParticipants: number = 0
+        maxParticipants: number 
     ): Event => {
         const event = new Event(
             title, description, user, date, location, speakers, sponsors,
