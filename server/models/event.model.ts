@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface EventDocument extends Document {
   date: Date;
   description: string;
   title: string;
-  speakers: string[];
+  speakers: Map<string , string>;
   sponsors: string[];
   location: string;
-  timeline: string[];         //detailed schedule of the event
+  timeline: Map<string , string>;         //detailed schedule of the event
   shareableLink: string;
 }
 
@@ -16,10 +16,10 @@ const eventSchema = new Schema<EventDocument>(
     date: { type: Date, required: true },
     description: { type: String, required: true },
     title: { type: String, required: true },
-    speakers: { type: [String], default: [] },
+    speakers: { type: Map, of: String, default: {} },
     sponsors: { type: [String], default: [] },
     location: { type: String, required: true },
-    timeline: { type: [String], default: [] },
+    timeline: { type: Map, of: String, default: {} },
     shareableLink: { type: String }
   },
   {
