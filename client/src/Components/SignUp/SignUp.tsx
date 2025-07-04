@@ -162,7 +162,6 @@ const SignUp: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="login-right" />
     </div>
   );
 };
