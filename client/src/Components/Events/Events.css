@@ -70,3 +70,55 @@
   .events-main { padding: 3rem; }
   .events-list-card { padding: 2.5rem; }
 }
+/* Add these styles to your Events.css file */
+
+/* Container for the new buttons */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb; /* gray-200 */
+}
+
+/* Styling for the 'Reserve as guest' button */
+.guest-button {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #374151; /* gray-700 */
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  cursor: pointer;
+  transition: background-color 300ms;
+}
+
+.guest-button:hover {
+  background-color: #e5e7eb; /* gray-200 */
+}
+
+/* Styling for the 'Reserve as speaker' button */
+.speaker-button {
+  background-color: #ef4444; /* red-500 */
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 300ms;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.speaker-button:hover {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Existing style for closed registration message */
+.registration-closed {
+  font-style: italic;
+  color: #6b7280; /* gray-500 */
+  text-align: center;
+  width: 100%;
+}
