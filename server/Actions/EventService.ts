@@ -169,7 +169,23 @@ class EventService {
     const event = Event.fromDocument(eventDoc);
     return event;
 }
+static async addParticipant(event: Event, user: User) {
+    if (!event.registerParticipant(user)) {
+      throw new Error('Failed to register participant');
+    }
+  
+    const updatedEvent = await EventModel.findByIdAndUpdate(
+      event.getId?.() ?? null, // Adjust as per your Event model
+      { participants: event.getParticipants().map((u) => u.getId?.() ?? null) },
+      { new: true }
+    );
+    
+    return updatedEvent;
+  }
+  static async getEvents(): Promise<Event[]> {
+    return Event.getEvents();
 
+  }
 }
 
 export default EventService;

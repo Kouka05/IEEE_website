@@ -131,6 +131,16 @@ class UserActions {
         event.removeTimelineItem(user , time);
         console.log(`Timeline item removed from event "${event.getTitle()}" by ${user.getName()}`);
     });
+    public getEvents = async (): Promise<Event[]> => {
+        try {
+            // Assuming we have a database connection and EventModel is defined
+            const events = await Event.getEvents();
+            return events;
+        } catch (error) {
+            console.error("Error fetching events:", error);
+            throw new Error("Failed to fetch events");
+        }
+    }
 }
 export default UserActions;
 export { hasPermission, withPermission };
