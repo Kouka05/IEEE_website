@@ -3,13 +3,17 @@ import './Events.css'; // Import the separated CSS file
 
 // --- 1. TYPE DEFINITIONS ---
 export interface Event {
-  id: number;
-  date: Date;
+ id: string;                      // CHANGED: from number to string
+  date: Date;                      // The type in our state will be a Date object
   title: string;
   description: string;
-  location: 'Online' | 'Offline';
-  abstract: string;
-  locationUrl: string;
+  abstract?: string;               // NEW: Optional abstract property
+  location: string;                // CHANGED: from 'Online' | 'Offline' to a general string
+  sponsors: string[];              // NEW
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED'; // NEW: Assuming these possible values
+  registrationDeadline: Date | null; // NEW
+  // You can add speakers, timeline, etc. here with more specific types if needed
+  // For now, they are not used in the UI.
 }
 
 // --- 3. HELPER FUNCTIONS ---
@@ -63,42 +67,26 @@ const EventItem: React.FC<{ event: Event; onSelect: (event: Event) => void; }> =
 const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ onSelectEvent }) => {
 
       // Updated with more details for the description page
-    const [eventsData, setEventsData] = useState<Event[]>([
-     {
-    id: 1,
-    date: new Date('2025-06-14T22:00:00'),
-    title: 'SSCS Lorum Ipsum Event Place Holder',
-    description: 'At vero eos et accusamus et iusto',
-    location: 'Online',
-    abstract: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse venenatis ipsum commodo enim vehicula, sit amet porttitor magna vehicula. In eget nulla quis enim pharetra venenatis fringilla eget ante. Mauris euismod odio dolor, in auctor nulla iaculis et. Duis convallis augue eget libero porttitor sollicitudin sit amet id justo.',
-    locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9',
+  const [eventsData, setEventsData] = useState<Event[]>([
+  {
+    id: '6866e6d302961ce1799f06d7',
+    title: 'Awesome Tech Conference',
+    description: 'A deep dive into modern web technologies.',
+    date: new Date('2025-07-28T20:00:00.000Z'),
+    location: 'Main Auditorium',
+    sponsors: ['TechCorp', 'Innovate LLC'],
+    status: 'PUBLISHED',
+    registrationDeadline: new Date('2025-07-20T23:59:00.000Z'),
   },
   {
-    id: 2,
-    date: new Date('2025-06-23T23:00:00'),
-    title: 'SSCS Lorum Ipsum Event Place Holder',
-    description: 'At vero eos et accusamus et iusto',
-    location: 'Offline',
-    abstract: 'This is the abstract for the second event. It provides a more detailed summary of what will be covered, who the speakers are, and what attendees can expect to learn. We look forward to seeing you there for this insightful session.',
-    locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9',
-  },
-  {
-    id: 3,
-    date: new Date('2025-07-14T22:00:00'),
-    title: 'SSCS Lorum Ipsum Event Place Holder',
-    description: 'At vero eos et accusamus et iusto',
+    id: '789a0c3b1e8d4f9a2b5c6d7e',
+    title: 'Design Systems Meetup',
+    description: 'Exploring the future of digital product design.',
+    date: new Date('2025-08-15T18:30:00.000Z'),
     location: 'Online',
-    abstract: 'Join us for the third event in our series. This abstract covers the key topics of discussion, including emerging trends and future outlooks. A perfect opportunity for networking and professional development.',
-    locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9',
-  },
-  {
-    id: 4,
-    date: new Date('2025-07-28T20:00:00'),
-    title: 'Another Awesome Tech Conference',
-    description: 'Join us for a deep dive into modern web technologies.',
-    location: 'Online',
-    abstract: 'A deep dive into the latest advancements in web development. This conference will feature talks from industry leaders on topics like React, Vue, Svelte, and the future of the web. Bring your questions for the Q&A session.',
-    locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9',
+    sponsors: ['Creative Minds'],
+    status: 'PUBLISHED',
+    registrationDeadline: null,
   },
 ]);
 
@@ -158,7 +146,7 @@ const EventDescriptionPage: React.FC<{ event: Event; onBack: () => void; }> = ({
   useEffect(() => { 
     // Simulate fetching data from an API
     const fetchEvents = async () => {
-      const response = await fetch(`/api/events/${event.id}`); // Replace with your API endpoint
+      const response = await fetch(`http://localhost:8081/api/events/6866e6d302961ce1799f06d7`); // Replace with your API endpoint
       if (response.ok) {
         const data = await response.json();
         setSelectedEvent(data);
@@ -184,7 +172,7 @@ const EventDescriptionPage: React.FC<{ event: Event; onBack: () => void; }> = ({
                         <strong>Abstract:</strong> {selectedEvent.abstract}
                     </p>
                     <p className="event-detail-location">
-                        <strong>Location:</strong> <a href={selectedEvent.locationUrl} target="_blank" rel="noopener noreferrer">{event.locationUrl}</a>
+                        <strong>Location:</strong> <a href={selectedEvent.location} target="_blank" rel="noopener noreferrer">{selectedEvent.location}</a>
                     </p>
                 </div>
             </main>
