@@ -20,16 +20,14 @@
 
 .navbar-logo {
   font-size: 1.2rem;
-  color: #111827;
+  color: #000000;
 }
 
 .logo {
   height: 24px;
   object-fit: contain;
   display: block;
-  color: black;
-  filter: 
-  grayscale(100%);
+  filter: grayscale(100%) brightness(0) invert(0);
 }
 
 .navbar-links {
