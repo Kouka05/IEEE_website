@@ -1,76 +1,6 @@
-/* General Styling */
-.events-container, .event-detail-container {
-  font-family: sans-serif;
-  background-color: #f9fafb; /* bg-gray-50 */
-  min-height: 100vh;
-}
-
-/* Header Section */
-.events-header {
-  background-color: #ffffff;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-.header-content {
-  max-width: 1280px; margin: auto; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
-}
-.header-title {
-  font-size: 1.875rem; font-weight: 700; color: #1f2937;
-}
-.header-button {
-  background-color: #f3f4f6; color: #374151; font-weight: 600; padding: 0.5rem 1.25rem; border-radius: 0.5rem; transition: background-color 300ms; border: none; cursor: pointer;
-}
-.header-button:hover { background-color: #e5e7eb; }
-
-/* Main Content Area */
-.events-main { max-width: 1280px; margin: auto; padding: 1.5rem; }
-.events-list-card { background-color: #ffffff; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); padding: 1.5rem; }
-
-/* Month Grouping */
-.month-group-spaced { margin-top: 2.5rem; }
-.month-header { display: flex; align-items: center; }
-.month-title { font-size: 1.25rem; font-weight: 600; color: #374151; }
-.month-divider { flex-grow: 1; border-top: 1px solid #d1d5db; margin-left: 1rem; }
-
-/* Event Item */
-.event-item-clickable { cursor: pointer; transition: background-color 0.2s; }
-.event-item-clickable:hover { background-color: #fafafa; }
-.event-item { display: flex; align-items: flex-start; padding: 1.5rem 0.5rem; }
-.event-item-icon { flex-shrink: 0; padding-top: 0.25rem; margin-right: 1rem; }
-.calendar-icon { height: 1.5rem; width: 1.5rem; color: #9ca3af; }
-.event-item-details { flex-grow: 1; }
-.event-date-time { font-size: 0.875rem; color: #6b7280; }
-.event-title { margin-top: 0.25rem; font-size: 1.125rem; font-weight: 700; color: #1f2937; }
-.event-description { margin-top: 0.25rem; font-size: 1rem; color: #4b5563; }
-.event-location { margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500; color: #6b7280; }
-.event-divider { border-color: #e5e7eb; border-style: solid; border-width: 1px 0 0 0; }
-.no-events-message { text-align: center; color: #6b7280; }
-
-/* Event Description Page */
-.event-detail-header { background-color: #1f2937; /* gray-800 */ color: #ffffff; padding: 2.5rem 1.5rem; }
-.event-detail-header-content { max-width: 1280px; margin: auto; }
-.event-detail-title { font-size: 2.25rem; /* 4xl */ font-weight: 700; line-height: 1.2; }
-.event-detail-time { font-size: 1.125rem; /* lg / margin-top: 1rem; color: #d1d5db; / gray-300 */ }
-
-.event-detail-body { background-color: #ffffff; padding: 2.5rem 1.5rem; }
-.event-detail-body-content { max-width: 1280px; margin: auto; }
-.event-detail-abstract { font-size: 1.125rem; line-height: 1.75; color: #374151; }
-.event-detail-abstract strong { font-weight: 700; }
-.event-detail-location { margin-top: 2rem; font-size: 1.125rem; }
-.event-detail-location strong { font-weight: 700; }
-.event-detail-location a { color: #2563eb; text-decoration: underline; }
-
-.back-button {
-    display: inline-block; margin: 1.5rem; font-weight: 600; color: #4b5563; cursor: pointer;
-}
-.back-button:hover { color: #1f2937; }
-
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  .header-content, .event-detail-header-content, .event-detail-body-content { padding-left: 3rem; padding-right: 3rem; }
-  .events-main { padding: 3rem; }
-  .events-list-card { padding: 2.5rem; }
-}
 /* Add these styles to your Events.css file */
+
+/* --- Button Styles --- */
 
 /* Container for the new buttons */
 .button-container {
@@ -121,4 +51,44 @@
   color: #6b7280; /* gray-500 */
   text-align: center;
   width: 100%;
+}
+
+/* --- Modal Styles --- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #9ca3af;
+}
+
+.modal-close-button:hover {
+  color: #1f2937;
 }
