@@ -8,6 +8,12 @@ interface LoginResult {
   role?: string;
   token?: string;
   error?: string;
+  user?: {
+    _id: string;
+    name: string;
+    role: string;
+    email: string;
+  };
 }
 
 class UserLoginService {
@@ -42,6 +48,12 @@ class UserLoginService {
         email: user.email,
         role: user.role,
         token,
+        user: {
+          _id: user._id.toString(),
+          name: user.name,
+          role: user.role,
+          email: user.email
+        }
       };
     } catch (error) {
       console.error(error);

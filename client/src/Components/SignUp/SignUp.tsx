@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../LoginPage/LoginPage.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 const SignUp: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const SignUp: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,7 +64,12 @@ const SignUp: React.FC = () => {
       const response = await axios.post('http://localhost:8081/api/auth/signup', formData);
       console.log('Signup successful:', response.data);
       const token = response.data.token;
-      localStorage.setItem('token', token);      
+      localStorage.setItem('token', token);
+      // Automatically log in and redirect
+      if (response.data.user) {
+        login(response.data.user);
+      }
+      navigate('/');
     } 
     catch (err) {
       if (axios.isAxiosError(err)) {

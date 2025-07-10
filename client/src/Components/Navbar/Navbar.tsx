@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
+import { useAuth } from '../../AuthContext';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,6 +16,8 @@ const Navbar: React.FC = () => {
     navigate(path);
     setIsMenuOpen(false);
   };
+
+  const canCreateEvent = user && (user.role === 'Head' || user.role === 'Chairman');
 
   return (
     <nav className="navbar">
@@ -73,17 +77,39 @@ const Navbar: React.FC = () => {
                 News
               </a>
             </li>
+            {canCreateEvent && (
+              <li>
+                <a
+                  href="#"
+                  className="nav-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/createevent');
+                  }}
+                >
+                  Create Event
+                </a>
+              </li>
+            )}
           </ul>
         </div>
 
         {/* Desktop Buttons */}
         <div className="navbar-buttons">
-          <button className="btn-outline" onClick={() => navigate('/login')}>
-            Sign in
-          </button>
-          <button className="btn-filled" onClick={() => navigate('/signup')}>
-            Join IEEE
-          </button>
+          {user ? (
+            <button className="btn-outline" onClick={() => { logout(); navigate('/'); }}>
+              Sign out
+            </button>
+          ) : (
+            <>
+              <button className="btn-outline" onClick={() => navigate('/login')}>
+                Sign in
+              </button>
+              <button className="btn-filled" onClick={() => navigate('/signup')}>
+                Join IEEE
+              </button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -112,21 +138,37 @@ const Navbar: React.FC = () => {
             <li>
               <button onClick={() => handleNavigation('/news')}>News</button>
             </li>
+            {canCreateEvent && (
+              <li>
+                <button onClick={() => handleNavigation('/createevent')}>Create Event</button>
+              </li>
+            )}
           </ul>
           
           <div className="mobile-buttons">
-            <button 
-              className="mobile-btn-outline" 
-              onClick={() => handleNavigation('/login')}
-            >
-              Sign in
-            </button>
-            <button 
-              className="mobile-btn-filled" 
-              onClick={() => handleNavigation('/signup')}
-            >
-              Join IEEE
-            </button>
+            {user ? (
+              <button 
+                className="mobile-btn-outline" 
+                onClick={() => { logout(); handleNavigation('/'); }}
+              >
+                Sign out
+              </button>
+            ) : (
+              <>
+                <button 
+                  className="mobile-btn-outline" 
+                  onClick={() => handleNavigation('/login')}
+                >
+                  Sign in
+                </button>
+                <button 
+                  className="mobile-btn-filled" 
+                  onClick={() => handleNavigation('/signup')}
+                >
+                  Join IEEE
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

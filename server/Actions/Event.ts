@@ -14,12 +14,14 @@ enum EventStatus {
 }
 class Event extends Actions {
     protected id?: string; // Optional ID for database reference
+    public description: string;
     public location: string;
     public speakers: Map<string, string>; // name, speaker details 
     public sponsors: Array<string>; // list of sponsors
-    public timeline: Map<string, string>; // time, event details
+    public eventStarts: Date;
+    public eventEnds: Date;
     public participants: Array<User>; // list of participants
-    private eventForm: string; 
+    public eventForm: string; // Google Form link
     public registrationDeadline: Date;
     public maxParticipants: number;
     private status: EventStatus;
@@ -28,26 +30,29 @@ class Event extends Actions {
         title: string, 
         description: string, 
         createdBy: User, 
-        date: Date, 
+        eventStarts: Date,
+        eventEnds: Date,
         location: string,
         speakers: Map<string, string>, 
         sponsors: Array<string>, 
-        timeline: Map<string, string>,
         participants: Array<User>, 
-        eventForm: string, 
+        eventForm: string, // Google Form link
         registrationDeadline: Date, 
-        maxParticipants: number
+        maxParticipants: number,
+        status?: EventStatus
     ) {
-        super(title, description, createdBy, date);
+        super(title, description, createdBy, eventStarts);
+        this.description = description;
         this.location = location;
         this.speakers = speakers;
         this.sponsors = sponsors;
-        this.timeline = timeline;
+        this.eventStarts = eventStarts;
+        this.eventEnds = eventEnds;
         this.participants = participants;
         this.eventForm = eventForm;
         this.registrationDeadline = registrationDeadline;
         this.maxParticipants = maxParticipants;
-        this.status = EventStatus.DRAFT; // Only set once
+        this.status = status ?? EventStatus.DRAFT;
     }
 
 
@@ -127,20 +132,7 @@ class Event extends Actions {
         console.log(`Speaker "${name}" removed from event "${this.title}"`);
     });
 
-     public addTimelineItem = withPermission((user: User, time: string, details: string): void => {
-        this.timeline.set(time, details);
-        console.log(`Timeline item added at "${time}" to event "${this.title}"`);
-    });
-
-    public removeTimelineItem = withPermission((user: User, time: string): void => {
-        if (this.timeline.has(time)) {
-            this.timeline.delete(time);
-            console.log(`Timeline item at "${time}" removed from event "${this.title}"`);
-        } else {
-            throw new Error(`Timeline item at "${time}" not found in event "${this.title}"`);
-        }
-    });
-
+    
 
     public removeSponsor = withPermission((user: User, sponsor: string): void => {
         const index = this.sponsors.indexOf(sponsor);
@@ -161,11 +153,11 @@ class Event extends Actions {
     });
 
     public setEventForm(form: string): void {
-        this.eventForm = form;
+        this.eventForm = form; // Google Form link
     }
 
     public getEventForm(): string {
-        return this.eventForm;
+        return this.eventForm; // Google Form link
     }
 
    
@@ -193,14 +185,14 @@ class Event extends Actions {
         doc.title,
         doc.description,
         doc.createdBy,
-        new Date(doc.date),
+        new Date(doc.eventStarts),
+        new Date(doc.eventEnds),
         doc.location,
         new Map(Object.entries(filterMap(doc.speakers))),
         doc.sponsors || [],
-        new Map(Object.entries(filterMap(doc.timeline))),
         doc.participants || [],
-        doc.eventForm,
-        new Date(doc.registrationDeadline),
+        doc.eventForm || '',
+        doc.registrationDeadline ? new Date(doc.registrationDeadline) : new Date(),
         doc.maxParticipants
     );
     event.id = doc._id?.toString();
