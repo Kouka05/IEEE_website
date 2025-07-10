@@ -12,6 +12,13 @@ enum EventStatus {
     CANCELLED = 'CANCELLED',
     COMPLETED = 'COMPLETED'
 }
+
+interface FormReply {
+    responseId: string;
+    timestamp: string;
+    answers: Record<string, any>; // This matches the Google Forms response format
+}
+
 class Event extends Actions {
     protected id?: string; // Optional ID for database reference
     public description: string;
