@@ -61,9 +61,6 @@ const CreateEvent: React.FC = () => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [sponsors, setSponsors] = useState('');
-  const [speakers, setSpeakers] = useState('');
-  const [eventForm, setEventForm] = useState('');
-  const [eventFormError, setEventFormError] = useState('');
   const [registrationDeadline, setRegistrationDeadline] = useState('');
   const [maxParticipants, setMaxParticipants] = useState('');
   const [status, setStatus] = useState('DRAFT');
@@ -99,16 +96,6 @@ const CreateEvent: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setEventFormError('');
-    // Validate eventForm as a URL
-    try {
-      if (eventForm && !/^https?:\/\//.test(eventForm)) {
-        throw new Error('Please enter a valid URL for the Google Form.');
-      }
-    } catch (err: any) {
-      setEventFormError(err.message);
-      return;
-    }
     // Compose event data
     // Convert start and end date dropdowns to ISO strings
     const eventStarts = startDate.year && startDate.month && startDate.day
@@ -117,6 +104,17 @@ const CreateEvent: React.FC = () => {
     const eventEnds = expirationDate.year && expirationDate.month && expirationDate.day
       ? new Date(`${expirationDate.year}-${expirationDate.month}-${expirationDate.day}`).toISOString()
       : '';
+
+    // Prepare guest and speaker fields (enabled only)
+    const enabledGuestFields = [
+      ...GUEST_FIELDS.filter(f => guestFields[f]),
+      ...guestCustomFields.filter((_, idx) => guestCustomChecked[idx]).map(f => ({ name: f.name, type: f.type }))
+    ];
+    const enabledSpeakerFields = [
+      ...SPEAKER_FIELDS.filter(f => speakerFields[f]),
+      ...speakerCustomFields.filter((_, idx) => speakerCustomChecked[idx]).map(f => ({ name: f.name, type: f.type }))
+    ];
+
     const eventData = {
       title,
       description,
@@ -124,15 +122,15 @@ const CreateEvent: React.FC = () => {
       eventEnds,
       location,
       sponsors: sponsors.split(',').map(s => s.trim()).filter(Boolean),
-      speakers: speakers.split(',').map(s => s.trim()).filter(Boolean),
       participants: [], // New event, so empty
-      eventForm,
       registrationDeadline,
       maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
       status: dynamicStatus, // Use computed status
       createdBy: user._id,
       userId: user._id,
-      // Add any other fields as needed
+      guestFields: enabledGuestFields,
+      speakerFields: enabledSpeakerFields,
+      // No eventForm field
     };
     try {
       const res = await fetch('http://localhost:8081/api/events/create', {
@@ -161,8 +159,6 @@ const CreateEvent: React.FC = () => {
       expirationDate.day && expirationDate.month && expirationDate.year &&
       location.trim() &&
       sponsors.trim() &&
-      speakers.trim() &&
-      eventForm.trim() &&
       registrationDeadline &&
       maxParticipants !== '' && Number(maxParticipants) > 0
     );
@@ -313,22 +309,6 @@ const CreateEvent: React.FC = () => {
         <div className="form-group">
           <label htmlFor="sponsors">Sponsors (comma separated)</label>
           <input id="sponsors" name="sponsors" value={sponsors} onChange={e => setSponsors(e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="speakers">Speakers (comma separated)</label>
-          <input id="speakers" name="speakers" value={speakers} onChange={e => setSpeakers(e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="eventForm">Google Form Link</label>
-          <input
-            id="eventForm"
-            name="eventForm"
-            type="url"
-            placeholder="https://forms.gle/your-form-link"
-            value={eventForm}
-            onChange={e => setEventForm(e.target.value)}
-          />
-          {eventFormError && <span className="error-message">{eventFormError}</span>}
         </div>
         <div className="form-group">
           <label htmlFor="registrationDeadline">Registration Deadline</label>
