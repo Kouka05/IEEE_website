@@ -34,15 +34,15 @@ const IconInfo: React.FC<IconInfoProps> = ({ icon, title, text }) => (
 );
 
 
-// --- Main About Component ---
+// MY SWEET STORAGE SAVER
 const AboutPage: React.FC = () => {
   const partners = [
     { name: 'Siemens Healthineers', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg' },
-    { name: 'Eventum Solutions', logo: 'https://media.licdn.com/dms/image/C4D0BAQG-f5tY-5PAeQ/company-logo_200_200/0/1631328538831?e=2147483647&v=beta&t=ZzR0h_jY9qjY9Q8z7f6c5g4h3j2k1l0i' },
-    { name: 'Valeo', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Valeo_Logo.svg/1200px-Valeo_Logo.svg.png' },
-    { name: 'Vast', logo: 'https://www.vast.com/wp-content/uploads/2022/01/vast-logo.png' },
+    { name: 'Eventum Solutions', logo: 'https://cdn.prod.website-files.com/665832f713e86b4a425d7531/6669a235fc73de73cd977740_New%20Logo%20Horizontal-p-500.png' },
+    { name: 'Valeo', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg' },
+    { name: 'VSLI EGYPT', logo: 'https://media-exp1.licdn.com/dms/image/C560BAQH_mkyu88X_lA/company-logo_200_200/0/1519876245645?e=2159024400&v=beta&t=xhuU_hRa2mfVT649fSDxITHh0n3UoJpTQlyNKnKmFc8' },
     { name: 'IEEE Egypt Section', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IEEE_logo.svg/1200px-IEEE_logo.svg.png' },
-    { name: 'ITCpedia', logo: 'https://www.itcpedia.nl/wp-content/uploads/2019/08/itcpedia-logo-1.png' },
+    { name: 'Cpedia', logo: 'https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/30/27/4a/30274a7b-900f-1a86-6f04-fb0f6134ba61/AppIcon.lsr/1200x630bb.png' },
     { name: 'Si-Ware Systems', logo: 'https://www.si-ware.com/wp-content/uploads/2021/09/si-ware-logo.png' },
     { name: 'Si-Vision', logo: 'https://www.si-vision.com/wp-content/uploads/2020/01/si-vision-logo.png' },
     { name: 'Cisco', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cisco_logo.svg/1200px-Cisco_logo.svg.png' },
