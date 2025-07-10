@@ -1,4 +1,4 @@
-import Event from './Event';
+import Event ,  { EventStatus } from './Event';
 import User from '../Factory/User';
 import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
@@ -33,11 +33,12 @@ class UserActions {
         timeline: Array<{ time: string; details: string }> = [],
         eventForm: string = '',
         registrationDeadline: Date,
-        maxParticipants: number
+        maxParticipants: number ,
+        status :EventStatus
      ): Event => {
         const event = new Event(
             title, description, user, date, location, speakers, sponsors,
-            timeline, [], eventForm, registrationDeadline, maxParticipants
+            timeline, [], eventForm, registrationDeadline, maxParticipants , status
         );
                 
         console.log(`Event "${title}" created by ${user.getName()}`);

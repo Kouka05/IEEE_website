@@ -8,12 +8,12 @@ enum EventStatus {
     COMPLETED = 'COMPLETED'
 }
 
-// Updated interface to match your Event class
+// Enhanced interface with Google Forms integration
 export interface EventDocument extends Document {
     // From Actions base class
     title: string;
     description: string;
-    createdBy: mongoose.Types.ObjectId; // User ID reference
+    createdBy: mongoose.Types.ObjectId;
     date: Date;
     
     // Event-specific fields
@@ -27,17 +27,35 @@ export interface EventDocument extends Document {
         time: string;
         details: string;
     }>;
-    participants: Array<mongoose.Types.ObjectId>; // Array of User IDs
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }];
     eventForm: string;
     registrationDeadline: Date;
     maxParticipants: number;
     status: EventStatus;
-    
-    // Optional shareable link (if you still want this)
     shareableLink?: string;
+    
+    // Google Forms integration fields
+    googleForm?: {
+        formId: string;
+        formUrl: string;
+        editUrl: string;
+        isActive: boolean;
+        syncEnabled: boolean;
+        lastSyncAt?: Date;
+       
+    };
+    
+    // Auto-registration settings
+    autoRegistration?: {
+        enabled: boolean;
+        emailFieldName?: string; // Which form field contains email
+        nameFieldName?: string;  // Which form field contains name
+        requireUserAccount: boolean; // Whether to require existing user account
+    };
+    availableSpots: number; // Virtual field for available spots
 }
 
-// Updated schema to match your Event class
+// Enhanced schema with Google Forms integration
 const eventSchema = new Schema<EventDocument>(
     {
         // From Actions base class
@@ -58,17 +76,34 @@ const eventSchema = new Schema<EventDocument>(
             details: { type: String, required: true }
         }],
         participants: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-        eventForm: { type: String, required: true },
+        eventForm: { type: String, required: false },
         registrationDeadline: { type: Date, required: true },
         maxParticipants: { type: Number, required: true },
-        status: { 
-            type: String, 
-            enum: Object.values(EventStatus), 
-            default: EventStatus.DRAFT 
+        status: {
+            type: String,
+            enum: Object.values(EventStatus),
+            default: EventStatus.DRAFT
+        },
+        shareableLink: { type: String },
+        
+        // Google Forms integration
+        googleForm: {
+            formId: { type: String },
+            formUrl: { type: String },
+            editUrl: { type: String },
+            isActive: { type: Boolean, default: false },
+            syncEnabled: { type: Boolean, default: true },
+            lastSyncAt: { type: Date },
+            participantCount: { type: Number, default: 0 }
         },
         
-        // Optional field
-        shareableLink: { type: String }
+        // Auto-registration settings
+        autoRegistration: {
+            enabled: { type: Boolean, default: false },
+            emailFieldName: { type: String },
+            nameFieldName: { type: String },
+            requireUserAccount: { type: Boolean, default: true }
+        }
     },
     {
         timestamps: true,
@@ -76,6 +111,27 @@ const eventSchema = new Schema<EventDocument>(
         toObject: { virtuals: true }
     }
 );
+
+// Add virtual for total participant count (database + form)
+
+
+// Add virtual for available spots
+eventSchema.virtual('availableSpots').get(function() {
+    return Math.max(0, this.maxParticipants - this.participants.length);
+});
+
+// Add virtual for registration status
+eventSchema.virtual('registrationStatus').get(function() {
+    const now = new Date();
+    const isBeforeDeadline = now <= this.registrationDeadline;
+    const hasSpots = this.availableSpots > 0;
+    const isPublished = this.status === EventStatus.PUBLISHED;
+    
+    if (!isPublished) return 'NOT_OPEN';
+    if (!isBeforeDeadline) return 'CLOSED';
+    if (!hasSpots) return 'FULL';
+    return 'OPEN';
+});
 
 const EventModel = mongoose.model<EventDocument>('Event', eventSchema);
 export default EventModel;

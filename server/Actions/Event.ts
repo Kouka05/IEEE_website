@@ -11,17 +11,23 @@ enum EventStatus {
     CANCELLED = 'CANCELLED',
     COMPLETED = 'COMPLETED'
 }
+interface FormReply {
+    responseId: string;
+    timestamp: string;
+    answers: Record<string, any>; // This matches the Google Forms response format
+}
 class Event extends Actions {
     protected id?: string; // Optional ID for database reference
     public location: string;
     public speakers: Array<{name: string, details: string}>; // name, speaker details 
     public sponsors: Array<string>; // list of sponsors
     public timeline: Array<{time: string, details: string}>; // time, event details
-    public participants: Array<User>; // list of participants
+    public participants: Array<string>; // list of participants
     private eventForm: string; 
     public registrationDeadline: Date;
     public maxParticipants: number;
     private status: EventStatus;
+    private formReplies: Array<FormReply> = [];
 
     constructor(
         title: string, 
@@ -32,10 +38,11 @@ class Event extends Actions {
         speakers: Array<{name: string, details: string}>, 
         sponsors: Array<string>, 
         timeline: Array<{time: string, details: string}>,
-        participants: Array<User>, 
+        participants: Array<string> = [] , 
         eventForm: string, 
         registrationDeadline: Date, 
-        maxParticipants: number
+        maxParticipants: number , 
+        status :EventStatus
     ) {
         super(title, description, createdBy, date);
         this.location = location;
@@ -46,34 +53,34 @@ class Event extends Actions {
         this.eventForm = eventForm;
         this.registrationDeadline = registrationDeadline;
         this.maxParticipants = maxParticipants;
-        this.status = EventStatus.DRAFT; // Only set once
+        this.status = status  // Only set once
     }
 
-    public registerParticipant(user: User): boolean {
-        if (new Date() > this.registrationDeadline) {
-            throw new Error("Registration deadline has passed");
-        }
+    
+    
+   registerParticipant(user: User): boolean {
+  const userId = user.getId?.();
+  if (!userId) {
+    console.warn('User ID is missing');
+    return false;
+  }
 
-        // Check if event is published
-        if (this.status !== EventStatus.PUBLISHED) {
-            throw new Error("Cannot register for unpublished event");
-        }
-        
-        // Check capacity
-        if (this.maxParticipants && this.participants.length >= this.maxParticipants) {
-            throw new Error("Event has reached maximum capacity");
-        }
-        
-        if (this.participants.includes(user)) {
-            throw new Error("User already registered for this event");
-        }
-        
-        this.participants.push(user);
-        console.log(`User ${user.getName()} successfully registered for event: ${this.title}`);
-        return true;
-    }
+  if (this.participants.length >= this.maxParticipants) {
+    console.warn('Event is full');
+    return false;
+  }
 
-   
+  if (this.registrationDeadline && this.registrationDeadline < new Date()) {
+    console.warn('Registration deadline has passed');
+    return false;
+  }
+
+  this.participants.push(userId);
+  return true;
+
+
+}
+
    public editDetails = withPermission((
     user: User,
     updates: Partial<{
@@ -187,7 +194,7 @@ class Event extends Actions {
         return this.status;
     }
 
-    public getParticipants(): Array<User> {
+    public getParticipants(): Array<string> {
         return [...this.participants]; // Return a copy to prevent direct manipulation
     }
     
@@ -217,7 +224,8 @@ class Event extends Actions {
             doc.participants || [],
             doc.eventForm,
             new Date(doc.registrationDeadline),
-            doc.maxParticipants
+            doc.maxParticipants ,
+            doc.status
         );
         event.id = doc._id?.toString();
         return event;
@@ -236,3 +244,5 @@ class Event extends Actions {
 }
 
 export default Event;
+export { EventStatus, FormReply }; // Exporting the enum and interface for external use
+export { hasPermission, withPermission }; // Exporting permission functions for external use

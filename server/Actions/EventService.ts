@@ -5,6 +5,7 @@ import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
 import { APP_ORIGIN } from '../constants/env';
 import { time } from 'console';
+import UserModel from '../models/user.model';
 
 class EventService {
  static async createEvent(data: any, createdByUser: User) {
@@ -25,7 +26,8 @@ class EventService {
     registrationDeadline,
     maxParticipants,
     shareableLink,
-    createdBy  // <-- Extract createdBy from data
+    createdBy ,
+    status 
   } = data;
 
   // Validate dates before creating the event
@@ -52,7 +54,8 @@ class EventService {
     [],
     eventForm,
     regDeadline,
-    maxParticipants
+    maxParticipants , 
+    status
   );
 
   // Prepare the document using only public getters
@@ -68,7 +71,7 @@ class EventService {
     registrationDeadline: event.registrationDeadline,
     maxParticipants: event.maxParticipants,
     status: event.getStatus(),
-    participants: event.getParticipants().map((user) => user.getId?.()?? null),
+    participants: event.getParticipants().map((id) => id ?? null),
     createdBy: createdBy, // <-- Use the createdBy from the request data (string ID)
     shareableLink
   };
@@ -112,7 +115,7 @@ class EventService {
       eventForm: event.getEventForm(),
       maxParticipants: event.maxParticipants,
       status: event.getStatus(),
-      participants: event.getParticipants().map((user) => user.getId() ?? null),
+      participants: event.getParticipants().map((id) => id ?? null),
     };
 
     // Only add registrationDeadline if it's valid
@@ -149,23 +152,38 @@ class EventService {
     return event;
   }
 
-  static async addParticipant(event: Event, user: User) {
-    if (!event.registerParticipant(user)) {
-      throw new Error('Failed to register participant');
-    }
-  
-    const updatedEvent = await EventModel.findByIdAndUpdate(
-      event.getId?.() ?? null,
-      { participants: event.getParticipants().map((u) => u.getId?.() ?? null) },
-      { new: true }
-    );
-    
-    return updatedEvent;
-  }
+ 
 
   static async getEvents(): Promise<Event[]> {
     return Event.getEvents();
   }
+  static async registerParticipant(eventId: string, userId: string) {
+ 
+  // Fetch the event from the database
+  const event = await EventModel.findById(eventId);
+  const user = await UserModel.findById(userId);
+
+   
+  // Validate that both event and user exist
+  if (!event || !user) {
+    throw new Error('Event or User not found');
+  }
+    if (new Date() > new Date(event.registrationDeadline)) {
+    throw new Error("Registration is closed: deadline has passed");
+  }
+  // Add the user to participants if not already there
+  const updatedEvent = await EventModel.findByIdAndUpdate(
+    eventId,
+    {
+      $addToSet: { participants: user._id } // Avoid duplicates
+    },
+    { new: true } // Return the updated event
+  );
+
+  // Optionally return the updated event for confirmation
+  return updatedEvent;
+}
+
 
   // Helper method to validate date strings
   private static isValidDate(dateString: string | Date): boolean {

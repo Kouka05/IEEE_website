@@ -6,8 +6,10 @@ import EventModel from '../models/event.model';
 import Event from '../Actions/Event';
 import { requireAuth, AuthenticatedRequest } from '../utils/authMiddleware';
 import User from'../Factory/User';
+import GoogleFormsService from '../Actions/GoogleFormsService';
 
 const router = Router();
+const googleFormsService = new GoogleFormsService();
 
 // Helper function to handle async routes
 const asyncHandler = (fn: (req: Request, res: Response) => Promise<void>) => {
@@ -29,48 +31,77 @@ const getUserFromDatabase = async (createdBy: string) => {
   return userFactory.fromDocument(userDoc);
 };
 
-// CREATE EVENT ROUTE
-// CREATE EVENT ROUTE with debug logging
-// FIXED CREATE EVENT ROUTE
-// FIXED CREATE EVENT ROUTE
-// FIXED CREATE EVENT ROUTE
 router.post('/create', asyncHandler(async (req: Request, res: Response) => {
-  console.log('Request received:', req.body);
-  
-  const { createdBy } = req.body;
-  
-  if (!createdBy) {
-    res.status(400).json({ success: false, error: 'Missing createdBy' });
-    return;
-  }
-
   try {
-    console.log('Getting user with ID:', createdBy);
-    const user = await getUserFromDatabase(createdBy);
-    console.log('User found:', user);
-    
-    console.log('About to create event with data:', JSON.stringify(req.body, null, 2));
-    console.log('createdBy field exists:', 'createdBy' in req.body);
-    console.log('createdBy value:', req.body.createdBy);
-    
-    // Pass the entire req.body - it already contains all required fields including createdBy
-    const createdEvent = await EventService.createEvent(req.body, user);
-    
-    console.log('Event created successfully');
-    res.status(201).json({ success: true, event: createdEvent });
-  } catch (error: any) {
-    console.log('Error occurred:', error.message);
-    if (error.message === 'User not found') {
-      res.status(404).json({ success: false, error: error.message });
-    } else if (error.name === 'ValidationError' || error.name === 'BusinessRuleError') {
-      res.status(400).json({ success: false, error: error.message });
-    } else if (error.name === 'UnauthorizedError') {
-      res.status(403).json({ success: false, error: error.message });
-    } else {
-      throw error; // Let asyncHandler catch it
+    const {
+      title,
+      description,
+      createdBy,
+      date,
+      location,
+      speakers,
+      sponsors,
+      timeline,
+      registrationDeadline,
+      maxParticipants,
+      status
+    } = req.body;
+
+    console.log('Request received:', req.body);
+
+    // Validate user exists
+    const user = await UserModel.findById(createdBy);
+    if (!user) {
+      res.status(404).json({ success: false, error: 'User not found' });
     }
+
+    const formData = await googleFormsService.createForm(
+      `${title} - Registration Form`
+    );
+
+    const template = googleFormsService.getEventFormTemplate('default', {
+      title,
+      description
+    });
+
+    await googleFormsService.addQuestions(formData.formId, template.questions);
+    await googleFormsService.updateFormSettings(formData.formId, template.settings);
+
+   
+    const event = await EventModel.create({
+      title,
+      description,
+      createdBy,
+      date,
+      location,
+      speakers,
+      sponsors,
+      timeline,
+      registrationDeadline,
+      maxParticipants,
+      status,
+      eventForm: formData.formUrl,
+      googleForm: {
+        formId: formData.formId,
+        formUrl: formData.formUrl,
+        editUrl: formData.editUrl,
+        isActive: true,
+        syncEnabled: true,
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Event created and form generated',
+      event
+    });
+
+  } catch (error: any) {
+    console.error('Error in /create:', error.message);
+    res.status(500).json({ success: false, error: error.message });
   }
 }));
+
 // EDIT EVENT ROUTE
 router.put('/edit/:id', asyncHandler(async (req: Request, res: Response) => {
   const { createdBy, ...updates } = req.body;
@@ -180,32 +211,70 @@ router.delete('/:id', asyncHandler(async (req: Request, res: Response) => {
   }
 }));
 
-router.put('/addparticipant/:id', requireAuth, asyncHandler(async (req: AuthenticatedRequest, res: Response) => {        
-  const eventId = req.params.id;  
-  // req.user is set by requireAuth middleware
-  if (!req.user || !req.user.userId) {
-    res.status(401).json({ success: false, error: 'Unauthorized: No user info in token' });
-    return;
+        
+  router.put('/addparticipant/:id', asyncHandler(async (req: Request, res: Response) => {
+  const eventId = req.params.id;
+  const userId = req.body.userId;
+
+  if (!userId) {
+    res.status(400).json({ success: false, error: 'No userId provided in body' });
+    return; // just return nothing
   }
+
   try {
-    const user = await getUserFromDatabase(req.user.userId);
+    const user = await getUserFromDatabase(userId);
     const eventDoc = await EventModel.findById(eventId);
     if (!eventDoc) {
       res.status(404).json({ success: false, error: 'Event not found' });
       return;
     }
+   const now = new Date();
+    const deadline = new Date(eventDoc.registrationDeadline);
+
+    if (now > deadline) {
+      res.status(400).json({
+        success: false,
+        error: `Registration is closed. Deadline was on ${deadline.toDateString()}`
+      });
+      return;
+    }
     const event = Event.fromDocument(eventDoc);
-    const updatedEvent = await EventService.addParticipant(event, user);
-    res.json({ success: true, event: updatedEvent });
+    const updatedEvent = await EventService.registerParticipant(eventId, userId);
+
+    if (!updatedEvent) {
+  res.status(500).json({ success: false, error: 'Failed to update event' });
+  return;
+}
+
+res.json({ success: true, event: updatedEvent.toObject() });
   } catch (error: any) {
     if (error.message === 'User not found') {
       res.status(404).json({ success: false, error: error.message });
-    } else if (error.name === 'UnauthorizedError') {
-      res.status(403).json({ success: false, error: error.message });
     } else {
-      throw error; // Let asyncHandler catch it
+      throw error; // let asyncHandler handle other errors
     }
   }
 }));
+
+router.put('/forms/:formId', asyncHandler(async (req, res) => {
+  const { formId } = req.params;
+  const { questions } = req.body;
+
+  if (!questions || !Array.isArray(questions)) {
+     res.status(400).json({ success: false, error: 'Invalid or missing questions array' });
+  }
+
+  try {
+    await googleFormsService.addQuestions(formId, questions);
+    res.status(200).json({ success: true, message: 'Questions added to form' });
+    const form = await googleFormsService.getForm(formId);
+    console.log('Form items:', form.items)
+  } catch (error) {
+    console.error('Error in PUT /forms/:formId:', error);
+    res.status(500).json({ success: false, error: 'Failed to add questions to form' });
+  }
+}));
+
+
 
 export default router;
