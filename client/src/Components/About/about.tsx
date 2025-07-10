@@ -85,7 +85,7 @@ const AboutPage: React.FC = () => {
         {/* SSCS Section */}
         <section className="info-card-section sscs-section">
           <div className="info-card-logo">
-            <img src="https://tse4.mm.bing.net/th/id/OIP._CybMO_5jCtYUM8-MhWPJgHaB_?rs=1&pid=ImgDetMain&o=7&rm=3.png" alt="SSCS Logo" />
+            <img src="./SSCS-Full-Logo.png" alt="SSCS Logo" />
           </div>
           <div className="info-card-content">
             <InfoSection title="SSCS" className="info-column">
@@ -131,7 +131,7 @@ const AboutPage: React.FC = () => {
 
         {/* Chipions Section */}
         <section className="chipions-section">
-            <img src="https://i.imgur.com/ODp9iTj.png" alt="Chipions Logo" className="chipions-logo"/>
+            <img src="https://sscsalex.org/static/b22b29295f6525ebad6eb60b224f3ec7/2a4de/chipions.png" alt="Chipions Logo" className="chipions-logo"/>
             <h3>Chipions</h3>
             <p>Launched in 2015, Chipions was one of Egypt's few digital design training programs and the first in Alexandria, training over 1,000 participants in the full VLSI design flow.</p>
         </section>
