@@ -84,7 +84,9 @@ abstract class User {
   public getPassword(): string {
     return this.password;
   }
-
+  public getId(): string | undefined {
+    return this.id;
+}
   /*public async validatePassword(password: string): Promise<boolean> {
     if (this.userDoc && typeof this.userDoc.comparePassword === 'function') {
       return await this.userDoc.comparePassword(password);
