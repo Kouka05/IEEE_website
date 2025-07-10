@@ -42,15 +42,15 @@ const AboutPage: React.FC = () => {
     { name: 'Valeo', logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2b/Valeo_Logo.svg' },
     { name: 'VSLI EGYPT', logo: 'https://media-exp1.licdn.com/dms/image/C560BAQH_mkyu88X_lA/company-logo_200_200/0/1519876245645?e=2159024400&v=beta&t=xhuU_hRa2mfVT649fSDxITHh0n3UoJpTQlyNKnKmFc8' },
     { name: 'IEEE Egypt Section', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IEEE_logo.svg/1200px-IEEE_logo.svg.png' },
-    { name: 'Cpedia', logo: 'https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/30/27/4a/30274a7b-900f-1a86-6f04-fb0f6134ba61/AppIcon.lsr/1200x630bb.png' },
-    { name: 'Si-Ware Systems', logo: 'https://www.si-ware.com/wp-content/uploads/2021/09/si-ware-logo.png' },
-    { name: 'Si-Vision', logo: 'https://www.si-vision.com/wp-content/uploads/2020/01/si-vision-logo.png' },
+    { name: 'Cpedia', logo: 'https://images.wuzzuf-data.net/files/company_logo/ICpedia-Egypt-35379-1535892735.jpg' },
+    { name: 'Si-Ware Systems', logo: 'https://assets.website-files.com/627d6c777a174b62cad95c20/627d6c777a174b78a2d95cbe_logo_Neospectra_BySiWare_all_color_transp_RGB-1200x300-p-500.jpeg' },
+    { name: 'Si-Vision', logo: 'https://tse3.mm.bing.net/th/id/OIP.DU6PaznUBTDGW6FF-4e9EwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3' },
     { name: 'Cisco', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Cisco_logo.svg/1200px-Cisco_logo.svg.png' },
-    { name: 'Nile University', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/Nile_University_logo.svg/1200px-Nile_University_logo.svg.png' },
-    { name: 'ITIDA', logo: 'https://www.itida.gov.eg/English/PublishingImages/itida-logo.png' },
-    { name: 'Microsoft Research', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Microsoft_Research_logo.svg/1200px-Microsoft_Research_logo.svg.png' },
-    { name: 'Vodafone', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Vodafone_icon.svg/1200px-Vodafone_icon.svg.png' },
-    { name: 'NTRA', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/NTRA_Logo.svg/1200px-NTRA_Logo.svg.png' },
+    { name: 'Nile University', logo: 'https://images.wuzzuf-data.net/files/company_logo/Nile-University-Egypt-25186-1497357925-og.png' },
+    { name: 'ITIDA', logo: 'https://www.itida.gov.eg/Style%20Library/LINKDev/Img/itidaLogo.jpg' },
+    { name: 'Microsoft Research', logo: 'https://www.isis.vanderbilt.edu/sites/isis.vanderbilt.edu/files/styles/large/public/2021-09/Microsoft-Research-logo.png?itok=-YBqnR9T' },
+    { name: 'Vodafone', logo: 'https://tse2.mm.bing.net/th/id/OIP.G4MHhuNAZfuIe-kxP4OnHAHaDk?rs=1&pid=ImgDetMain&o=7&rm=3' },
+    { name: 'NTRA', logo: 'https://www.crwflags.com/fotw/images/e/eg_ntra.jpg' },
   ];
 
   return (
@@ -85,7 +85,7 @@ const AboutPage: React.FC = () => {
         {/* SSCS Section */}
         <section className="info-card-section sscs-section">
           <div className="info-card-logo">
-            <img src="https://ieee-sscs.org/images/sscs_logo_2020.png" alt="SSCS Logo" />
+            <img src="https://tse4.mm.bing.net/th/id/OIP._CybMO_5jCtYUM8-MhWPJgHaB_?rs=1&pid=ImgDetMain&o=7&rm=3.png" alt="SSCS Logo" />
           </div>
           <div className="info-card-content">
             <InfoSection title="SSCS" className="info-column">
