@@ -1,4 +1,3 @@
-/* --- General Page Styling --- */
 .about-page {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: #333;
@@ -6,7 +5,7 @@
 }
 
 a {
-  color: #d9534f; /* A red color similar to the image */
+  color: #d9534f;
   text-decoration: none;
 }
 
@@ -14,8 +13,8 @@ a:hover {
   text-decoration: underline;
 }
 
-h1, h2, h3 {
-  color: #b71c1c; /* A darker red for headings */
+h1, h2, h3, h4 {
+  color: #b71c1c; 
 }
 
 /* --- Header --- */
@@ -231,15 +230,50 @@ section {
 }
 
 .achievement-section h2 {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
-.achievement-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.achievement-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #e0e0e0;
 }
+
+.achievement-item {
+    background-color: #fff;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.achievement-icon {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.achievement-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.achievement-text h4 {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.achievement-text p {
+    color: #555;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
 
 /* --- Partners Section --- */
 .partners-section {
@@ -291,6 +325,10 @@ section {
   .activities-section {
     grid-template-columns: 1fr 1fr;
     text-align: left;
+  }
+  
+  .achievement-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

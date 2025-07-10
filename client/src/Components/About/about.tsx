@@ -23,8 +23,7 @@ interface IconInfoProps {
 const IconInfo: React.FC<IconInfoProps> = ({ icon, title, text }) => (
   <div className="icon-info-item">
     <div className="icon-container">
-      {/* In a real app, you would use an icon library like react-icons */}
-      <span className="icon-placeholder">{icon}</span>
+    <span className="icon-placeholder">{icon}</span>
     </div>
     <div className="icon-info-text">
       <h3>{title}</h3>
@@ -32,6 +31,45 @@ const IconInfo: React.FC<IconInfoProps> = ({ icon, title, text }) => (
     </div>
   </div>
 );
+
+interface AchievementItemProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const AchievementItem: React.FC<AchievementItemProps> = ({ icon, title, description }) => (
+  <div className="achievement-item">
+    <div className="achievement-icon">{icon}</div>
+    <div className="achievement-text">
+      <h4>{title}</h4>
+      <p>{description}</p>
+    </div>
+  </div>
+);
+
+  const achievements = [
+    {
+        icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>,
+        title: '12 Years',
+        description: '12 years of commitment and growth'
+    },
+    {
+        icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.5 5.162a1 1 0 0 0-1.002 0L2.598 9.084a1 1 0 0 0-.02 1.838l8.9 3.92a1 1 0 0 0 .998-.001l8.945-3.92z"></path><path d="M4.21 12.556v3.31a1 1 0 0 0 .513.874l6.784 3.917a1 1 0 0 0 .998 0l6.784-3.917a1 1 0 0 0 .513-.874v-3.31"></path></svg>,
+        title: '+1000 Alumni',
+        description: 'Over 1000 Alumni who have been part of our journey'
+    },
+    {
+        icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>,
+        title: '+2500 Hours',
+        description: 'Over 2,500 hours of training and hands-on experience'
+    },
+    {
+        icon: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>,
+        title: '+100 Activities',
+        description: 'Interactive activities done for learning and growth'
+    }
+  ];
 
 
 // MY SWEET STORAGE SAVER
@@ -139,7 +177,11 @@ const AboutPage: React.FC = () => {
         {/* Achievement Section */}
         <section className="achievement-section">
             <h2>Achievement</h2>
-            <img src="https://i.imgur.com/uQy3C2s.png" alt="Achievements" className="achievement-image"/>
+            <div className="achievement-grid">
+                {achievements.map((item, index) => (
+                    <AchievementItem key={index} icon={item.icon} title={item.title} description={item.description} />
+                ))}
+            </div>
         </section>
 
         {/* Partners Section */}
