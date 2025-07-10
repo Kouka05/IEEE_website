@@ -69,15 +69,15 @@ class EventService {
     const {
       title,
       description,
-      date,
+      eventStarts,
+      eventEnds,
       location,
       speakers,
       sponsors,
-      timeline,
       eventForm,
       registrationDeadline,
       maxParticipants,
-      shareableLink 
+      status
     } = data;
 
     // Use the UserActions pattern for event creation
@@ -85,15 +85,16 @@ class EventService {
       title,
       description,
       createdBy,
-      new Date(date),
+      new Date(eventStarts),
+      new Date(eventEnds),
       location,
       new Map(Object.entries(speakers || {})),
       sponsors || [],
-      new Map(Object.entries(timeline || {})),
-      [],
+      [], // participants
       eventForm,
       new Date(registrationDeadline),
-      maxParticipants
+      maxParticipants,
+      status
     );
 
     // Prepare the document using only public getters
@@ -101,17 +102,17 @@ class EventService {
       title: event.getTitle(),
       description: event.getDescription(),
       date: event.getDate(),
+      eventStarts: event.eventStarts,
+      eventEnds: event.eventEnds,
       location: event.location,
       speakers: Object.fromEntries(event.speakers),
       sponsors: event.sponsors,
-      timeline: Object.fromEntries(event.timeline),
       eventForm: event.getEventForm(),
       registrationDeadline: event.registrationDeadline,
       maxParticipants: event.maxParticipants,
       status: event.getStatus(),
       participants: event.getParticipants().map((user) => user.getId?.()?? null), // Adjust as per your User model
-      createdBy: createdBy.getId?.() ?? null, // Adjust as per your User model
-      shareableLink // Store the provided shareableLink
+      createdBy: createdBy.getId?.() ?? null // Adjust as per your User model
     };
 
     const savedEvent = await EventModel.create(eventDocument);
@@ -142,7 +143,6 @@ class EventService {
         location: event.location,
         speakers: Object.fromEntries(event.speakers),
         sponsors: event.sponsors,
-        timeline: Object.fromEntries(event.timeline),
         eventForm: event.getEventForm(),
         registrationDeadline: event.registrationDeadline,
         maxParticipants: event.maxParticipants,

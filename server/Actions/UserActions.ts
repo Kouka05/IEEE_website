@@ -30,18 +30,19 @@ class UserActions {
         user: User,
         title: string,
         description: string,
-        date: Date,
+        eventStarts: Date,
+        eventEnds: Date,
         location: string,
         speakers: Map<string, string> = new Map(),
         sponsors: Array<string> = [],
-        timeline: Map<string, string> = new Map(),
+        participants: Array<User> = [],
         eventForm: string = '',
         registrationDeadline: Date,
         maxParticipants: number 
     ): Event => {
         const event = new Event(
-            title, description, user, date, location, speakers, sponsors,
-            timeline, [], eventForm, registrationDeadline, maxParticipants
+            title, description, user, eventStarts, eventEnds, location, speakers, sponsors,
+            participants, eventForm, registrationDeadline, maxParticipants
         );
         
         console.log(`Event "${title}" created by ${user.getName()}`);
@@ -112,25 +113,7 @@ class UserActions {
         console.log(`Sponsor "${sponsor}" removed from event "${event.getTitle()}" by ${user.getName()}`);
     });
 
-    // TIMELINE ACTIONS
-    public addTimelineItem = withPermission((
-        user: User,
-        event: Event,
-        time: string,
-        details: string
-    ): void => {
-        event.addTimelineItem(user , time, details);
-        console.log(`Timeline item added to event "${event.getTitle()}" by ${user.getName()}`);
-    });
-
-    public removeTimelineItem = withPermission((
-        user: User,
-        event: Event,
-        time: string
-    ): void => {
-        event.removeTimelineItem(user , time);
-        console.log(`Timeline item removed from event "${event.getTitle()}" by ${user.getName()}`);
-    });
+    // Remove TIMELINE ACTIONS (addTimelineItem, removeTimelineItem)
     public getEvents = async (): Promise<Event[]> => {
         try {
             // Assuming we have a database connection and EventModel is defined

@@ -1,4 +1,11 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
+
+export enum EventStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED'
+}
 
 export interface EventDocument extends Document {
   date: Date;
@@ -7,8 +14,14 @@ export interface EventDocument extends Document {
   speakers: Map<string , string>;
   sponsors: string[];
   location: string;
-  timeline: Map<string , string>;         //detailed schedule of the event
-  shareableLink: string;
+  eventStarts: Date;
+  eventEnds: Date;
+  participants: Types.ObjectId[];
+  eventForm: string; // Google Form link
+  registrationDeadline: Date;
+  maxParticipants: number;
+  status: EventStatus;
+  createdBy: Types.ObjectId;
 }
 
 const eventSchema = new Schema<EventDocument>(
@@ -19,8 +32,14 @@ const eventSchema = new Schema<EventDocument>(
     speakers: { type: Map, of: String, default: {} },
     sponsors: { type: [String], default: [] },
     location: { type: String, required: true },
-    timeline: { type: Map, of: String, default: {} },
-    shareableLink: { type: String }
+    eventStarts: { type: Date, required: true },
+    eventEnds: { type: Date, required: true },
+    participants: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+    eventForm: { type: String, default: '' }, // Google Form link
+    registrationDeadline: { type: Date },
+    maxParticipants: { type: Number },
+    status: { type: String, enum: Object.values(EventStatus), default: EventStatus.DRAFT },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: true,
