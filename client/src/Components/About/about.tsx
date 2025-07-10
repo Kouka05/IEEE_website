@@ -98,7 +98,7 @@ const AboutPage: React.FC = () => {
         <div className="header-logos">
            <span>Part of: <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/IEEE_logo.svg/1200px-IEEE_logo.svg.png" alt="IEEE Power Electronics Society" /></span>
            <span>Powered of: <img src="https://tse4.mm.bing.net/th/id/OIP.fMPG9N5S9jchAbMdM39iIAHaFo?rs=1&pid=ImgDetMain&o=7&rm=3g" alt="PST" /></span>
-           <span>Backed of: <img src="https://tse3.mm.bing.net/th/id/OIP.wvWIadYYx7_MdIJT5ibJ5AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="EME" /></span>
+           <span>Backed of: <img src="https://itida.gov.eg/PublishingImages/eme-logo.jfif" alt="EME" /></span>
         </div>
       </header>
 
