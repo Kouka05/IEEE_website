@@ -1,6 +1,6 @@
 import React from 'react';
+import './about.css';
 
-// --- Helper Component for Section with a Title and Text ---
 interface InfoSectionProps {
   title: string;
   children: React.ReactNode;
@@ -14,7 +14,6 @@ const InfoSection: React.FC<InfoSectionProps> = ({ title, children, className })
   </div>
 );
 
-// --- Helper Component for Icon-based Sections (Vision, Mission, Objective) ---
 interface IconInfoProps {
   icon: string;
   title: string;
@@ -38,7 +37,7 @@ const IconInfo: React.FC<IconInfoProps> = ({ icon, title, text }) => (
 // --- Main About Component ---
 const AboutPage: React.FC = () => {
   const partners = [
-    { name: 'Siemens Healthineers', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Siemens_Healthineers_logo.svg/1200px-Siemens_Healthineers_logo.svg.png' },
+    { name: 'Siemens Healthineers', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/79/Siemens_Healthineers_logo.svg' },
     { name: 'Eventum Solutions', logo: 'https://media.licdn.com/dms/image/C4D0BAQG-f5tY-5PAeQ/company-logo_200_200/0/1631328538831?e=2147483647&v=beta&t=ZzR0h_jY9qjY9Q8z7f6c5g4h3j2k1l0i' },
     { name: 'Valeo', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Valeo_Logo.svg/1200px-Valeo_Logo.svg.png' },
     { name: 'Vast', logo: 'https://www.vast.com/wp-content/uploads/2022/01/vast-logo.png' },
