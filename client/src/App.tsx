@@ -4,7 +4,7 @@ import Welcome from './Components/Welcome/WelcomePage'
 import SignUp from './Components/SignUp/SignUp'
 import Login from './Components/LoginPage/LoginPage'
 import AboutPage from './Components/About/about'  
-import './App.css'
+import Call from './Components/Call/Call'
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
         <Route path="/" element={<Welcome />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/*" element={<Welcome />} />
+        <Route path="/call" element={<Call setPage={() => {}} />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
