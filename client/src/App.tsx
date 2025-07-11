@@ -5,6 +5,11 @@ import SignUp from './Components/SignUp/SignUp'
 import Login from './Components/LoginPage/LoginPage'
 import AboutPage from './Components/About/about'  
 import Call from './Components/Call/Call'
+import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
+import  Events  from './Components/Events/Events'
+import News from './Components/News/News'
+import './App.css'
+
 
 function App() {
   return (
@@ -16,6 +21,9 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/*" element={<Welcome />} />
         <Route path="/call" element={<Call setPage={() => {}} />} />
+        <Route path="/newsandevents" element={<NewsandEvents />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/news" element={<News />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
@@ -25,4 +33,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
