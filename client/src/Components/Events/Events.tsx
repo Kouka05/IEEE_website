@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import './Events.css';
 // --- 1. TYPE DEFINITIONS (Updated to match backend model) ---
 export interface Event {
   id: string;

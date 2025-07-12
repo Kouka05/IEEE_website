@@ -10,7 +10,8 @@
     display: inline-block; 
     margin: 1.5rem; 
     font-weight: 600; 
-    color: #4b5563; 
+    /* color: #4b5563;  */
+    color: white; 
     cursor: pointer; 
 }
 .back-button:hover { 
