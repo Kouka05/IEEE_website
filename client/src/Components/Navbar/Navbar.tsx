@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext'; 
 import './Navbar.css';
+import { useAuth } from '../../AuthContext';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Navbar: React.FC = () => {
     setIsMenuOpen(false);
   };
 
-  const isAdmin = user?.role === 'admin' || user?.role === 'coordinator';
+  const canCreateEvent = user && (user.role === 'Head' || user.role === 'Chairman');
 
   return (
     <nav className="navbar">
@@ -48,31 +49,40 @@ const Navbar: React.FC = () => {
               </a>
             </li>
             <li>
-              <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/news'); }}>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/news');
+                }}
+              >
                 News
               </a>
             </li>
+            {canCreateEvent && (
+              <li>
+                <a
+                  href="#"
+                  className="nav-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/createevent');
+                  }}
+                >
+                  Create Event
+                </a>
+              </li>
+            )}
           </ul>
         </div>
 
         {/* Desktop Buttons */}
         <div className="navbar-buttons">
           {user ? (
-            <div className="user-menu">
-              <span className="username">Hi, {user.username}</span>
-              <div className="dropdown">
-                <button className="btn-outline">
-                  Account <span className="dropdown-arrow">▼</span>
-                </button>
-                <div className="dropdown-content">
-                  <button onClick={() => navigate('/profile')}>Profile</button>
-                  {isAdmin && (
-                    <button onClick={() => navigate('/call')}>Call</button>
-                  )}
-                  <button onClick={() => { logout(); navigate('/'); }}>Logout</button>
-                </div>
-              </div>
-            </div>
+            <button className="btn-outline" onClick={() => { logout(); navigate('/'); }}>
+              Sign out
+            </button>
           ) : (
             <>
               <button className="btn-outline" onClick={() => navigate('/login')}>
@@ -99,42 +109,33 @@ const Navbar: React.FC = () => {
       <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-content">
           <ul>
-            <li><button onClick={() => handleNavigation('/training')}>Training</button></li>
-            <li><button onClick={() => handleNavigation('/events')}>Events</button></li>
-            {isAdmin && (
-              <li><button onClick={() => handleNavigation('/call')}>Call</button></li>
+            <li>
+              <button onClick={() => handleNavigation('/training')}>Training</button>
+            </li>
+            <li>
+              <button onClick={() => handleNavigation('/events')}>Events</button>
+            </li>
+            <li>
+              <button onClick={() => handleNavigation('/committee')}>Committee</button>
+            </li>
+            <li>
+              <button onClick={() => handleNavigation('/news')}>News</button>
+            </li>
+            {canCreateEvent && (
+              <li>
+                <button onClick={() => handleNavigation('/createevent')}>Create Event</button>
+              </li>
             )}
-            <li><button onClick={() => handleNavigation('/committee')}>Committee</button></li>
-            <li><button onClick={() => handleNavigation('/news')}>News</button></li>
           </ul>
           
           <div className="mobile-buttons">
             {user ? (
-              <>
-                <div className="mobile-user-info">
-                  Logged in as: <strong>{user.username}</strong>
-                </div>
-                <button 
-                  className="mobile-btn-outline" 
-                  onClick={() => handleNavigation('/profile')}
-                >
-                  Profile
-                </button>
-                {isAdmin && (
-                  <button 
-                    className="mobile-btn-outline" 
-                    onClick={() => handleNavigation('/admin')}
-                  >
-                    Admin Panel
-                  </button>
-                )}
-                <button 
-                  className="mobile-btn-filled" 
-                  onClick={() => { logout(); handleNavigation('/'); }}
-                >
-                  Logout
-                </button>
-              </>
+              <button 
+                className="mobile-btn-outline" 
+                onClick={() => { logout(); handleNavigation('/'); }}
+              >
+                Sign out
+              </button>
             ) : (
               <>
                 <button 

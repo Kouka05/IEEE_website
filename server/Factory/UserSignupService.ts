@@ -29,6 +29,12 @@ interface SignupResult {
   role?: Role;
   token?: string;
   error?: string;
+  user?: {
+    _id: string;
+    name: string;
+    role: string;
+    email: string;
+  };
 }
 
 class UserSignupService {
@@ -131,7 +137,13 @@ class UserSignupService {
         userId: createdUser!._id.toString(),
         email: user.getEmail(),
         role: user.getRole() as Role,
-        token
+        token,
+        user: {
+          _id: createdUser!._id.toString(),
+          name: createdUser!.name,
+          role: createdUser!.role,
+          email: createdUser!.email
+        }
       };
     } catch (error: any) {
       console.error('Error creating user:', error);
