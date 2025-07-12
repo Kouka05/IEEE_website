@@ -148,6 +148,8 @@ router.put('/edit/:id', asyncHandler(async (req: Request, res: Response) => {
 }));
 
 router.get('/getevents', asyncHandler(async (req: Request, res: Response) => {
+
+router.get('/getevents', asyncHandler(async (req: Request, res: Response) => {
   try { 
     const events = await EventService.getEvents();
     res.json({ success: true, events });

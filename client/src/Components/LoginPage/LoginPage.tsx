@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './LoginPage.css';
+import { useAuth } from '../../AuthContext';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,8 @@ const LoginPage: React.FC = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [apiError, setApiError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -47,8 +50,11 @@ const LoginPage: React.FC = () => {
       console.log('Login successful:', response.data);
       const token = response.data.token;
       localStorage.setItem('token', token);
-      // Add navigation to dashboard/home here
-
+      // Save user info to context and localStorage
+      if (response.data.user) {
+        login(response.data.user);
+      }
+      navigate('/');
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setApiError(err.response?.data?.message || 'Login failed. Please check your credentials.');

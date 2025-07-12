@@ -18,6 +18,7 @@ interface FormReply {
 }
 class Event extends Actions {
     protected id?: string; // Optional ID for database reference
+    public description: string;
     public location: string;
     public speakers: Array<{name: string, details: string}>; // name, speaker details 
     public sponsors: Array<string>; // list of sponsors
@@ -33,7 +34,8 @@ class Event extends Actions {
         title: string, 
         description: string, 
         createdBy: User, 
-        date: Date, 
+        eventStarts: Date,
+        eventEnds: Date,
         location: string,
         speakers: Array<{name: string, details: string}>, 
         sponsors: Array<string>, 
@@ -44,7 +46,8 @@ class Event extends Actions {
         maxParticipants: number , 
         status :EventStatus
     ) {
-        super(title, description, createdBy, date);
+        super(title, description, createdBy, eventStarts);
+        this.description = description;
         this.location = location;
         this.speakers = speakers || [];
         this.sponsors = sponsors;
@@ -183,11 +186,11 @@ class Event extends Actions {
     });
  
     public setEventForm(form: string): void {
-        this.eventForm = form;
+        this.eventForm = form; // Google Form link
     }
 
     public getEventForm(): string {
-        return this.eventForm;
+        return this.eventForm; // Google Form link
     }
 
     public getStatus(): EventStatus {

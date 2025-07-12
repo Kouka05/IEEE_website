@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import './Events.css';
 // --- 1. TYPE DEFINITIONS (Updated to match backend model) ---
 export interface Event {
   id: string;
@@ -82,18 +82,15 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
         }
         
         const data = await response.json();
-
-        // Check if the received data is an array.
         const eventsArray = Array.isArray(data) ? data : data.events;
 
         if (!Array.isArray(eventsArray)) {
           throw new Error("API response did not contain an array of events.");
         }
 
-        // Process data to convert date strings to Date objects and handle IDs
         const processedEvents = eventsArray.map((event: any) => ({
           ...event,
-          id: event._id || event.id, // Use _id from MongoDB or id if present
+          id: event._id || event.id,
           date: new Date(event.date),
           registrationDeadline: event.registrationDeadline ? new Date(event.registrationDeadline) : null,
         }));
@@ -108,13 +105,8 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
     fetchEvents();
   }, []);
 
-  if (loading) {
-    return <p>Loading events...</p>;
-  }
-
-  if (error) {
-    return <p>Error fetching events: {error}</p>;
-  }
+  if (loading) return <p>Loading events...</p>;
+  if (error) return <p>Error fetching events: {error}</p>;
 
   const sortedEvents = [...eventsData].sort((a, b) => a.date.getTime() - b.date.getTime());
   const groupedEvents = groupEventsByMonth(sortedEvents);
@@ -139,10 +131,10 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
                   <div className="month-divider"></div>
                 </div>
                 <div>
-                  {eventsInMonth.map((event, eventIndex) => (
+                  {eventsInMonth.map((event) => (
                     <div key={event.id}>
                       <EventItem event={event} onSelect={onSelectEvent} />
-                      {eventIndex < eventsInMonth.length - 1 && <hr className="event-divider" />}
+                      {eventsInMonth.indexOf(event) < eventsInMonth.length - 1 && <hr className="event-divider" />}
                     </div>
                   ))}
                 </div>
@@ -155,10 +147,27 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
   );
 };
 
+// NEW: Modal Component
+const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close-button" onClick={onClose}>&times;</button>
+        <h2>{title}</h2>
+        <div>{children}</div>
+      </div>
+    </div>
+  );
+};
+
 const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> = ({ eventId, onBack }) => {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: '', body: '' });
 
   useEffect(() => {
     const fetchEventDetails = async () => {
@@ -167,16 +176,11 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
         setLoading(true);
         setError(null);
         const response = await fetch(`http://localhost:8081/api/events/${eventId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
-
-        // The backend might return the event inside an "event" property or directly
         const eventData = data.event || data;
 
-        // Process the single event data
         const processedEvent: Event = {
           ...eventData,
           id: eventData._id || eventData.id,
@@ -193,69 +197,71 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
     };
     fetchEventDetails();
   }, [eventId]);
-
-  if (loading) {
-    return <p>Loading event details...</p>;
-  }
-
-  if (error) {
-    return <p>Error fetching event details: {error}</p>;
-  }
-
-  if (!event) {
-    return <p>Event not found.</p>;
-  }
   
-  const isRegistrationOpen = event.registrationDeadline && new Date() < event.registrationDeadline;
+  const handleGuestReserve = () => {
+    setModalContent({ title: "Reserve as Guest", body: "This is where the guest registration form or confirmation would appear." });
+    setModalOpen(true);
+  };
+  
+  const handleSpeakerReserve = () => {
+    setModalContent({ title: "Reserve as Speaker", body: "This is where the speaker application form or confirmation would appear." });
+    setModalOpen(true);
+  };
+
+  if (loading) return <p>Loading event details...</p>;
+  if (error) return <p>Error fetching event details: {error}</p>;
+  if (!event) return <p>Event not found.</p>;
+  
+  // This function will now always show the buttons, ignoring the event status and deadline.
+  const renderRegistrationStatus = () => {
+    return (
+      <>
+        <button className="guest-button" onClick={handleGuestReserve}>Reserve as guest</button>
+        <button className="speaker-button" onClick={handleSpeakerReserve}>Reserve as speaker</button>
+      </>
+    );
+  };
 
   return (
-    <div className="event-detail-container">
-      <button onClick={onBack} className="back-button">← Back to Events</button>
-      <header className="event-detail-header">
-        <div className="event-detail-header-content">
-          <h1 className="event-detail-title">{event.title}</h1>
-          <p className="event-detail-time">{formatEventDate(event.date, true)}</p>
-        </div>
-      </header>
-      <main className="event-detail-body">
-        <div className="event-detail-body-content">
-          <p className="event-detail-description">
-            <strong>Description:</strong> {event.description}
-          </p>
-          <p className="event-detail-location">
-            <strong>Location:</strong> {event.location}
-          </p>
-          {event.sponsors && event.sponsors.length > 0 && (
-            <div>
-              <strong>Sponsors:</strong>
-              <ul>
-                {event.sponsors.map(sponsor => <li key={sponsor}>{sponsor}</li>)}
-              </ul>
-            </div>
-          )}
-          {event.timeline && Object.keys(event.timeline).length > 0 && (
-            <div>
-              <strong>Timeline:</strong>
-              <ul>
-                {Object.entries(event.timeline).map(([time, details]) => (
-                  <li key={time}><strong>{time}:</strong> {details}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <div className="button-container">
-            {isRegistrationOpen ? (
-              <>
-                <button className="guest-button">Reserve as guest</button>
-                <button className="speaker-button">Reserve as speaker</button>
-              </>
-            ) : (
-              <p className="registration-closed">Registration has closed.</p>
-            )}
+    <>
+      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title={modalContent.title}>
+        <p>{modalContent.body}</p>
+      </Modal>
+      <div className="event-detail-container">
+        <button onClick={onBack} className="back-button">← Back to Events</button>
+        <header className="event-detail-header">
+          <div className="event-detail-header-content">
+            <h1 className="event-detail-title">{event.title}</h1>
+            <p className="event-detail-time">{formatEventDate(event.date, true)}</p>
           </div>
-        </div>
-      </main>
-    </div>
+        </header>
+        <main className="event-detail-body">
+          <div className="event-detail-body-content event-detail-time">
+            <p className="event-detail-description">
+              <strong>Description:</strong> {event.description}
+            </p>
+            <p className="event-detail-location">
+              <strong>Location:</strong> {event.location}
+            </p>
+            {event.sponsors && event.sponsors.length > 0 && (
+              <div>
+                <strong>Sponsors:</strong>
+                <ul>{event.sponsors.map(sponsor => <li key={sponsor}>{sponsor}</li>)}</ul>
+              </div>
+            )}
+            {event.timeline && Object.keys(event.timeline).length > 0 && (
+              <div>
+                <strong>Timeline:</strong>
+                <ul>{Object.entries(event.timeline).map(([time, details]) => <li key={time}><strong>{time}:</strong> {details}</li>)}</ul>
+              </div>
+            )}
+            <div className="button-container">
+              {renderRegistrationStatus()}
+            </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 };
 
