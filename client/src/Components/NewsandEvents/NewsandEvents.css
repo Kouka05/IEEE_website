@@ -204,6 +204,8 @@
 .event-detail-body-content {
     max-width: 1280px;
     margin: auto;
+    color: black;
+
 }
 
 .event-detail-abstract {
