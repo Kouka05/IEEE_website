@@ -64,7 +64,7 @@ router.post('/create', asyncHandler(async (req: Request, res: Response) => {
       description
     });
 
-    await googleFormsService.addQuestions(formData.formId, template.questions);
+    await googleFormsService.addQuestions(formData.formId, req.body.questions ? [template.questions, ...req.body.questions] : template.questions);
     await googleFormsService.updateFormSettings(formData.formId, template.settings);
 
    
