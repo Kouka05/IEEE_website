@@ -8,8 +8,6 @@ import Call from './Components/Call/Call'
 import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
-import './App.css'
-
 
 function App() {
   return (
