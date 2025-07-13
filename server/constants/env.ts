@@ -10,9 +10,9 @@ const getEnv = (key: string, defaultValue?: string): string => {
 
 export const NODE_ENV = getEnv("NODE_ENV", "development");
 export const PORT = getEnv("PORT", "4004");
-export const MONGO_URI = getEnv("MONGO_URI");
-export const APP_ORIGIN = getEnv("APP_ORIGIN");
-export const JWT_SECRET = getEnv("JWT_SECRET");
-export const JWT_REFRESH_SECRET = getEnv("JWT_REFRESH_SECRET");
-export const EMAIL_SENDER = getEnv("EMAIL_SENDER");
-export const RESEND_API_KEY = getEnv("RESEND_API_KEY");
+export const MONGO_URI = getEnv("MONGO_URI", "mongodb://localhost:27017/ieee-dev-db");
+export const APP_ORIGIN = getEnv("APP_ORIGIN", "http://localhost:8081");
+export const JWT_SECRET = getEnv("JWT_SECRET", "changeme");
+export const JWT_REFRESH_SECRET = getEnv("JWT_REFRESH_SECRET", "changeme-refresh");
+export const EMAIL_SENDER = getEnv("EMAIL_SENDER", "noreply@example.com");
+export const RESEND_API_KEY = getEnv("RESEND_API_KEY", "");

@@ -9,6 +9,8 @@ import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
 import ElectionPage from './Components/Elections/Election'
+import CreateEvent from './Components/CreateEvent/CreateEvent';
+
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/news" element={<News />} />
         <Route path="/election" element={<ElectionPage setPage={() => {}} />} />
+        <Route path="/createevent" element={<CreateEvent />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />

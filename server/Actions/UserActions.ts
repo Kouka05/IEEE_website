@@ -1,7 +1,4 @@
-import Event from './Event';
-// import Call from './Call';
-// import Election from './Election';
-// import Training from './Training';
+import Event ,  { EventStatus } from './Event';
 import User from '../Factory/User';
 import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
@@ -23,27 +20,28 @@ function withPermission<T extends (...args: any[]) => any>(
   };
 }
 
-
 class UserActions {
     // EVENT ACTIONS
     public createEvent = withPermission((
         user: User,
         title: string,
         description: string,
-        date: Date,
+        eventStarts: Date,
+        eventEnds: Date,
         location: string,
-        speakers: Map<string, string> = new Map(),
+        speakers: Array<{ name: string; details: string }> = [],
         sponsors: Array<string> = [],
-        timeline: Map<string, string> = new Map(),
+        timeline: Array<{ time: string; details: string }> = [],
         eventForm: string = '',
         registrationDeadline: Date,
-        maxParticipants: number 
-    ): Event => {
+        maxParticipants: number ,
+        status :EventStatus
+     ): Event => {
         const event = new Event(
             title, description, user, date, location, speakers, sponsors,
-            timeline, [], eventForm, registrationDeadline, maxParticipants
+            timeline, [], eventForm, registrationDeadline, maxParticipants , status
         );
-        
+                
         console.log(`Event "${title}" created by ${user.getName()}`);
         return event;
     });
@@ -57,10 +55,11 @@ class UserActions {
             location: string;
             date: Date;
             registrationDeadline: Date;
-            speakers: Map<string, any>;
+            speakers: Array<{name: string, details: string}>; // Changed from Map to Array
             sponsors: Array<string>;
             maxParticipants: number;
-            eventForm: any;
+            eventForm: string; // Changed from any to string
+            timeline: Array<{time: string, details: string}>; // Added timeline
         }>
     ): void => {
         event.editDetails(user, updates); // Fixed: pass updates object directly
@@ -73,64 +72,6 @@ class UserActions {
         return result;
     });
 
-    // SPEAKER ACTIONS
-    public addSpeaker = withPermission((
-        user: User,
-        event: Event,
-        name: string,
-        details: string
-    ): void => {
-        event.addSpeaker(user, name, details);
-        console.log(`Speaker "${name}" added to event "${event.getTitle}" by ${user.getName()}`);
-    });
-
-    public removeSpeaker = withPermission((
-        user: User,
-        event: Event,
-        name: string
-    ): void => {
-        event.removeSpeaker(user, name);
-        console.log(`Speaker "${name}" removed from event "${event.getTitle()}" by ${user.getName()}`);
-    });
-
-    // SPONSOR ACTIONS
-    public addSponsor = withPermission((
-        user: User,
-        event: Event,
-        sponsor: string
-    ): void => {
-        event.addSponsor(user , sponsor);
-        console.log(`Sponsor "${sponsor}" added to event "${event.getTitle()}" by ${user.getName()}`);
-    });
-
-    public removeSponsor = withPermission((
-        user: User,
-        event: Event,
-        sponsor: string
-    ): void => {
-        event.removeSponsor(user , sponsor);
-        console.log(`Sponsor "${sponsor}" removed from event "${event.getTitle()}" by ${user.getName()}`);
-    });
-
-    // TIMELINE ACTIONS
-    public addTimelineItem = withPermission((
-        user: User,
-        event: Event,
-        time: string,
-        details: string
-    ): void => {
-        event.addTimelineItem(user , time, details);
-        console.log(`Timeline item added to event "${event.getTitle()}" by ${user.getName()}`);
-    });
-
-    public removeTimelineItem = withPermission((
-        user: User,
-        event: Event,
-        time: string
-    ): void => {
-        event.removeTimelineItem(user , time);
-        console.log(`Timeline item removed from event "${event.getTitle()}" by ${user.getName()}`);
-    });
     public getEvents = async (): Promise<Event[]> => {
         try {
             // Assuming we have a database connection and EventModel is defined
@@ -142,5 +83,6 @@ class UserActions {
         }
     }
 }
+
 export default UserActions;
 export { hasPermission, withPermission };

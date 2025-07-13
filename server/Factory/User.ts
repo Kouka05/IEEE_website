@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 
 abstract class User {
-  protected id?: string;
+  protected id ?: string;
   private password: string;
   protected name: string;
   protected email: string;
@@ -97,6 +97,7 @@ abstract class User {
   /*public async hashPassword(): Promise<void> {
     this.password = await bcrypt.hash(this.password, 8);
   }*/
+
 }
 
 export default User;
