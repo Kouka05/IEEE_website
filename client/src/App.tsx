@@ -8,6 +8,7 @@ import Call from './Components/Call/Call'
 import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
+import ElectionPage from './Components/Elections/Election'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/newsandevents" element={<NewsandEvents />} />
         <Route path="/events" element={<Events />} />
         <Route path="/news" element={<News />} />
+        <Route path="/election" element={<ElectionPage setPage={() => {}} />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
