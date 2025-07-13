@@ -1,10 +1,10 @@
 /* Base Styles */
 .election-page {
-  width: 100%;
+  width:100%;
   max-width: 80rem;
   margin: 0 auto;
   padding: 2rem 1rem;
-  color: #000; /* Ensure all text is black */
+  color: #000; 
 }
 
 .election-header {
@@ -17,10 +17,10 @@
 .election-header h1 {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #000; /* Black text */
+  color: #000; 
 }
 
-/* Card Styles */
+
 .card {
   background-color: white;
   padding: 1.5rem;
@@ -37,7 +37,7 @@
 .section-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #000; /* Black text */
+  color: #000; 
   margin-bottom: 1.5rem;
 }
 
@@ -74,13 +74,13 @@
 
 /* Form Controls */
 .form-control {
-  width: 100%;
-  margin-bottom: 1.5rem; /* Increased spacing */
+  width: 90%;
+  margin-bottom: 1.5rem; 
 }
 
 .form-control label {
   display: block;
-  color: #000; /* Black text */
+  color: #000; 
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
@@ -110,7 +110,7 @@
 
 /* Date Selector */
 .date-selector {
-  margin-bottom: 1.5rem; /* Increased spacing */
+  margin-bottom: 1.5rem; 
 }
 
 .date-selector label {
@@ -139,7 +139,7 @@
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem; /* Increased spacing */
+  gap: 1.2rem; 
   margin-bottom: 2rem;
 }
 
