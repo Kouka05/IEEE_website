@@ -5,25 +5,168 @@ interface ElectionPageProps {
   setPage: (page: string) => void;
 }
 
+interface DateState {
+  hour: string;
+  day: string;
+  month: string;
+  year: string;
+}
+
+// Generate options for date selects
+const generateOptions = (start: number, end: number) => {
+  return Array.from({ length: end - start + 1 }, (_, i) => {
+    const value = (start + i).toString().padStart(2, '0');
+    return <option key={value} value={value}>{value}</option>;
+  });
+};
+
+const generateYearOptions = () => {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: 6 }, (_, i) => {
+    const year = currentYear + i;
+    return <option key={year} value={year}>{year}</option>;
+  });
+};
+
 const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [startDate, setStartDate] = useState<DateState>({
+    hour: '00',
+    day: '01',
+    month: '01',
+    year: new Date().getFullYear().toString()
+  });
+  const [expirationDate, setExpirationDate] = useState<DateState>({
+    hour: '00',
+    day: '01',
+    month: '01',
+    year: (new Date().getFullYear() + 1).toString()
+  });
   const [electionType, setElectionType] = useState<'board' | 'chairman' | 'custom'>('board');
+  const [customYears, setCustomYears] = useState('');
+  const [includeName, setIncludeName] = useState(true);
+  const [includeEmail, setIncludeEmail] = useState(true);
+  const [includeCommittee, setIncludeCommittee] = useState(true);
+  const [allowMultiple, setAllowMultiple] = useState(true);
+  const [anonymous, setAnonymous] = useState(true);
+  const [showResults, setShowResults] = useState(true);
+  const [candidateCustomFields, setCandidateCustomFields] = useState<string[]>([]);
+  const [newFieldName, setNewFieldName] = useState('');
+
+  // Handle date changes
+  const handleDateChange = (
+    dateType: 'start' | 'expiration',
+    field: keyof DateState,
+    value: string
+  ) => {
+    if (dateType === 'start') {
+      setStartDate(prev => ({ ...prev, [field]: value }));
+    } else {
+      setExpirationDate(prev => ({ ...prev, [field]: value }));
+    }
+  };
+
+  // Add new candidate field
+  const addNewField = () => {
+    if (newFieldName.trim()) {
+      setCandidateCustomFields([...candidateCustomFields, newFieldName]);
+      setNewFieldName('');
+    }
+  };
+
+  // Remove custom field
+  const removeCustomField = (index: number) => {
+    setCandidateCustomFields(candidateCustomFields.filter((_, i) => i !== index));
+  };
+
+  // Publish election to backend
+  const handlePublish = async () => {
+    // Format dates to ISO string
+    const formatDate = (date: DateState) => {
+      return new Date(
+        Date.UTC(
+          parseInt(date.year),
+          parseInt(date.month) - 1,
+          parseInt(date.day),
+          parseInt(date.hour)
+        )
+      ).toISOString();
+    };
+
+    const electionData = {
+      title,
+      description,
+      startDate: formatDate(startDate),
+      expirationDate: formatDate(expirationDate),
+      electionType,
+      customYears: electionType === 'custom' ? parseInt(customYears) : undefined,
+      candidateFields: {
+        name: includeName,
+        email: includeEmail,
+        committee: includeCommittee,
+        custom: candidateCustomFields
+      },
+      votingOptions: {
+        allowMultiple,
+        anonymous,
+        showResults
+      }
+    };
+
+    try {
+      const response = await fetch('/api/elections', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(electionData)
+      });
+
+      if (!response.ok) throw new Error('Failed to publish election');
+
+      const data = await response.json();
+      console.log('Election published:', data);
+      setPage('electionResults');
+    } catch (error) {
+      console.error('Publish error:', error);
+      alert('Failed to publish election');
+    }
+  };
 
   return (
     <div className="election-page">
       <header className="election-header">
         <h1>Election</h1>
-        <Button variant="secondary" onClick={() => setPage('electionResults')}>See Voting</Button>
+        <Button variant="secondary" onClick={() => setPage('electionResults')}>
+          See Voting
+        </Button>
       </header>
 
       <Card>
         <SectionTitle>About Election</SectionTitle>
         <div className="form-grid">
-          <Input label="Title" />
-          <Textarea label="Description" />
+          <Input 
+            label="Title" 
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Textarea 
+            label="Description" 
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </div>
+        
         <div className="date-grid">
-          <DateSelector label="Start Date" />
-          <DateSelector label="Expiration Date" />
+          <DateSelector 
+            label="Start Date"
+            date={startDate}
+            onChange={(field, value) => handleDateChange('start', field, value)}
+          />
+          <DateSelector 
+            label="Expiration Date"
+            date={expirationDate}
+            onChange={(field, value) => handleDateChange('expiration', field, value)}
+          />
         </div>
 
         <hr className="section-divider" />
@@ -35,14 +178,14 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
             name="electionType" 
             value="board" 
             checked={electionType === 'board'} 
-            onChange={(e) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}
           />
           <RadioButton 
             label="Chairman Election (minimum 2 years participation)" 
             name="electionType" 
             value="chairman" 
             checked={electionType === 'chairman'} 
-            onChange={(e) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}
+            onChange={(e) => setElectionType(e.target.value as any)}
           />
           <div className="custom-radio-container">
             <RadioButton 
@@ -50,8 +193,16 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
               name="electionType" 
               value="custom" 
               checked={electionType === 'custom'} 
-            onChange={(e) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}            />
-            <input type="text" className="custom-input" />
+              onChange={(e) => setElectionType(e.target.value as any)}
+            />
+            <input 
+              type="number"
+              min="1"
+              value={customYears}
+              onChange={(e) => setCustomYears(e.target.value)}
+              className="custom-input"
+              disabled={electionType !== 'custom'}
+            />
           </div>
         </div>
 
@@ -59,24 +210,70 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
 
         <SectionTitle>Candidate info</SectionTitle>
         <div className="checkbox-group">
-          <Checkbox label="Include Name Field" checked={true} onChange={() => {}} />
-          <Checkbox label="Include Email Field" checked={true} onChange={() => {}} />
-          <Checkbox label="Include Committee Field" checked={true} onChange={() => {}} />
+          <Checkbox 
+            label="Include Name Field" 
+            checked={includeName} 
+            onChange={setIncludeName} 
+          />
+          <Checkbox 
+            label="Include Email Field" 
+            checked={includeEmail} 
+            onChange={setIncludeEmail} 
+          />
+          <Checkbox 
+            label="Include Committee Field" 
+            checked={includeCommittee} 
+            onChange={setIncludeCommittee} 
+          />
+          
+          {candidateCustomFields.map((field, index) => (
+            <div key={index} className="custom-field">
+              <Checkbox 
+                label={field} 
+                checked={true} 
+                onChange={() => removeCustomField(index)} 
+              />
+            </div>
+          ))}
         </div>
-        <Button variant="secondary">Add New Field</Button>
+        
+        <div className="add-field-container">
+          <input
+            type="text"
+            value={newFieldName}
+            onChange={(e) => setNewFieldName(e.target.value)}
+            placeholder="New field name"
+            className="field-input"
+          />
+          <Button variant="secondary" onClick={addNewField}>
+            Add New Field
+          </Button>
+        </div>
 
         <hr className="section-divider" />
 
         <SectionTitle>Voting info</SectionTitle>
         <div className="checkbox-group">
-          <Checkbox label="Allow voters to select multiple candidate" checked={true} onChange={() => {}} />
-          <Checkbox label="Enable anonymous voting" checked={true} onChange={() => {}} />
-          <Checkbox label="Show live results to voters" checked={true} onChange={() => {}} />
+          <Checkbox 
+            label="Allow voters to select multiple candidates" 
+            checked={allowMultiple} 
+            onChange={setAllowMultiple} 
+          />
+          <Checkbox 
+            label="Enable anonymous voting" 
+            checked={anonymous} 
+            onChange={setAnonymous} 
+          />
+          <Checkbox 
+            label="Show live results to voters" 
+            checked={showResults} 
+            onChange={setShowResults} 
+          />
         </div>
       </Card>
 
       <div className="publish-button-container">
-        <Button>Publish Call</Button>
+        <Button onClick={handlePublish}>Publish Election</Button>
       </div>
     </div>
   );
@@ -102,57 +299,92 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ children }) => (
 
 interface InputProps {
   label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  type?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({ label, placeholder = '', type = 'text' }) => (
+const Input: React.FC<InputProps> = ({ label, value, onChange, placeholder = '' }) => (
   <div className="form-control">
     <label>{label}</label>
-    <input 
-      type={type} 
-      placeholder={placeholder} 
-      className="form-input" 
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className="form-input"
     />
   </div>
 );
 
 interface TextareaProps {
   label: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const Textarea: React.FC<TextareaProps> = ({ label, placeholder = '' }) => (
+const Textarea: React.FC<TextareaProps> = ({ label, value, onChange, placeholder = '' }) => (
   <div className="form-control">
     <label>{label}</label>
-    <textarea 
-      placeholder={placeholder} 
-      rows={4} 
-      className="form-textarea" 
-    ></textarea>
+    <textarea
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      rows={4}
+      className="form-textarea"
+    />
   </div>
 );
 
 interface DateSelectorProps {
   label: string;
+  date: DateState;
+  onChange: (field: keyof DateState, value: string) => void;
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ label }) => (
+const DateSelector: React.FC<DateSelectorProps> = ({ label, date, onChange }) => (
   <div className="date-selector">
     <label>{label}</label>
     <div className="date-selector-group">
-      <select className="date-select">
-        <option>H</option>
+      <select 
+        value={date.year}
+        onChange={(e) => onChange('year', e.target.value)}
+        className="date-select"
+      >
+        {generateYearOptions()}
       </select>
-      <select className="date-select">
-        <option>D</option>
+      <select 
+        value={date.month}
+        onChange={(e) => onChange('month', e.target.value)}
+        className="date-select"
+      >
+        <option value="01">Jan</option>
+        <option value="02">Feb</option>
+        <option value="03">Mar</option>
+        <option value="04">Apr</option>
+        <option value="05">May</option>
+        <option value="06">Jun</option>
+        <option value="07">Jul</option>
+        <option value="08">Aug</option>
+        <option value="09">Sep</option>
+        <option value="10">Oct</option>
+        <option value="11">Nov</option>
+        <option value="12">Dec</option>
       </select>
-      <select className="date-select">
-        <option>M</option>
+      <select 
+        value={date.day}
+        onChange={(e) => onChange('day', e.target.value)}
+        className="date-select"
+      >
+        {generateOptions(1, 31)}
+      </select>
+      <select 
+        value={date.hour}
+        onChange={(e) => onChange('hour', e.target.value)}
+        className="date-select"
+      >
+        {generateOptions(0, 23)}
       </select>
     </div>
   </div>
@@ -208,7 +440,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({ label, name, value, checked, 
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
+  variant?: 'primary' | 'secondary';
   className?: string;
 }
 
