@@ -82,7 +82,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
 
   // Publish election to backend
   const handlePublish = async () => {
-    // Format dates to ISO string
     const formatDate = (date: DateState) => {
       return new Date(
         Date.UTC(
@@ -185,7 +184,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
             name="electionType" 
             value="chairman" 
             checked={electionType === 'chairman'} 
-            onChange={(e) => setElectionType(e.target.value as any)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}
           />
           <div className="custom-radio-container">
             <RadioButton 
@@ -193,7 +192,7 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
               name="electionType" 
               value="custom" 
               checked={electionType === 'custom'} 
-              onChange={(e) => setElectionType(e.target.value as any)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setElectionType(e.target.value as 'board' | 'chairman' | 'custom')}
             />
             <input 
               type="number"
