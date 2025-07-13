@@ -8,7 +8,12 @@ const getYears = () => {
 };
 
 const GUEST_FIELDS = ['name', 'email', 'committee'] as const;
-const SPEAKER_FIELDS = ['name', 'email', 'committee', 'topic'] as const;
+const SPEAKER_FIELDS = ['name', 'email', 'phoneNumber'] as const;
+interface TimelineEvent {
+  time: string;
+  details: string;
+}
+// const SPEAKER_FIELDS = [] as const;
 
 const GOOGLE_FORM_TYPES = [
   { value: 'text', label: 'Short answer' },
@@ -26,9 +31,10 @@ type GuestField = typeof GUEST_FIELDS[number];
 type SpeakerField = typeof SPEAKER_FIELDS[number];
 
 type CustomField = {
-  name: string;
+  title: string;
   type: string;
   value: any;
+  required: true;
 };
 
 const CreateEvent: React.FC = () => {
@@ -41,8 +47,8 @@ const CreateEvent: React.FC = () => {
   const [guestCustomFields, setGuestCustomFields] = useState<CustomField[]>([]);
   const [guestCustomChecked, setGuestCustomChecked] = useState<boolean[]>([]);
 
-  const [speakerFields, setSpeakerFields] = useState<Record<SpeakerField, boolean>>({ name: true, email: true, committee: true, topic: true });
-  const [speakerValues, setSpeakerValues] = useState<Record<SpeakerField, string>>({ name: '', email: '', committee: '', topic: '' });
+  const [speakerFields, setSpeakerFields] = useState<Record<SpeakerField, boolean>>({ name: true, email: true, phoneNumber: true });
+  const [speakerValues, setSpeakerValues] = useState<Record<SpeakerField, string>>({ name: '', email: '', phoneNumber: ''});
   const [speakerCustomFields, setSpeakerCustomFields] = useState<CustomField[]>([]);
   const [speakerCustomChecked, setSpeakerCustomChecked] = useState<boolean[]>([]);
 
@@ -61,6 +67,9 @@ const CreateEvent: React.FC = () => {
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
   const [sponsors, setSponsors] = useState('');
+  const [speackers, setSpeackers] = useState('');
+  const [timeline, setTimeline] = useState('[]');
+  const [isThereSpeackersForm, setIsThereSpeackersForm] = useState(false);
   const [registrationDeadline, setRegistrationDeadline] = useState('');
   const [maxParticipants, setMaxParticipants] = useState('');
   const [status, setStatus] = useState('DRAFT');
@@ -108,30 +117,33 @@ const CreateEvent: React.FC = () => {
     // Prepare guest and speaker fields (enabled only)
     const enabledGuestFields = [
       ...GUEST_FIELDS.filter(f => guestFields[f]),
-      ...guestCustomFields.filter((_, idx) => guestCustomChecked[idx]).map(f => ({ name: f.name, type: f.type }))
+      ...guestCustomFields.filter((_, idx) => guestCustomChecked[idx]).map(f => ({ title: f.title, type: f.type }))
     ];
     const enabledSpeakerFields = [
-      ...SPEAKER_FIELDS.filter(f => speakerFields[f]),
-      ...speakerCustomFields.filter((_, idx) => speakerCustomChecked[idx]).map(f => ({ name: f.name, type: f.type }))
+      // ...SPEAKER_FIELDS.filter(f => speakerFields[f]),
+      ...speakerCustomFields.filter((_, idx) => speakerCustomChecked[idx]).map(f => ({ title: f.title, type: f.type }))
     ];
 
     const eventData = {
       title,
       description,
-      eventStarts,
-      eventEnds,
+      createdBy: user._id,
+      date: eventStarts,
+      // eventEnds,
       location,
       sponsors: sponsors.split(',').map(s => s.trim()).filter(Boolean),
-      participants: [], // New event, so empty
+      // participants: [], // New event, so empty
+      speakers: speackers.split(',').map(s => s.trim()).filter(Boolean), // No speakers yet
+      timeline: JSON.parse(timeline) as TimelineEvent[], // No timeline yet
       registrationDeadline,
       maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
       status: dynamicStatus, // Use computed status
-      createdBy: user._id,
-      userId: user._id,
-      guestFields: enabledGuestFields,
-      speakerFields: enabledSpeakerFields,
+      // userId: user._id,
+      // guestFields: enabledGuestFields,
+      speakersFormFields: enabledSpeakerFields,
       // No eventForm field
     };
+    console.log('Submitting event data:', eventData);
     try {
       const res = await fetch('http://localhost:8081/api/events/create', {
         method: 'POST',
@@ -140,6 +152,7 @@ const CreateEvent: React.FC = () => {
       });
       const data = await res.json();
       if (data.success) {
+        setStatus('PUBLISHED');
         alert('Event created successfully!');
         // Optionally redirect or reset form
       } else {
@@ -156,9 +169,10 @@ const CreateEvent: React.FC = () => {
       title.trim() &&
       description.trim() &&
       startDate.day && startDate.month && startDate.year &&
-      expirationDate.day && expirationDate.month && expirationDate.year &&
+      // expirationDate.day && expirationDate.month && expirationDate.year &&
       location.trim() &&
       sponsors.trim() &&
+      // speackers.trim() &&
       registrationDeadline &&
       maxParticipants !== '' && Number(maxParticipants) > 0
     );
@@ -193,7 +207,7 @@ const CreateEvent: React.FC = () => {
   };
   const handleModalConfirm = () => {
     if (!modalFieldName.trim()) return;
-    const newField: CustomField = { name: modalFieldName.trim(), type: modalFieldType, value: '' };
+    const newField: CustomField = { title: modalFieldName.trim(), type: modalFieldType, value: '', required: true };
     if (modalSection === 'guest') {
       setGuestCustomFields((prev) => [...prev, newField]);
       setGuestCustomChecked((prev) => [...prev, true]);
@@ -216,25 +230,25 @@ const CreateEvent: React.FC = () => {
   const renderCustomInput = (field: CustomField, section: 'guest' | 'speaker', idx: number) => {
     switch (field.type) {
       case 'text':
-        return <input className="toggle-input" type="text" placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="text" placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'textarea':
-        return <textarea className="toggle-input" placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <textarea className="toggle-input" placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'radio':
-        return <input className="toggle-input" type="text" placeholder={`Options for ${field.name} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="text" placeholder={`Options for ${field.title} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'checkbox':
-        return <input className="toggle-input" type="text" placeholder={`Options for ${field.name} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="text" placeholder={`Options for ${field.title} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'dropdown':
-        return <input className="toggle-input" type="text" placeholder={`Options for ${field.name} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="text" placeholder={`Options for ${field.title} (comma separated)`} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'file':
         return <input className="toggle-input" type="file" onChange={e => handleCustomFieldChange(section, idx, e.target.files?.[0] || '')} />;
       case 'scale':
-        return <input className="toggle-input" type="number" min={1} max={10} placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="number" min={1} max={10} placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'date':
-        return <input className="toggle-input" type="date" placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="date" placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       case 'time':
-        return <input className="toggle-input" type="time" placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="time" placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
       default:
-        return <input className="toggle-input" type="text" placeholder={field.name} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
+        return <input className="toggle-input" type="text" placeholder={field.title} value={field.value} onChange={e => handleCustomFieldChange(section, idx, e.target.value)} />;
     }
   };
 
@@ -256,7 +270,7 @@ const CreateEvent: React.FC = () => {
         </div>
         <div className="form-row">
           <div className="form-group">
-            <label>Event Starts</label>
+            <label>Event Date</label>
             <div className="date-dropdowns">
               <select className="date-select" value={startDate.day} onChange={e => setStartDate(prev => ({ ...prev, day: e.target.value }))}>
                 <option value="">Day</option>
@@ -278,7 +292,7 @@ const CreateEvent: React.FC = () => {
               </select>
             </div>
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label>Event Ends</label>
             <div className="date-dropdowns">
               <select className="date-select" value={expirationDate.day} onChange={e => setExpirationDate(prev => ({ ...prev, day: e.target.value }))}>
@@ -300,6 +314,96 @@ const CreateEvent: React.FC = () => {
                 ))}
               </select>
             </div>
+          </div> */}
+        </div>
+        <div className="form-group">
+          <label>Event Timeline</label>
+          <div>
+            <button
+              type="button"
+              className="add-field-btn"
+              onClick={() => {
+                // Parse timeline or start new
+                let arr: { time: string; details: string }[] = [];
+                try {
+                  arr = timeline ? JSON.parse(timeline) : [];
+                } catch {
+                  arr = [];
+                }
+                arr.push({ time: '', details: '' });
+                setTimeline(JSON.stringify(arr));
+              }}
+            >
+              Add Timeline Slot
+            </button>
+          </div>
+          {/* Timeline slots input */}
+          {(() => {
+            let arr: { time: string; details: string }[] = [];
+            try {
+              arr = timeline ? JSON.parse(timeline) : [];
+            } catch {
+              arr = [];
+            }
+            return arr.map((slot, idx) => (
+              <div key={idx} className="timeline-slot-row">
+                <input
+                  type="time"
+                  value={slot.time}
+                  onChange={e => {
+                    const newArr = [...arr];
+                    newArr[idx].time = e.target.value;
+                    setTimeline(JSON.stringify(newArr));
+                  }}
+                  className="timeline-time-input"
+                />
+                <input
+                  type="text"
+                  placeholder="Details"
+                  value={slot.details}
+                  onChange={e => {
+                    const newArr = [...arr];
+                    newArr[idx].details = e.target.value;
+                    setTimeline(JSON.stringify(newArr));
+                  }}
+                  className="timeline-details-input"
+                />
+                <button
+                  type="button"
+                  className="remove-slot-btn"
+                  onClick={() => {
+                    const newArr = arr.filter((_, i) => i !== idx);
+                    setTimeline(JSON.stringify(newArr));
+                  }}
+                  title="Remove slot"
+                >
+                  &times;
+                </button>
+              </div>
+            ));
+          })()}
+          {/* Visual timeline preview */}
+          <div className="timeline-visual">
+            <h4>Timeline Preview</h4>
+            <ul>
+              {(() => {
+                let arr: { time: string; details: string }[] = [];
+                try {
+                  arr = timeline ? JSON.parse(timeline) : [];
+                } catch {
+                  arr = [];
+                }
+                return arr.length === 0 ? (
+                  <li style={{ color: '#888' }}>No timeline slots added yet.</li>
+                ) : (
+                  arr.map((slot, idx) => (
+                    <li key={idx}>
+                      <strong>{slot.time || '--:--'}</strong> &mdash; {slot.details || <span style={{ color: '#aaa' }}>No details</span>}
+                    </li>
+                  ))
+                );
+              })()}
+            </ul>
           </div>
         </div>
         <div className="form-group">
@@ -309,6 +413,15 @@ const CreateEvent: React.FC = () => {
         <div className="form-group">
           <label htmlFor="sponsors">Sponsors (comma separated)</label>
           <input id="sponsors" name="sponsors" value={sponsors} onChange={e => setSponsors(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="speackers">Speakers (comma separated)
+            <small>
+              &nbsp;&nbsp;Add a registration form&nbsp;&nbsp;
+              <input type="checkbox" checked={isThereSpeackersForm} onChange={() => setIsThereSpeackersForm(!isThereSpeackersForm)} />
+            </small>
+          </label>
+          <input id="speackers" name="speackers" value={speackers} onChange={e => setSpeackers(e.target.value)} />
         </div>
         <div className="form-group">
           <label htmlFor="registrationDeadline">Registration Deadline</label>
@@ -329,7 +442,7 @@ const CreateEvent: React.FC = () => {
             }}
           />
         </div>
-        <hr className="form-divider" />
+        {/* <hr className="form-divider" />
         <div className="form-section">
           <h3 className="form-section-title">Registration Fields for Guests</h3>
           {GUEST_FIELDS.map((field) => (
@@ -339,30 +452,34 @@ const CreateEvent: React.FC = () => {
             </div>
           ))}
           {guestCustomFields.map((field, idx) => (
-            <div className="toggle-row" key={field.name + idx}>
-              <label>{field.name}</label>
+            <div className="toggle-row" key={field.title + idx}>
+              <label>{field.title}</label>
               <input type="checkbox" checked={guestCustomChecked[idx]} onChange={() => handleCustomCheckedChange('guest', idx)} />
             </div>
           ))}
           <button type="button" className="add-field-btn" onClick={() => openModal('guest')}>Add New Field</button>
-        </div>
-        <hr className="form-divider" />
+        </div> */}
+
+        {isThereSpeackersForm && (
+        <hr className="form-divider" />)}
+        {isThereSpeackersForm && (
         <div className="form-section">
           <h3 className="form-section-title">Registration Fields for Speakers</h3>
           {SPEAKER_FIELDS.map((field) => (
             <div className="toggle-row" key={field}>
-              <label>{`Include ${field.charAt(0).toUpperCase() + field.slice(1)} Field`}</label>
-              <input type="checkbox" checked={speakerFields[field]} onChange={() => handleToggle('speaker', field)} />
+              <label>{`${field.charAt(0).toUpperCase() + field.slice(1)} Field is Default`}</label>
+              <input type="checkbox" disabled checked={speakerFields[field]} onChange={() => handleToggle('speaker', field)} />
             </div>
           ))}
+          
           {speakerCustomFields.map((field, idx) => (
-            <div className="toggle-row" key={field.name + idx}>
-              <label>{field.name}</label>
+            <div className="toggle-row" key={field.title + idx}>
+              <label>{field.title}</label>
               <input type="checkbox" checked={speakerCustomChecked[idx]} onChange={() => handleCustomCheckedChange('speaker', idx)} />
             </div>
           ))}
           <button type="button" className="add-field-btn" onClick={() => openModal('speaker')}>Add New Field</button>
-        </div>
+        </div>)}
         <div className="form-actions-row">
           <button type="button" className="update-btn">Update Event</button>
           <button
@@ -370,7 +487,7 @@ const CreateEvent: React.FC = () => {
             className="publish-btn"
             disabled={!isFormValid()}
             onClick={() => {
-              setStatus('PUBLISHED');
+              // setStatus('PUBLISHED');
               setTimeout(() => {
                 document.querySelector('.createevent-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
               }, 0);
