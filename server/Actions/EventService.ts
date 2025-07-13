@@ -54,7 +54,7 @@ class EventService {
     [],
     eventForm,
     regDeadline,
-    maxParticipants, 
+    maxParticipants , 
     status
   );
 

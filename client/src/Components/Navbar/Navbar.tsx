@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../AuthContext'; 
 import './Navbar.css';
 import { useAuth } from '../../AuthContext';
 
@@ -9,7 +8,10 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   const handleNavigation = (path: string) => {
     navigate(path);
     setIsMenuOpen(false);
@@ -22,29 +24,44 @@ const Navbar: React.FC = () => {
       <div className="navbar-container">
         <div className="navbar-left">
           <div className="navbar-logo">
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/'); }}><img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" /></a>
+            <img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" />
           </div>
+
           {/* Desktop Navigation */}
           <ul className="navbar-links">
             <li>
-              <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/training'); }}>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/training');
+                }}
+              >
                 Training
               </a>
             </li>
             <li>
-              <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/events'); }}>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/events');
+                }}
+              >
                 Events
               </a>
             </li>
-            {isAdmin && (
-              <li>
-                <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/call'); }}>
-                  Call
-                </a>
-              </li>
-            )}
             <li>
-              <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); navigate('/committee'); }}>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/committee');
+                }}
+              >
                 Committee
               </a>
             </li>

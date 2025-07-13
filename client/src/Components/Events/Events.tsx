@@ -249,12 +249,12 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
                 <ul>{event.sponsors.map(sponsor => <li key={sponsor}>{sponsor}</li>)}</ul>
               </div>
             )}
-            {event.timeline && Object.keys(event.timeline).length > 0 && (
+            {/* {event.timeline && Object.keys(event.timeline).length > 0 && (
               <div>
                 <strong>Timeline:</strong>
                 <ul>{Object.entries(event.timeline).map(([time, details]) => <li key={time}><strong>{time}:</strong> {details}</li>)}</ul>
               </div>
-            )}
+            )} */}
             <div className="button-container">
               {renderRegistrationStatus()}
             </div>
