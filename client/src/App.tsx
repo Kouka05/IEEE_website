@@ -8,30 +8,31 @@ import Call from './Components/Call/Call'
 import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
+import ElectionPage from './Components/Elections/Election'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
-import './App.css'
-import { AuthProvider } from './AuthContext';
+
 
 function App() {
   return (
-    <div className="App">
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Layout />}>
-              <Route index element={<Welcome />} />
-              <Route path="/*" element={<Welcome />} />
-              <Route path="/newsandevents" element={<NewsandEvents />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/createevent" element={<CreateEvent />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </div>
+<div className="App">
+  <BrowserRouter>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/*" element={<Welcome />} />
+        <Route path="/call" element={<Call setPage={() => {}} />} />
+        <Route path="/newsandevents" element={<NewsandEvents />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/election" element={<ElectionPage setPage={() => {}} />} />
+        <Route path="/createevent" element={<CreateEvent />} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+    </Routes>
+  </BrowserRouter>
+</div>
   )
 }
 
