@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Election.css';
+import { Link } from 'react-router-dom';
 
 interface ElectionPageProps {
   setPage: (page: string) => void;
@@ -135,9 +136,11 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
     <div className="election-page">
       <header className="election-header">
         <h1>Election</h1>
-        <Button variant="secondary" onClick={() => setPage('electionResults')}>
-          See Voting
-        </Button>
+        <Link to="/election">
+          <Button variant="secondary">
+            See Voting
+          </Button>
+        </Link>
       </header>
 
       <Card>
