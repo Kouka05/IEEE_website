@@ -10,6 +10,8 @@ import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
 import ElectionPage from './Components/Elections/Election'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
+import ElectionResults from './Components/Elections/ElectionResults'
+import CandidateProfile from './Components/Elections/CandidateProfile';
 
 
 function App() {
@@ -25,7 +27,9 @@ function App() {
         <Route path="/newsandevents" element={<NewsandEvents />} />
         <Route path="/events" element={<Events />} />
         <Route path="/news" element={<News />} />
-        <Route path="/election" element={<ElectionPage setPage={() => {}} />} />
+        <Route path="/Aelection" element={<ElectionPage setPage={() => {}} />} />
+        <Route path="/election" element={<ElectionResults setPage={() => {}} />} />
+        <Route path="/election/:candidateId" element={<CandidateProfile setPage={() => {}} />} />
         <Route path="/createevent" element={<CreateEvent />} />
       </Route>
       <Route path="/login" element={<Login />} />
