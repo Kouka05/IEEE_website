@@ -1,0 +1,140 @@
+.create-session-page {
+  background-color: white;
+  min-height: 100vh;
+  color: #000;
+}
+
+.session-header {
+  background-color: #333;
+  color: white;
+  padding: 1.5rem 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-control label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.form-control label::after {
+  content: ' *';
+  color: #d32f2f;
+  opacity: 0.8;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.date-selector {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-selector label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.date-group {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.date-group select {
+  flex: 1;
+  padding: 0.8rem 0.5rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.create-button-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.create-button {
+  padding: 0.9rem 2.5rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-button:hover {
+  background-color: #222;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: 6px;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
