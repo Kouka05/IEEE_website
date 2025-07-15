@@ -1,0 +1,205 @@
+.submitted-registration-page {
+  background-color: white;
+  min-height: 100vh;
+  color: #000;
+}
+
+.registration-header {
+  background-color: #333;
+  color: white;
+  padding: 1.5rem 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.registration-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .registration-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
+.registration-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.readonly-input,
+.readonly-textarea {
+  padding: 0.8rem 1rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.readonly-input:focus,
+.readonly-textarea:focus {
+  outline: none;
+  border-color: #aaa;
+}
+
+.readonly-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.interview-card {
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.calendar-icon svg {
+  width: 28px;
+  height: 28px;
+  color: #666;
+}
+
+.interview-time {
+  color: #444;
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.interview-title {
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 0.3rem 0;
+  font-size: 1.1rem;
+}
+
+.interview-location {
+  color: #666;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.status-button {
+  padding: 0.8rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.status-button.accept {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-button.accept:hover,
+.status-button.accept.active {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.status-button.reject {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-button.reject:hover,
+.status-button.reject.active {
+  background-color: #c62828;
+  color: white;
+}
+
+.resend-button {
+  padding: 0.8rem 1.8rem;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.resend-button:hover {
+  background-color: #bbdefb;
+}
+
+.status-message {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  font-weight: 500;
+}
+
+.status-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.status-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #c62828;
+}

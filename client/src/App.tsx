@@ -12,6 +12,7 @@ import ElectionPage from './Components/Elections/Election'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
 import ElectionResults from './Components/Elections/ElectionResults'
 import CandidateProfile from './Components/Elections/CandidateProfile';
+import CallConfirm from './Components/CallRegistration/CallConfirm';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/election" element={<ElectionResults setPage={() => {}} />} />
         <Route path="/election/:candidateId" element={<CandidateProfile setPage={() => {}} />} />
         <Route path="/createevent" element={<CreateEvent />} />
+        <Route path="/callconfirm" element={<CallConfirm />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
