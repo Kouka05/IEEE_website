@@ -1,18 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import { ChevronDown, Sun, Moon, Menu, X } from 'lucide-react';
+import { ChevronDown, Sun, Moon, Menu, X, ChevronRight } from 'lucide-react';
+import './Navbar.css';
 
-// Page components
-const HomePage = () => <div className="page">Home Page</div>;
-const AboutPage = () => <div className="page">About Page</div>;
-const WorkPage = () => <div className="page">Our Work Page</div>;
-const ContactPage = () => <div className="page">Contact Page</div>;
-const ToolsPage = () => <div className="page">Tools Page</div>;
-const ProjectPage = () => <div className="page">Projects Page</div>;
-const ProgramsPage = () => <div className="page">Programs Page</div>;
-const EventsPage = () => <div className="page">Events Page</div>;
-const JoinPage = () => <div className="page">Join IEEE Page</div>;
-
+// --- Type Definitions for Nested Menus ---
 interface SubMenuItem {
   title: string;
   href: string;
@@ -25,246 +15,242 @@ interface MenuItem {
   submenu?: SubMenuItem[];
 }
 
+// --- Main App Component ---
 export default function App() {
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove(theme === 'dark' ? 'light' : 'dark');
+    root.classList.add(theme);
+  }, [theme]);
+
   return (
-    <Router>
-      <Navbar />
-    </Router>
+    <div className={`app-container`}>
+      <Navbar theme={theme} setTheme={setTheme} />
+    </div>
   );
 }
 
-const Navbar = () => {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [isRotating, setIsRotating] = useState(false);
+// --- Navbar Component ---
+interface NavbarProps {
+  theme: 'light' | 'dark';
+  setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>>;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ theme, setTheme }) => {
+  const [openMenuPath, setOpenMenuPath] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
-  const navigate = useNavigate();
 
   const navItems: MenuItem[] = [
-    { title: 'Home', href: '/' },
+    { title: 'Home', href: '#' },
     {
       title: 'About',
-      href: '/about',
+      href: '#',
       submenu: [
-        { title: 'Our Story', href: '/about/story' },
-        { title: 'Our Team', href: '/about/team' },
-        { title: 'Careers', href: '/about/careers' },
+        { title: 'Our Story', href: '#' },
+        { title: 'Our Team', href: '#' },
+        { title: 'Our Programs', href: '#' },
+        { title: 'Who we are', href: '#' }
       ],
     },
     {
-      title: 'Our Work',
-      href: '/our-work',
+      title: 'Activities',
+      href: '#',
       submenu: [
-        { 
-          title: 'Projects', 
-          href: '/projects',
+        {
+          title: 'Programs',
+          href: '#',
           submenu: [
-            { title: 'Programs', href: '/programs' },
-            { title: 'Events', href: '/events' }
-          ]
+            { title: 'Events', href: '#' },
+            { title: 'Mega-Events', href: '#' },
+            { title: 'Chipions', href: '#' }
+          ],
         },
-        { title: 'Research', href: '/research' },
-        { title: 'Publications', href: '/publications' },
+        { title: 'Media', href: '#' },
       ],
     },
     {
       title: 'Contact',
-      href: '/contact',
+      href: '#',
       submenu: [
-        { title: 'Get in Touch', href: '/contact/touch' },
-        { title: 'Locations', href: '/contact/locations' },
+        { title: 'Become a Partner', href: '/contact/partner' },
+        { title: 'Become a Speaker', href: '/contact/speaker' },
       ],
     },
-    { title: 'Tools', href: '/tools' },
+        {
+      title: 'Hub',
+      href: '#',
+      submenu: [
+        { title: 'Topics', href: '#' },
+        { title: 'Projects', href: '#' },
+        { title: 'Publications', href: '#' },
+        { title: 'Facilities', href: '#' },
+      ],
+    }
   ];
 
-  const isActive = (href: string) => location.pathname === href;
-
-  const handleMenuToggle = (title: string) => {
-    if (openMenu === title) {
-    if (openMenu === title) {
-      setOpenMenu(null);
-    } else {
-      setOpenMenu(title);
-    }
-
+  const handleMenuToggle = (path: string) => {
+    setOpenMenuPath(openMenuPath === path ? null : path);
+  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
-    setOpenMenu(null);
-    setOpenMenu(null);
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-    setOpenMenu(null);
-    setIsRotating(true);
-    setTimeout(() => {
-      const newTheme = theme === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
-      document.documentElement.setAttribute('data-theme', newTheme);
-      setIsRotating(false);
-    }, 300);
   };
+  
+  const handleThemeToggle = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  }
 
-  const navigateTo = (href: string) => {
-    navigate(href);
-    setIsMobileMenuOpen(false);
-    setOpenMenu(null);
-    setOpenMenu(null);
-    navigate(href);
-    setIsMobileMenuOpen(false);
-    setOpenMenu(null);
-      if (event && menuRef.current && !menuRef.current.contains((event as MouseEvent).target as Node)) {
-        setOpenMenu(null);
-        setOpenMenu(null);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuPath(null);
         setIsMobileMenuOpen(false);
       }
     };
-        setOpenMenu(null);
-        setIsMobileMenuOpen(false);
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  // Render desktop menu items
-  const renderDesktopMenu = (items: MenuItem[], level = 0) => (
-    <>
-      {items.map((item) => (
-        <div key={`${level}-${item.title}`} className={`menu-item-container ${level > 0 ? 'submenu' : ''}`}>
-          <div
-            className={`menu-item ${isActive(item.href) ? 'active' : ''}`}
-            onClick={() => {
-              if (item.submenu) {
-                handleMenuToggle(item.title);
-              } else {
-                navigateTo(item.href);
-              }
-            }}
-          >
-            {item.title}
-            {item.submenu && (
-              <ChevronDown 
-                size={16} 
-                className={`ml-1 transition-transform ${openMenu === item.title ? 'rotate-180' : ''}`} 
-              />
-            )}
-          </div>
-          
-          {item.submenu && openMenu === item.title && (
-            <div className={`submenu-container ${level > 0 ? 'nested' : ''}`}>
-              {renderDesktopMenu(item.submenu, level + 1)}
-            </div>
-          )}
-        </div>
-      ))}
-    </>
-  );
-
-  // Render mobile menu items
-  const renderMobileMenu = (items: MenuItem[], level = 0) => (
-    <>
-      {items.map((item) => (
-        <div key={`m-${level}-${item.title}`} className="mobile-menu-item">
-          <div className="mobile-menu-link-container">
-            <div
-              className={`mobile-menu-link ${isActive(item.href) ? 'active' : ''}`}
-              onClick={() => {
-                if (!item.submenu) {
-                  navigateTo(item.href);
-                } else {
-                  handleMenuToggle(item.title);
-                }
-              }}
-            >
-              {item.title}
-            </div>
-            
-            {item.submenu && (
-              <button
-                className="mobile-menu-toggle"
-                onClick={() => handleMenuToggle(item.title)}
-              >
-                <ChevronDown 
-                  size={16} 
-                  className={`transition-transform ${openMenu === item.title ? 'rotate-180' : ''}`} 
-                />
-              </button>
-            )}
-          </div>
-          
-          {item.submenu && openMenu === item.title && (
-            <div className={`mobile-submenu ${level > 0 ? 'nested' : ''}`}>
-              {renderMobileMenu(item.submenu, level + 1)}
-            </div>
-          )}
-        </div>
-      ))}
-    </>
-  );
-
-      // Remove the unused toggleTheme stub, as the actual theme toggle logic is already implemented inline above.
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav ref={menuRef} className="navbar">
-      <div className="navbar-inner">
+      <div className="navbar-content">
+        {/* Logo */}
         <div className="logo-container">
-          <div className="logo-link" onClick={() => navigateTo('/')}>
-            <svg width="40" height="40" viewBox="0 0 256 256" className="logo-svg">
-              <path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm0 192a88 88 0 1 1 88-88a88.1 88.1 0 0 1-88 88Zm48-88a48 48 0 0 1-48 48V80a48 48 0 0 1 48 48Z"/>
-            </svg>
-            <span className="logo-text">IEEE Student Branch</span>
-          </div>
+          <img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" width="40px" />
+          <span className="logo-text">SSCS Alex Branch</span>
         </div>
 
+        {/* Desktop Menu */}
         <div className="desktop-menu">
-          {renderDesktopMenu(navItems)}
+          {navItems.map((item) => (
+            <div key={item.title} className="menu-item">
+              <button
+                onClick={() => item.submenu && handleMenuToggle(item.title)}
+                className={`menu-button ${item.title === 'Home' ? 'active' : ''}`}
+              >
+                {item.title}
+                {item.submenu && <ChevronDown size={16} className="menu-icon" />}
+              </button>
+              
+              {item.submenu && openMenuPath?.startsWith(item.title) && (
+                <div className="submenu">
+                  {item.submenu.map((subItem) => (
+                    <div key={subItem.title} className="submenu-item">
+                      <button
+                        onClick={() => subItem.submenu && handleMenuToggle(`${item.title}>${subItem.title}`)}
+                        className="submenu-button"
+                      >
+                        <a href={subItem.href}>{subItem.title}</a>
+                        {subItem.submenu && <ChevronRight size={14} />}
+                      </button>
+                      
+                      {subItem.submenu && openMenuPath === `${item.title}>${subItem.title}` && (
+                        <div className="nested-submenu">
+                          {subItem.submenu.map(nestedItem => (
+                            <a
+                              key={nestedItem.title}
+                              href={nestedItem.href}
+                              className="submenu-link"
+                            >
+                              {nestedItem.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
 
-        <div className="desktop-buttons">
-          <div className="join-button" onClick={() => navigateTo('/join')}>
-            <span className="join-button-overlay"></span>
-            <span className="join-button-border"></span>
-            <span className="join-button-gradient"></span>
-            <span className="join-button-text">Join IEEE</span>
-          </div>
-          <button 
-            className={`theme-button ${isRotating ? 'rotating' : ''}`}
-            
-            aria-label="Toggle theme"
-          >
+        {/* Right side buttons */}
+        <div className="right-buttons">
+          <a href="#" className="join-button">
+            <span className="join-button-span">Join IEEE</span>
+          </a>
+          <button onClick={handleThemeToggle} className="theme-button">
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
         </div>
         
+        {/* Mobile Menu Button */}
         <div className="mobile-menu-button">
-          <button 
-            onClick={toggleMobileMenu} 
-            className="mobile-toggle-button"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          >
+          <button onClick={toggleMobileMenu} className="theme-button">
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>
       
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="mobile-menu">
-          {renderMobileMenu(navItems)}
-          <div className="mobile-buttons">
-            <div 
-              className="mobile-join-button"
-              onClick={() => navigateTo('/join')}
-            >
-              <span className="mobile-join-overlay"></span>
-              <span className="mobile-join-text">Join IEEE</span>
-            </div>
-            <button 
-              className="mobile-theme-button"
+          {navItems.map((item) => (
+            <div key={item.title} className="mobile-menu-item">
+              <button 
+                onClick={() => item.submenu && handleMenuToggle(item.title)} 
+                className="mobile-menu-button-item"
+              >
+                <a href={item.href}>{item.title}</a>
+                {item.submenu && (
+                  <ChevronDown 
+                    size={16} 
+                    className={`transition-transform ${openMenuPath?.startsWith(item.title) ? 'rotate-180' : ''}`} 
+                  />
+                )}
+              </button>
               
-            >
+              {item.submenu && openMenuPath?.startsWith(item.title) && (
+                <div className="mobile-submenu">
+                  {item.submenu.map((subItem) => (
+                    <div key={subItem.title} className="mobile-menu-item">
+                      <button 
+                        onClick={() => subItem.submenu && handleMenuToggle(`${item.title}>${subItem.title}`)} 
+                        className="mobile-menu-button-item"
+                      >
+                        <a href={subItem.href}>{subItem.title}</a>
+                        {subItem.submenu && (
+                          <ChevronDown 
+                            size={16} 
+                            className={`transition-transform ${openMenuPath === `${item.title}>${subItem.title}` ? 'rotate-180' : ''}`} 
+                          />
+                        )}
+                      </button>
+                      
+                      {subItem.submenu && openMenuPath === `${item.title}>${subItem.title}` && (
+                        <div className="mobile-nested-submenu">
+                          {subItem.submenu.map(nestedItem => (
+                            <a 
+                              key={nestedItem.title} 
+                              href={nestedItem.href} 
+                              className="submenu-link"
+                            >
+                              {nestedItem.title}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          
+          <div className="mobile-menu-footer">
+            <a href="#" className="join-button">
+              <span className="join-button-span">Join IEEE</span>
+            </a>
+            <button onClick={handleThemeToggle} className="mobile-theme-button">
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              <span>Theme</span>
+              <span>Toggle Theme</span>
             </button>
           </div>
         </div>
@@ -272,7 +258,6 @@ const Navbar = () => {
     </nav>
   );
 };
-
 {/* 
   Old NavBar
   
