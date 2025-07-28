@@ -1,3 +1,4 @@
+{/*
 import './JoinUs.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,5 +58,4 @@ const JoinUs = () => {
         </section>
     );
 };
-
-export default JoinUs;
+export default JoinUs;*/}
