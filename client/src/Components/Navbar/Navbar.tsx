@@ -35,6 +35,18 @@ const Navbar: React.FC = () => {
                 className="nav-link"
                 onClick={(e) => {
                   e.preventDefault();
+                  navigate('/about');
+                }}
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
                   navigate('/training');
                 }}
               >
@@ -126,6 +138,9 @@ const Navbar: React.FC = () => {
       <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
         <div className="mobile-menu-content">
           <ul>
+            <li>
+              <button onClick={() => handleNavigation('/about')}>About</button>
+            </li>
             <li>
               <button onClick={() => handleNavigation('/training')}>Training</button>
             </li>
