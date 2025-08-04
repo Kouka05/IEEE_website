@@ -1,45 +1,4 @@
-// HeroSection.tsx
-import React from 'react';
-import './HeroSection.css';
 
-const HeroSection: React.FC = () => {
-  return (
-    <section className="hero">
-      <div className="hero-content">
-        <div className="logo-container">
-          <div className="ieee-logo">IEEE</div>
-          <div className="sscs-logo">SSCS</div>
-        </div>
-        
-        <h1 className="hero-title">
-          <span>Solid-State Circuits Society</span>
-          Alexandria University Branch
-        </h1>
-        
-        <p className="hero-subtitle">
-          Advancing integrated circuit design and systems through education, research, and professional development
-        </p>
-        
-        <div className="hero-cta">
-          <button className="cta-primary">Join Our Community</button>
-          <button className="cta-secondary">Upcoming Events</button>
-        </div>
-      </div>
-      
-      <div className="hero-decoration">
-        <div className="circuit-line"></div>
-        <div className="chip-icon">
-          <div className="chip-core"></div>
-          <div className="chip-pins">
-            {[...Array(16)].map((_, i) => <div key={i} className="chip-pin"></div>)}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default HeroSection;
 {/*
 import './JoinUs.css';
 import { useNavigate } from 'react-router-dom';
