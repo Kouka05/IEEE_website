@@ -3,11 +3,9 @@ import Layout from './Components/Layout'
 import Welcome from './Components/Welcome/WelcomePage'
 import SignUp from './Components/SignUp/SignUp'
 import Login from './Components/LoginPage/LoginPage'
-import Call from './Components/Call/Call'
 import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
-import ElectionPage from './Components/Elections/Election'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
 import About from './Components/About/About';
 import './App.css'
