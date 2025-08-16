@@ -1,4 +1,70 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './HeroSection.css';
 
+const HeroSection = () => {
+    const navigate = useNavigate();
+    
+    const handleClick = () => navigate('/signup');
+
+    return (
+        <section className="journey-section">
+            <div className="circuit-overlay"></div>
+            <div className="journey-container">
+                <div className="journey-content">
+                    <h2 className="journey-title">
+                        <span className="title-line">Your Journey in</span>
+                        <span className="title-line">Solid-State Starts Here</span>
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="journey-arrow"
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                        >
+                            <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M9 5l7 7-7 7" 
+                            />
+                        </svg>
+                    </h2>
+                    <p className="journey-description">
+                        Connect with like-minded engineers, access exclusive IEEE resources, 
+                        and accelerate your career in solid-state circuits and systems.
+                    </p>
+                    <div className="journey-button-container">
+                        <button
+                            className="journey-button"
+                            onClick={handleClick}
+                        >
+                            Join SSCS Now
+                        </button>
+                    </div>
+                </div>
+                
+                <div className="circuit-diagram">
+                    <div className="circuit-node"></div>
+                    <div className="circuit-node"></div>
+                    <div className="circuit-node"></div>
+                    <div className="circuit-node"></div>
+                    <div className="circuit-line horizontal"></div>
+                    <div className="circuit-line vertical"></div>
+                    <div className="circuit-line diagonal"></div>
+                    <div className="circuit-chip">
+                        <div className="chip-pin"></div>
+                        <div className="chip-pin"></div>
+                        <div className="chip-pin"></div>
+                        <div className="chip-pin"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default HeroSection;
 {/*
 import './JoinUs.css';
 import { useNavigate } from 'react-router-dom';
