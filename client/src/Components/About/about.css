@@ -1,339 +1,321 @@
-.about-page {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  color: #333;
-  background-color: #ffffff;
+body, .about-gradient-bg {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.08rem;
+  color: #222;
 }
 
-a {
-  color: #d9534f;
-  text-decoration: none;
+.about-hero-img-title, .about-vmv-title, .about-history-title {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
 }
 
-a:hover {
-  text-decoration: underline;
+.about-hero-img-title {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
 
-h1, h2, h3, h4 {
-  color: #b71c1c; 
+.about-hero-img-text {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.08rem;
+  color: #fff;
+  line-height: 1.6;
 }
 
-/* --- Header --- */
-.about-header {
-  background-color: #222;
-  color: white;
-  padding: 2rem 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+.about-vmv-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
 }
 
-.about-header h1 {
-  color: white;
-  font-size: 2.5rem;
-  margin: 0;
+.about-vmv-text {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.08rem;
+  color: #fff;
+  line-height: 1.7;
 }
 
-.header-logos {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    font-size: 0.8rem;
-}
-
-.header-logos span {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.header-logos img {
-    max-height: 25px;
-    filter: brightness(0) invert(1); /* Make logos white */
-}
-
-
-/* --- Main Content --- */
-main {
-  padding: 2rem 5%;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-section {
-  margin-bottom: 4rem;
-}
-
-/* --- Info Card Section (IEEE, SSCS) --- */
-.info-card-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  background-color: #f7f7f7;
-  border-radius: 12px;
+.about-history-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin: 32px 0 36px 0;
   text-align: center;
 }
 
-.info-card-logo img {
-  max-width: 200px;
-  margin-bottom: 1rem;
+.about-timeline-title {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 7px;
 }
 
-.info-card-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.about-timeline-description {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.about-timeline-date-red {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  color: #e53935;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.about-timeline-center {
+  position: relative;
   width: 100%;
-}
-
-.info-column h2 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-}
-
-.info-column p {
-  line-height: 1.6;
-  max-width: 500px;
+  max-width: 900px;
   margin: 0 auto;
+  min-height: 600px;
+  padding-bottom: 60px;
 }
 
-.info-column a {
-    display: block;
-    margin-top: 1rem;
-    font-weight: bold;
+.about-timeline-vertical-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #222;
+  transform: translateX(-50%);
+  z-index: 0;
+  border-radius: 2px;
 }
 
-/* --- Vision, Mission, Objective Section --- */
-.vmo-section {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2.5rem;
+.about-timeline-row {
+  display: flex;
+  width: 100%;
+  min-height: 120px;
+  position: relative;
+  align-items: center;
 }
 
-.icon-info-item {
+.about-timeline-row.left {
+  justify-content: flex-start;
+}
+
+.about-timeline-row.right {
+  justify-content: flex-end;
+}
+
+.about-timeline-card-wrapper {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 100%;
+}
+
+.about-timeline-card {
+  background: #fff;
+  border: 1px solid #bbb;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 18px 20px;
+  min-width: 220px;
+  max-width: 320px;
+  margin: 18px 0;
+  position: relative;
   display: flex;
   align-items: flex-start;
-  gap: 1.5rem;
 }
 
-.icon-container {
-  font-size: 2.5rem;
+.about-timeline-dot-line {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  flex-shrink: 0;
+  position: relative;
+  left: 0;
 }
 
-.icon-info-text h3 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
+.about-timeline-row.right .about-timeline-card-wrapper {
+  justify-content: flex-end;
 }
 
-.icon-info-text p {
-  margin: 0;
-  line-height: 1.6;
-  color: #555;
+.about-timeline-row.left .about-timeline-card-wrapper {
+  justify-content: flex-start;
 }
 
-/* --- Strategy Section --- */
-.strategy-section {
-    text-align: center;
+.about-timeline-row.right .about-timeline-card {
+  flex-direction: row-reverse;
 }
 
-.strategy-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
+.about-timeline-row.right .about-timeline-dot-line {
+  margin-left: 10px;
+  margin-right: 0;
+  flex-direction: row-reverse;
 }
 
-.strategy-header .icon-placeholder {
-    font-size: 2rem;
+.about-timeline-row.right .about-timeline-dot {
+  margin-left: 0;
+  margin-right: 0;
 }
 
-.strategy-header h2 {
-    margin: 0;
+.about-timeline-row.left .about-timeline-dot {
+  margin-right: 0;
+  margin-left: 0;
 }
 
-.strategy-bubbles {
+.about-timeline-horizontal-line {
+  width: 38px;
+  height: 2px;
+  background: #222;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.about-timeline-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.about-timeline-content-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+
+.about-timeline-row.right .about-timeline-content-flex {
+  flex-direction: row-reverse;
+}
+
+.about-timeline-image-card {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(124,77,255,0.08);
+}
+
+.about-timeline-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.about-hero-img-section {
+  position: relative;
+  width: 100vw;
+  min-height: 220px;
+  background: url('/faculty_of_engineering_alexandria_university_egypt_cover.jpg') 50% 45% /100% no-repeat;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 1;
+}
+
+.about-hero-img-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35); 
+  z-index: 2;
+}
+
+.about-hero-img-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 38px 0 38px 48px;
+  max-width: 800px;
+}
+
+.about-hero-img-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.about-hero-img-gold-bar {
+  display: inline-block;
+  width: 5px;
+  height: 38px;
+  background: #ffc107;
+  margin-right: 16px;
+  border-radius: 2px;
+}
+
+.about-vmv-section {
+  background: #b71c1c;
+  padding: 48px 0 32px 0;
+  width: 100vw;
+  margin-bottom: 0;
+}
+
+.about-vmv-row {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 80px;
+  margin-bottom: 36px;
   flex-wrap: wrap;
 }
 
-.bubble {
-  background-color: #b71c1c;
-  color: white;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
+.about-vmv-row-center {
   justify-content: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 0;
 }
 
-.bubble:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+.about-vmv-block {
+  flex: 1 1 320px;
+  max-width: 1000px;
+  min-width: 220px;
+  margin: 0 18px;
+  text-align: center;
 }
 
-/* --- Activities Section --- */
-.activities-section {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    text-align: center;
+.about-vmv-gold-underline {
+  width: 80px;
+  height: 4px;
+  background: #ffc107;
+  margin: 0 auto 18px auto;
+  border-radius: 2px;
 }
 
-.activities-section h2 {
-    font-size: 1.8rem;
-}
-
-.activities-section p {
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-    color: #555;
-}
-
-/* --- Chipions Section --- */
-.chipions-section {
-    text-align: center;
-}
-
-.chipions-logo {
-    max-width: 300px;
-    margin-bottom: 1rem;
-}
-
-.chipions-section h3 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.chipions-section p {
-    max-width: 700px;
-    margin: 0 auto;
-    line-height: 1.6;
-    color: #555;
-}
-
-
-/* --- Achievement Section --- */
-.achievement-section {
-    text-align: center;
-}
-
-.achievement-section h2 {
-    margin-bottom: 2.5rem;
-}
-
-.achievement-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-    background-color: #e0e0e0;
-}
-
-.achievement-item {
-    background-color: #fff;
-    padding: 2rem 1.5rem;
-    display: flex;
+@media (max-width: 900px) {
+  .about-hero-img-content {
+    padding: 28px 0 28px 12px;
+    max-width: 98vw;
+  }
+  .about-vmv-row {
     flex-direction: column;
+    gap: 32px;
     align-items: center;
-    text-align: center;
-}
-
-.achievement-icon {
-    margin-bottom: 1rem;
-    color: #333;
-}
-
-.achievement-icon svg {
-    width: 40px;
-    height: 40px;
-}
-
-.achievement-text h4 {
-    font-size: 1.2rem;
-    margin: 0 0 0.5rem 0;
-}
-
-.achievement-text p {
-    color: #555;
-    line-height: 1.5;
-    margin: 0;
-    font-size: 0.95rem;
-}
-
-
-/* --- Partners Section --- */
-.partners-section {
-    text-align: center;
-}
-
-.partners-section h2 {
-    margin-bottom: 2.5rem;
-}
-
-.partners-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 2rem;
-  align-items: center;
-}
-
-.partner-logo img {
-  max-width: 100%;
-  max-height: 60px;
-  object-fit: contain;
-  filter: grayscale(100%);
-  transition: filter 0.3s ease;
-}
-
-.partner-logo img:hover {
-  filter: grayscale(0%);
-}
-
-/* --- Responsive Design --- */
-@media (min-width: 768px) {
-  .info-card-section {
-    flex-direction: row;
-    text-align: left;
   }
-  
-  .info-card-logo {
-    flex-shrink: 0;
+  .about-vmv-block {
+    margin: 0 0 24px 0;
+    max-width: 95vw;
   }
-
-  .info-card-content {
-    flex-direction: row;
+  .about-hero-img-title, .about-vmv-title, .about-history-title {
+    font-size: 1.4rem;
   }
-  
-  .vmo-section {
-    grid-template-columns: repeat(2, 1fr);
+  .about-hero-img-text, .about-vmv-text, .about-timeline-title, .about-timeline-description, .about-timeline-date-red {
+    font-size: 0.98rem;
   }
-
-  .activities-section {
-    grid-template-columns: 1fr 1fr;
-    text-align: left;
+  .about-timeline-content-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px;
   }
-  
-  .achievement-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .about-timeline-row.right .about-timeline-content-flex {
+    flex-direction: column-reverse !important;
+    align-items: flex-start !important;
   }
-}
-
-@media (min-width: 1024px) {
-  .vmo-section {
-    grid-template-columns: repeat(3, 1fr);
+  .about-timeline-image-card {
+    width: 80vw;
+    height: auto;
+    max-width: 320px;
   }
-}
+} 
