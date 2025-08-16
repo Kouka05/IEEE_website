@@ -97,7 +97,6 @@ body, .about-gradient-bg {
   min-height: 120px;
   position: relative;
   align-items: center;
-  /* Center the row vertically */
 }
 
 .about-timeline-row.left {
@@ -113,7 +112,6 @@ body, .about-gradient-bg {
   display: flex;
   align-items: center;
   min-width: 0;
-  /* Ensure the card is vertically centered in the row */
   height: 100%;
 }
 
@@ -221,7 +219,7 @@ body, .about-gradient-bg {
 .about-hero-img-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.35); /* dark overlay for faded effect */
+  background: rgba(0,0,0,0.35); 
   z-index: 2;
 }
 
