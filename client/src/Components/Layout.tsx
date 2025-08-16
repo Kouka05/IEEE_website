@@ -5,9 +5,9 @@ import React from 'react';
 
 const Layout: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div>
       <Navbar />
-      <main className="flex-grow">
+      <main>
         <Outlet /> 
       </main>
       <Footer />

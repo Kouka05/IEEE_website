@@ -11,15 +11,22 @@
   --text-dark: #1e293b;
   --text-light: #f1f5f9;
   --text-gray: #64748b;
-  
   /* Transitions */
   --transition: all 0.3s ease;
 }
 
+/* CSS RESET
+  This removes default browser styles.
+*/
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -27,7 +34,6 @@ body {
   background-color: var(--dark-bg);
   color: var(--text-light);
   line-height: 1.6;
-  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5 {
@@ -48,10 +54,17 @@ button {
   background: none;
 }
 
+/* THE CORRECTED CONTAINER CLASS
+  This is now a reusable utility to center content.
+  You already have this logic in .hero-container and .journey-container,
+  which is the correct way to do it. This rule is here for future use.
+*/
 .container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 /* Scrollbar Styling */
