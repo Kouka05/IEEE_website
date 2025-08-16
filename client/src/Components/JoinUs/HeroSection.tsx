@@ -14,7 +14,7 @@ const HeroSection = () => {
                 <div className="journey-content">
                     <h2 className="journey-title">
                         <span className="title-line">Your Journey in</span>
-                        <span className="title-line">Solid-State Starts Here</span>
+                        <span className="title-line">SSCS Starts Here</span>
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
                             className="journey-arrow"
