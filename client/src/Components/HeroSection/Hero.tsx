@@ -8,18 +8,34 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ navigate }) => {
     return (
         <section className="hero-section">
+            <div className="circuit-overlay"></div>
             <div className="hero-container">
-                <h1 className="hero-title">IEEE SSCS Alexandria</h1>
-                <h2 className="hero-subtitle">Powering the Future of Electronics</h2>
+                <div className="header-branding">
+                    <div className="sscs-logo">SSCS</div>
+                    <div className="branch-name">ALEXANDRIA STUDENT BRANCH</div>
+                </div>
+                
+                <h1 className="hero-title">
+                    <span className="title-line">SOLID-STATE CIRCUITS</span>
+                    <span className="title-line">SOCIETY</span>
+                </h1>
+                
                 <p className="hero-description">
-                    Empowering students, researchers, and professionals through innovation, collaboration, and cutting-edge education in solid-state circuits.
+                    Empowering students, researchers, and professionals through innovation, 
+                    collaboration, and cutting-edge education in solid-state circuits.
                 </p>
+                
                 <div className="hero-buttons">
-                    {/* Fix loading issue for buttons */}
-                    <button type="button" onClick={() => navigate('/about')} className="hero-button learn-more">
+                    <button 
+                        onClick={() => navigate('/about')} 
+                        className="hero-button learn-more"
+                    >
                         Learn More
                     </button>
-                    <button type="button" onClick={() => navigate('/signup')} className="hero-button join-scs">
+                    <button 
+                        onClick={() => navigate('/signup')} 
+                        className="hero-button join-scs"
+                    >
                         Join SSCS
                     </button>
                 </div>
