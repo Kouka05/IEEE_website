@@ -23,15 +23,7 @@ const Navbar: React.FC = () => {
   const navItems: MenuItem[] = [
     { title: 'Home', href: '/' },
     {
-      title: 'About',
-      href: '#',
-      submenu: [
-        { title: 'Our Story', href: '/about' },
-        { title: 'Our Team', href: '/team' },
-        { title: 'Our Programs', href: '/programs' },
-        { title: 'Who we are', href: '/who-we-are' }
-      ],
-    },
+      title: 'About', href: '/about'},
     {
       title: 'Activities',
       href: '#',
