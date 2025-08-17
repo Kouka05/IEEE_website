@@ -7,7 +7,7 @@ import NewsandEvents from './Components/NewsandEvents/NewsandEvents'
 import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
-import About from './Components/About/About';
+import About from './Components/About/about';
 import './App.css'
 import { AuthProvider } from './AuthContext';
 
