@@ -1,6 +1,10 @@
 /* Global Styles */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap');
-
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 :root {
   /* Main Colors */
   --sscs-red: #e11837;
@@ -14,10 +18,7 @@
   /* Transitions */
   --transition: all 0.3s ease;
 }
-
-/* CSS RESET
-  This removes default browser styles.
-*/
+/* Reset Styles */
 * {
   margin: 0;
   padding: 0;
@@ -52,19 +53,6 @@ button {
   font-family: 'Montserrat', sans-serif;
   border: none;
   background: none;
-}
-
-/* THE CORRECTED CONTAINER CLASS
-  This is now a reusable utility to center content.
-  You already have this logic in .hero-container and .journey-container,
-  which is the correct way to do it. This rule is here for future use.
-*/
-.container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 }
 
 /* Scrollbar Styling */
