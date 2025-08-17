@@ -1,14 +1,21 @@
 /* Hero Section - Final Fix */
 .hero-section {
   position: relative;
+  width: 100vw; /* Use viewport width */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-top: 0;
+
+
+  /* Your existing styles below */
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  padding: 70px 0 0; /* Top padding for navbar */
-  margin: 0;
-  width: 100%;
-  overflow: hidden;
+  padding: 70px 0 0;
+  overflow-x: hidden; /* Important for this technique */
   background-color: #0a0a0a;
+  flex: 1;
 }
 
 /* Circuit board background effect */
@@ -23,7 +30,7 @@
     radial-gradient(circle at 80% 70%, rgba(225, 24, 55, 0.15) 0px, transparent 3px),
     linear-gradient(135deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%),
     linear-gradient(45deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%);
-  background-size: 80px 80px;
+  background-size: 100px 100px;
   opacity: 0.6;
   z-index: 0;
 }
@@ -31,7 +38,6 @@
 .hero-container {
   position: relative;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   text-align: center;
   z-index: 1;
@@ -39,7 +45,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: calc(100vh - 70px); /* Adjust for navbar */
 }
 
 .header-branding {
@@ -155,9 +160,7 @@
     padding-top: 60px; /* Adjust for mobile navbar */
   }
   
-  .hero-container {
-    min-height: calc(100vh - 60px);
-  }
+
   
   .hero-title {
     font-size: 2.5rem;
@@ -186,10 +189,7 @@
   .hero-section {
     padding-top: 50px; /* Adjust for smaller navbar */
   }
-  
-  .hero-container {
-    min-height: calc(100vh - 50px);
-  }
+
   
   .hero-title {
     font-size: 2rem;
