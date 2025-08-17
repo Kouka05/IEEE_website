@@ -7,7 +7,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ navigate }) => {
     return (
-        <section className="hero-section">
+        <div className="hero-section">
             <div className="circuit-overlay"></div>
             <div className="hero-container">
                 <div className="header-branding">
@@ -40,7 +40,7 @@ const Hero: React.FC<HeroProps> = ({ navigate }) => {
                     </button>
                 </div>
             </div>
-        </section>
+        </div>
     );
 };
 

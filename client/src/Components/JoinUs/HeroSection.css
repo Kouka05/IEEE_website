@@ -1,9 +1,18 @@
 /* Journey Section - Final Fix */
 .journey-section {
+  /* --- Full bleed properties --- */
   position: relative;
+  width: 100vw; /* Use viewport width */
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-bottom: 0;
+
+
+  /* --- Your existing styles --- */
+  min-height: 100vh;
   padding: 0;
-  margin: 0;
-  width: 100%;
   background: linear-gradient(to bottom, #0a0a0a 0%, #1a0a0e 100%);
   overflow: hidden;
   border-top: 1px solid rgba(225, 24, 55, 0.2);
@@ -26,7 +35,6 @@
 .journey-container {
   position: relative;
   width: 100%;
-  max-width: 1280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
