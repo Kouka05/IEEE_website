@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom'; // Added Link import
 import { ChevronDown, Menu, X, ChevronRight } from 'lucide-react';
 import './Navbar.css';
 
@@ -22,8 +23,7 @@ const Navbar: React.FC = () => {
 
   const navItems: MenuItem[] = [
     { title: 'Home', href: '/' },
-    {
-      title: 'About', href: '/about'},
+    { title: 'About', href: '/about' },
     {
       title: 'Activities',
       href: '#',
@@ -115,36 +115,54 @@ const Navbar: React.FC = () => {
         <div className="desktop-menu">
           {navItems.map((item) => (
             <div key={item.title} className="menu-item">
-              <button
-                onClick={() => item.submenu && handleMenuToggle(item.title)}
-                className={`menu-button ${item.title === 'Home' ? 'active' : ''}`}
-              >
-                {item.title}
-                {item.submenu && <ChevronDown size={16} className="menu-icon" />}
-              </button>
+              {item.submenu ? (
+                <button
+                  onClick={() => handleMenuToggle(item.title)}
+                  className={`menu-button ${item.title === 'Home' ? 'active' : ''}`}
+                >
+                  {item.title}
+                  <ChevronDown size={16} className="menu-icon" />
+                </button>
+              ) : (
+                <Link
+                  to={item.href}
+                  className={`menu-button ${item.title === 'Home' ? 'active' : ''}`}
+                >
+                  {item.title}
+                </Link>
+              )}
               
               {item.submenu && openMenuPath?.startsWith(item.title) && (
                 <div className="submenu">
                   {item.submenu.map((subItem) => (
                     <div key={subItem.title} className="submenu-item">
-                      <button
-                        onClick={() => subItem.submenu && handleMenuToggle(`${item.title}>${subItem.title}`)}
-                        className="submenu-button"
-                      >
-                        <a href={subItem.href}>{subItem.title}</a>
-                        {subItem.submenu && <ChevronRight size={14} />}
-                      </button>
+                      {subItem.submenu ? (
+                        <button
+                          onClick={() => handleMenuToggle(`${item.title}>${subItem.title}`)}
+                          className="submenu-button"
+                        >
+                          {subItem.title}
+                          <ChevronRight size={14} />
+                        </button>
+                      ) : (
+                        <Link
+                          to={subItem.href}
+                          className="submenu-button"
+                        >
+                          {subItem.title}
+                        </Link>
+                      )}
                       
                       {subItem.submenu && openMenuPath === `${item.title}>${subItem.title}` && (
                         <div className="nested-submenu">
                           {subItem.submenu.map(nestedItem => (
-                            <a
+                            <Link
                               key={nestedItem.title}
-                              href={nestedItem.href}
+                              to={nestedItem.href}
                               className="submenu-link"
                             >
                               {nestedItem.title}
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -158,9 +176,9 @@ const Navbar: React.FC = () => {
 
         {/* Right side buttons */}
         <div className="right-buttons">
-          <a href="/join" className="join-button">
+          <Link to="/signup" className="join-button">
             <span className="join-button-span">Join IEEE</span>
-          </a>
+          </Link>
         </div>
         
         {/* Mobile Menu Button */}
@@ -176,46 +194,60 @@ const Navbar: React.FC = () => {
         <div className="mobile-menu">
           {navItems.map((item) => (
             <div key={item.title} className="mobile-menu-item">
-              <button 
-                onClick={() => item.submenu && handleMenuToggle(item.title)} 
-                className="mobile-menu-button-item"
-              >
-                <a href={item.href}>{item.title}</a>
-                {item.submenu && (
+              {item.submenu ? (
+                <button 
+                  onClick={() => handleMenuToggle(item.title)} 
+                  className="mobile-menu-button-item"
+                >
+                  {item.title}
                   <ChevronDown 
                     size={16} 
                     className={`transition-transform ${openMenuPath?.startsWith(item.title) ? 'rotate-180' : ''}`} 
                   />
-                )}
-              </button>
+                </button>
+              ) : (
+                <Link
+                  to={item.href}
+                  className="mobile-menu-button-item"
+                >
+                  {item.title}
+                </Link>
+              )}
               
               {item.submenu && openMenuPath?.startsWith(item.title) && (
                 <div className="mobile-submenu">
                   {item.submenu.map((subItem) => (
                     <div key={subItem.title} className="mobile-menu-item">
-                      <button 
-                        onClick={() => subItem.submenu && handleMenuToggle(`${item.title}>${subItem.title}`)} 
-                        className="mobile-menu-button-item"
-                      >
-                        <a href={subItem.href}>{subItem.title}</a>
-                        {subItem.submenu && (
+                      {subItem.submenu ? (
+                        <button 
+                          onClick={() => handleMenuToggle(`${item.title}>${subItem.title}`)} 
+                          className="mobile-menu-button-item"
+                        >
+                          {subItem.title}
                           <ChevronDown 
                             size={16} 
                             className={`transition-transform ${openMenuPath === `${item.title}>${subItem.title}` ? 'rotate-180' : ''}`} 
                           />
-                        )}
-                      </button>
+                        </button>
+                      ) : (
+                        <Link
+                          to={subItem.href}
+                          className="mobile-menu-button-item"
+                        >
+                          {subItem.title}
+                        </Link>
+                      )}
                       
                       {subItem.submenu && openMenuPath === `${item.title}>${subItem.title}` && (
                         <div className="mobile-nested-submenu">
                           {subItem.submenu.map(nestedItem => (
-                            <a 
+                            <Link 
                               key={nestedItem.title} 
-                              href={nestedItem.href} 
+                              to={nestedItem.href} 
                               className="submenu-link"
                             >
                               {nestedItem.title}
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       )}
@@ -227,9 +259,9 @@ const Navbar: React.FC = () => {
           ))}
           
           <div className="mobile-menu-footer">
-            <a href="/join" className="join-button">
+            <Link to="/join" className="join-button">
               <span className="join-button-span">Join IEEE</span>
-            </a>
+            </Link>
           </div>
         </div>
       )}
@@ -238,192 +270,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-
-{/* import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Navbar.css';
-import { useAuth } from '../../AuthContext';
-
-const Navbar: React.FC = () => {
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setIsMenuOpen(false);
-  };
-
-  const canCreateEvent = user && (user.role === 'Head' || user.role === 'Chairman');
-
-  return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-left">
-          <div className="navbar-logo">
-            <img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" />
-          </div>
-
-          <ul className="navbar-links">
-            <li>
-              <a
-                href="#"
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/about');
-                }}
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/training');
-                }}
-              >
-                Training
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/events');
-                }}
-              >
-                Events
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/committee');
-                }}
-              >
-                Committee
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="nav-link"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/news');
-                }}
-              >
-                News
-              </a>
-            </li>
-            {canCreateEvent && (
-              <li>
-                <a
-                  href="#"
-                  className="nav-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate('/createevent');
-                  }}
-                >
-                  Create Event
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
-
-        <div className="navbar-buttons">
-          {user ? (
-            <button className="btn-outline" onClick={() => { logout(); navigate('/'); }}>
-              Sign out
-            </button>
-          ) : (
-            <>
-              <button className="btn-outline" onClick={() => navigate('/login')}>
-                Sign in
-              </button>
-              <button className="btn-filled" onClick={() => navigate('/signup')}>
-                Join IEEE
-              </button>
-            </>
-          )}
-        </div>
-
-        <button className="mobile-menu-button" onClick={toggleMenu}>
-          <div className={`menu-icon ${isMenuOpen ? 'open' : ''}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-      </div>
-
-      <div className={`mobile-menu ${isMenuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-content">
-          <ul>
-            <li>
-              <button onClick={() => handleNavigation('/about')}>About</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('/training')}>Training</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('/events')}>Events</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('/committee')}>Committee</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('/news')}>News</button>
-            </li>
-            {canCreateEvent && (
-              <li>
-                <button onClick={() => handleNavigation('/createevent')}>Create Event</button>
-              </li>
-            )}
-          </ul>
-          
-          <div className="mobile-buttons">
-            {user ? (
-              <button 
-                className="mobile-btn-outline" 
-                onClick={() => { logout(); handleNavigation('/'); }}
-              >
-                Sign out
-              </button>
-            ) : (
-              <>
-                <button 
-                  className="mobile-btn-outline" 
-                  onClick={() => handleNavigation('/login')}
-                >
-                  Sign in
-                </button>
-                <button 
-                  className="mobile-btn-filled" 
-                  onClick={() => handleNavigation('/signup')}
-                >
-                  Join IEEE
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-};  */}
