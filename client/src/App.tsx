@@ -8,6 +8,8 @@ import  Events  from './Components/Events/Events'
 import News from './Components/News/News'
 import CreateEvent from './Components/CreateEvent/CreateEvent';
 import About from './Components/About/About';
+import ContactPartner from './Components/Contact/ContactPartner';
+import ContactSpeaker from './Components/Contact/ContactSpeaker';
 import './App.css'
 import { AuthProvider } from './AuthContext';
 
@@ -25,6 +27,8 @@ function App() {
               <Route path="/news" element={<News />} />
               <Route path="/createevent" element={<CreateEvent />} />
               <Route path="/about" element={<About />} />
+              <Route path="/contact/partner" element={<ContactPartner />} />
+              <Route path="/contact/speaker" element={<ContactSpeaker />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
