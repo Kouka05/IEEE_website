@@ -52,10 +52,8 @@ const Navbar: React.FC = () => {
       title: 'Hub',
       href: '#',
       submenu: [
-        { title: 'Topics', href: '/topics' },
-        { title: 'Projects', href: '/projects' },
-        { title: 'Publications', href: '/publications' },
-        { title: 'Facilities', href: '/facilities' },
+        { title: 'Events', href: '/events' },
+        { title: 'News', href: '/news' },
       ],
     }
   ];
