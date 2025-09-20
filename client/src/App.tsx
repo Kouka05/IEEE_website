@@ -11,6 +11,8 @@ import CreateTraining from './Components/CreateTraining/CreateTraining';
 import About from './Components/About/About';
 import Training from './Components/Training/Training';
 import Contact from './Components/Contact/Contact';
+import ContactPartner from './Components/Contact/ContactPartner';
+import ContactSpeaker from './Components/Contact/ContactSpeaker';
 import './App.css'
 import { AuthProvider } from './AuthContext';
 
@@ -31,6 +33,8 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/training" element={<Training />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/contact/partner" element={<ContactPartner />} />
+              <Route path="/contact/speaker" element={<ContactSpeaker />} />
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
