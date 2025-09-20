@@ -1,4 +1,3 @@
-/* LatestNews.css */
 .news-section {
     background-color: #ffffff;
     padding: 2rem 1.5rem;
@@ -13,18 +12,24 @@
     display: flex;
     align-items: center;
     margin-bottom: 3rem;
+    background-color: #e11837; 
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
 }
 
 .news-header-icon {
-    color: #2d3748;
+    color: #ffffff;
     margin-right: 1rem;
 }
 
 .news-title {
     font-size: 1.875rem;
     font-weight: 700;
-    color: #2d3748;
+    color: #ffffff;
+    position: relative;
 }
+
+.news-title::after { display: none; }
 
 .news-card {
     background-color: #ffffff;
@@ -64,7 +69,6 @@
     height: 4rem; 
 }
 
-/* --- Slider and Grid Layout --- */
 .news-slider {
     display: block; 
     position: relative;

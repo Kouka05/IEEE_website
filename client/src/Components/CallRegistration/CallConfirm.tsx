@@ -205,7 +205,6 @@ const SubmittedRegistrationPage = () => {
   );
 };
 
-// SectionTitle Component
 interface SectionTitleProps {
   children: React.ReactNode;
 }

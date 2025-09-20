@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CreateEvent.css';
 import { useAuth } from '../../AuthContext';
 
@@ -40,7 +40,11 @@ type CustomField = {
 const CreateEvent: React.FC = () => {
   const { user } = useAuth();
   if (!user) {
-    return <div className="access-denied">You must be signed in to create an event.</div>;
+    return (
+      <div className="createevent-page">
+        <div className="error-text">You must be signed in to create an event.</div>
+      </div>
+    );
   }
   const [guestFields, setGuestFields] = useState<Record<GuestField, boolean>>({ name: true, email: true, committee: true });
   const [guestValues, setGuestValues] = useState<Record<GuestField, string>>({ name: '', email: '', committee: '' });
@@ -52,11 +56,13 @@ const CreateEvent: React.FC = () => {
   const [speakerCustomFields, setSpeakerCustomFields] = useState<CustomField[]>([]);
   const [speakerCustomChecked, setSpeakerCustomChecked] = useState<boolean[]>([]);
 
-  // Modal state
+  // Add-field modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSection, setModalSection] = useState<'guest' | 'speaker' | null>(null);
   const [modalFieldName, setModalFieldName] = useState('');
   const [modalFieldType, setModalFieldType] = useState('text');
+  // Update-event modal state
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   // Date state
   const [startDate, setStartDate] = useState({ day: '', month: '', year: '' });
@@ -73,6 +79,26 @@ const CreateEvent: React.FC = () => {
   const [registrationDeadline, setRegistrationDeadline] = useState('');
   const [maxParticipants, setMaxParticipants] = useState('');
   const [status, setStatus] = useState('DRAFT');
+  const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  const resetFormAndState = () => {
+    setEditingEventId(null);
+    setTitle('');
+    setDescription('');
+    setLocation('');
+    setSponsors('');
+    setSpeackers('');
+    setTimeline('[]');
+    setIsThereSpeackersForm(false);
+    setStartDate({ day: '', month: '', year: '' });
+    setExpirationDate({ day: '', month: '', year: '' });
+    setRegistrationDeadline('');
+    setMaxParticipants('');
+    setStatus('DRAFT');
+    setGuestCustomFields([]);
+    setGuestCustomChecked([]);
+    setSpeakerCustomFields([]);
+    setSpeakerCustomChecked([]);
+  };
 
   // Access control
   if (user.role !== 'Head' && user.role !== 'Chairman') {
@@ -105,8 +131,6 @@ const CreateEvent: React.FC = () => {
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Compose event data
-    // Convert start and end date dropdowns to ISO strings
     const eventStarts = startDate.year && startDate.month && startDate.day
       ? new Date(`${startDate.year}-${startDate.month}-${startDate.day}`).toISOString()
       : '';
@@ -114,34 +138,37 @@ const CreateEvent: React.FC = () => {
       ? new Date(`${expirationDate.year}-${expirationDate.month}-${expirationDate.day}`).toISOString()
       : '';
 
-    // Prepare guest and speaker fields (enabled only)
     const enabledGuestFields = [
       ...GUEST_FIELDS.filter(f => guestFields[f]),
       ...guestCustomFields.filter((_, idx) => guestCustomChecked[idx]).map(f => ({ title: f.title, type: f.type }))
     ];
     const enabledSpeakerFields = [
-      // ...SPEAKER_FIELDS.filter(f => speakerFields[f]),
       ...speakerCustomFields.filter((_, idx) => speakerCustomChecked[idx]).map(f => ({ title: f.title, type: f.type }))
     ];
+
+    let parsedTimeline: TimelineEvent[] = [];
+    try {
+      parsedTimeline = timeline ? JSON.parse(timeline) : [];
+      if (!Array.isArray(parsedTimeline)) parsedTimeline = [];
+    } catch {
+      parsedTimeline = [];
+    }
 
     const eventData = {
       title,
       description,
       createdBy: user._id,
       date: eventStarts,
-      // eventEnds,
       location,
       sponsors: sponsors.split(',').map(s => s.trim()).filter(Boolean),
-      // participants: [], // New event, so empty
-      speakers: speackers.split(',').map(s => s.trim()).filter(Boolean), // No speakers yet
-      timeline: JSON.parse(timeline) as TimelineEvent[], // No timeline yet
+      speakers: speackers.split(',').map(s => s.trim()).filter(Boolean), 
+      timeline: parsedTimeline as TimelineEvent[], 
       registrationDeadline,
       maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
-      status: dynamicStatus, // Use computed status
+      status: dynamicStatus, 
       // userId: user._id,
       // guestFields: enabledGuestFields,
       speakersFormFields: enabledSpeakerFields,
-      // No eventForm field
     };
     console.log('Submitting event data:', eventData);
     try {
@@ -154,7 +181,6 @@ const CreateEvent: React.FC = () => {
       if (data.success) {
         setStatus('PUBLISHED');
         alert('Event created successfully!');
-        // Optionally redirect or reset form
       } else {
         alert('Error: ' + data.error);
       }
@@ -163,7 +189,6 @@ const CreateEvent: React.FC = () => {
     }
   };
 
-  // Validation for required fields
   const isFormValid = () => {
     return (
       title.trim() &&
@@ -253,8 +278,10 @@ const CreateEvent: React.FC = () => {
   };
 
   return (
-    <div className="createevent-container">
-      <form className="createevent-form" onSubmit={handleSubmit}>
+    <div className="createevent-page">
+      <div className="createevent-container reveal">
+        <h1 className="createevent-title reveal" style={{ '--reveal-delay': '100ms' } as React.CSSProperties}>Create Event</h1>
+        <form className="createevent-form reveal" style={{ '--reveal-delay': '200ms' } as React.CSSProperties} onSubmit={handleSubmit}>
         <div className="form-section-header">
           <span>Event Data</span>
         </div>
@@ -323,16 +350,29 @@ const CreateEvent: React.FC = () => {
               type="button"
               className="add-field-btn"
               onClick={() => {
-                // Parse timeline or start new
                 let arr: { time: string; details: string }[] = [];
                 try {
                   arr = timeline ? JSON.parse(timeline) : [];
                 } catch {
                   arr = [];
                 }
-                arr.push({ time: '', details: '' });
-                setTimeline(JSON.stringify(arr));
+                if (arr.length === 0) {
+                  arr.push({ time: '', details: '' });
+                  setTimeline(JSON.stringify(arr));
+                }
               }}
+              disabled={(() => {
+                try {
+                  const parsed = timeline ? JSON.parse(timeline) : [];
+                  return Array.isArray(parsed) && parsed.length > 0;
+                } catch { return false; }
+              })()}
+              title={(() => {
+                try {
+                  const parsed = timeline ? JSON.parse(timeline) : [];
+                  return Array.isArray(parsed) && parsed.length > 0 ? 'Only one timeline slot is allowed' : undefined;
+                } catch { return undefined; }
+              })()}
             >
               Add Timeline Slot
             </button>
@@ -481,23 +521,104 @@ const CreateEvent: React.FC = () => {
           <button type="button" className="add-field-btn" onClick={() => openModal('speaker')}>Add New Field</button>
         </div>)}
         <div className="form-actions-row">
-          <button type="button" className="update-btn">Update Event</button>
-          <button
-            type="button"
-            className="publish-btn"
-            disabled={!isFormValid()}
-            onClick={() => {
-              // setStatus('PUBLISHED');
-              setTimeout(() => {
-                document.querySelector('.createevent-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-              }, 0);
-            }}
-          >
-            Publish Event
-          </button>
+          {editingEventId ? (
+            <>
+              <button
+                type="button"
+                className="update-btn"
+                onClick={async () => {
+                  if (!confirm('Are you sure you want to delete this event? This action cannot be undone.')) return;
+                  try {
+                    const res = await fetch(`http://localhost:8081/api/events/${editingEventId}`, {
+                      method: 'DELETE',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ userId: user._id })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.success) throw new Error(data?.error || 'Delete failed');
+                    alert('Event deleted successfully');
+                    resetFormAndState();
+                  } catch (e) {
+                    alert('Failed to delete event');
+                  }
+                }}
+              >
+                Delete Event
+              </button>
+              <button
+                type="button"
+                className="publish-btn"
+                onClick={async () => {
+                  // Save Changes (PUT)
+                  const eventStarts = startDate.year && startDate.month && startDate.day
+                    ? new Date(`${startDate.year}-${startDate.month}-${startDate.day}`).toISOString()
+                    : '';
+                  let safeTimeline2: TimelineEvent[] = [];
+                  try {
+                    safeTimeline2 = timeline ? JSON.parse(timeline) : [];
+                    if (!Array.isArray(safeTimeline2)) safeTimeline2 = [];
+                  } catch { safeTimeline2 = []; }
+
+                  const updates: any = {
+                    title,
+                    description,
+                    date: eventStarts,
+                    location,
+                    sponsors: sponsors.split(',').map(s => s.trim()).filter(Boolean),
+                    speakers: speackers.split(',').map(s => s.trim()).filter(Boolean),
+                    timeline: safeTimeline2,
+                    registrationDeadline,
+                    maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
+                    status,
+                  };
+                  try {
+                    const res = await fetch(`http://localhost:8081/api/events/edit/${editingEventId}`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ createdBy: user._id, ...updates }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                      alert('Event updated successfully');
+                      resetFormAndState();
+                    } else {
+                      alert('Error: ' + (data.error || 'Update failed'));
+                    }
+                  } catch (e) {
+                    alert('Network error while updating');
+                  }
+                }}
+              >
+                Save Changes
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="update-btn"
+                onClick={() => setUpdateModalOpen(true)}
+                title="Update an existing live event"
+              >
+                Update Event
+              </button>
+              <button
+                type="button"
+                className="publish-btn"
+                disabled={!isFormValid()}
+                onClick={() => {
+                  setTimeout(() => {
+                    document.querySelector('.createevent-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                  }, 0);
+                }}
+              >
+                Publish Event
+              </button>
+            </>
+          )}
         </div>
       </form>
-      {/* Modal */}
+      {/* Modal for adding a new custom field (guest or speaker) */}
       {modalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -521,8 +642,112 @@ const CreateEvent: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Modal for updating existing live events */}
+      {updateModalOpen && (
+        <UpdateEventModal
+          onClose={() => setUpdateModalOpen(false)}
+          onSelectEvent={(evt) => {
+            setEditingEventId(evt._id || evt.id);
+            setTitle(evt.title || '');
+            setDescription(evt.description || '');
+            setLocation(evt.location || '');
+            setSponsors((evt.sponsors || []).join(', '));
+            setSpeackers((evt.speakers || []).join(', '));
+            if (evt.date) {
+              const d = new Date(evt.date);
+              const yyyy = String(d.getFullYear());
+              const mm = String(d.getMonth() + 1).padStart(2, '0');
+              const dd = String(d.getDate()).padStart(2, '0');
+              setStartDate({ year: yyyy, month: mm, day: dd });
+            }
+            setRegistrationDeadline(evt.registrationDeadline ? String(evt.registrationDeadline).slice(0, 10) : '');
+            setMaxParticipants(evt.maxParticipants ? String(evt.maxParticipants) : '');
+            setStatus(evt.status || 'DRAFT');
+            setUpdateModalOpen(false);
+          }}
+        />
+      )}
+      </div>
     </div>
   );
 };
 
 export default CreateEvent;
+
+// Inline modal component to select an existing live event and load it for editing
+const UpdateEventModal: React.FC<{
+  onClose: () => void;
+  onSelectEvent: (evt: any) => void;
+}> = ({ onClose, onSelectEvent }) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch('http://localhost:8081/api/events/getevents');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const arr = Array.isArray(data) ? data : data.events;
+        const normalized = (arr || []).map((e: any) => ({
+          ...e,
+          id: e._id || e.id,
+          date: e.date ? new Date(e.date) : null,
+        }));
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        // Keep only live/upcoming events
+        const live = normalized.filter((e: any) => {
+          const isUpcoming = e.date && e.date.getTime() >= startOfToday.getTime();
+          return isUpcoming;
+        });
+        setEvents(live);
+      } catch (err: any) {
+        setError(err.message || 'Failed to load events');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h3>Select an Event to Update</h3>
+        {loading && <div className="loading-text">Loading...</div>}
+        {error && <div className="error-text">{error}</div>}
+        {!loading && !error && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: 400, overflowY: 'auto' }}>
+            {events.length === 0 ? (
+              <div className="no-events-message">No live upcoming events found.</div>
+            ) : (
+              events
+                .sort((a, b) => (a.date?.getTime?.() || 0) - (b.date?.getTime?.() || 0))
+                .map((e) => (
+                  <button
+                    key={e.id}
+                    type="button"
+                    className="update-btn"
+                    onClick={() => onSelectEvent(e)}
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    <span>{e.title}</span>
+                    <span style={{ opacity: 0.8 }}>
+                      {e.date ? new Date(e.date).toLocaleDateString() : ''}
+                    </span>
+                  </button>
+                ))
+            )}
+          </div>
+        )}
+        <div className="modal-actions">
+          <button type="button" onClick={onClose} className="update-btn">Close</button>
+        </div>
+      </div>
+    </div>
+  );
+};

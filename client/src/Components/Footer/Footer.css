@@ -1,38 +1,42 @@
 .footer {
-    background-color: #434343;
-    padding: 5%;
+    background-color: #181717;
+    padding: 8px 16px;
     margin-top: 0;
 
 }
 
-.logos_container {
+.footer-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; 
+    gap: 24px;
 }
 
-.right_logo,
-.left_logo {
+.right_logo {
+    margin-left: auto;
+    margin-right: 100px;
     display: flex;
-    align-items: center;
-}
-
-.left_logo {
     flex-direction: column;
-    align-items: flex-end;
+    align-items: center;
+    gap: 6px;
 }
 
 .footer-logo {
-    max-width: 100%;
+    max-width: 90px;
     height: auto;
     display: block;
 }
 
 .social_icons {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    gap: 5px;
+    margin-top: 0;
+    margin-left: 28px; 
+}
+
+.social_icons svg {
+    width: 18px;
+    height: 18px;
 }
 
 .social-icon {
@@ -45,8 +49,8 @@
 
 .copyright {
     color: #79747E;
-    text-align: center;
-    margin-top: 30px;
+    text-align: left;
+    margin-top: 0;
 }
 
 hr {
@@ -58,46 +62,45 @@ hr {
 }
 
 .copyright p {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 1000px;
+    margin: 0 0 0 200px; 
     line-height: 1.6;
+    text-align: left;
+    font-size: 14px;
 }
 
-/* Responsive Footer */
 @media (max-width: 768px) {
-    .logos_container {
-        flex-direction: row; 
-        gap: 15px; 
-        flex-wrap: nowrap; 
-        justify-content: space-between; 
-        align-items: center;
+    .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
     }
     
-    .right_logo,
-    .left_logo {
+    .right_logo {
         width: auto;
         justify-content: center;
-        text-align: center;
+        align-items: center;
+        gap: 6px;
     }
     
     .footer-logo {
-        max-width: 120px;
+        max-width: 80px;
         height: auto;
     }
     
     .right_logo img {
-        max-width: 100px; 
+        max-width: 80px; 
         height: auto;
     }
     
     .social_icons {
         justify-content: center;
-        gap: 5px; 
+        gap: 6px; 
     }
     
     .social_icons svg {
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
     }
     
     hr {
@@ -105,17 +108,17 @@ hr {
     }
     
     .copyright p {
-        font-size: 0.85rem; 
+        font-size: 0.9rem; 
     }
 }
 
 @media (max-width: 480px) {
     .footer {
-        padding: 8% 5%; 
+        padding: 12px 16px; 
     }
     
     .footer-logo {
-        max-width: 100px; 
+        max-width: 90px; 
     }
     
     .right_logo img {

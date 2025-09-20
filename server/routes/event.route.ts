@@ -57,25 +57,32 @@ router.post(
         res.status(404).json({ success: false, error: "User not found" });
       }
 
-      const formData = await googleFormsService.createForm(
-        `${title} - Registration Form`
-      );
+      // Try to create a Google Form, but do not fail event creation if Google config is missing
+      let formData: { formId: string; formUrl: string; editUrl: string } | null = null;
+      try {
+        const created = await googleFormsService.createForm(
+          `${title} - Registration Form`
+        );
 
-      const template = googleFormsService.getEventFormTemplate("default", {
-        title,
-        description,
-      });
+        const template = googleFormsService.getEventFormTemplate("default", {
+          title,
+          description,
+        });
 
-      await googleFormsService.addQuestions(
-        formData.formId,
-        req.body.questions
-          ? [template.questions, ...req.body.questions]
-          : template.questions
-      );
-      await googleFormsService.updateFormSettings(
-        formData.formId,
-        template.settings
-      );
+        await googleFormsService.addQuestions(
+          created.formId,
+          req.body.questions
+            ? [template.questions, ...req.body.questions]
+            : template.questions
+        );
+        await googleFormsService.updateFormSettings(
+          created.formId,
+          template.settings
+        );
+        formData = created;
+      } catch (gerr: any) {
+        console.warn("Google Form creation skipped:", gerr?.message || gerr);
+      }
 
       const event = await EventModel.create({
         title,
@@ -89,14 +96,16 @@ router.post(
         registrationDeadline,
         maxParticipants,
         status,
-        eventForm: formData.formUrl,
-        googleForm: {
-          formId: formData.formId,
-          formUrl: formData.formUrl,
-          editUrl: formData.editUrl,
-          isActive: true,
-          syncEnabled: true,
-        },
+        eventForm: formData?.formUrl,
+        googleForm: formData
+          ? {
+              formId: formData.formId,
+              formUrl: formData.formUrl,
+              editUrl: formData.editUrl,
+              isActive: true,
+              syncEnabled: true,
+            }
+          : undefined,
       });
 
       res.status(201).json({

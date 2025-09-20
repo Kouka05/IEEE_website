@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Navbar.css';
 import { useAuth } from '../../AuthContext';
 
@@ -23,9 +23,9 @@ const Navbar: React.FC = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-left">
-          <div className="navbar-logo">
+          <Link to="/" className="navbar-logo" aria-label="Go to home">
             <img src="./SSCS-Mini-Logo.png" alt="IEEE SSCS" className="logo" />
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <ul className="navbar-links">
@@ -89,19 +89,45 @@ const Navbar: React.FC = () => {
                 News
               </a>
             </li>
+            <li>
+              <a
+                href="#"
+                className="nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate('/contact');
+                }}
+              >
+                Contact
+              </a>
+            </li>
             {canCreateEvent && (
-              <li>
-                <a
-                  href="#"
-                  className="nav-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate('/createevent');
-                  }}
-                >
-                  Create Event
-                </a>
-              </li>
+              <>
+                <li>
+                  <a
+                    href="#"
+                    className="nav-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/createevent');
+                    }}
+                  >
+                    Create Event
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="nav-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/createtraining');
+                    }}
+                  >
+                    Create Training
+                  </a>
+                </li>
+              </>
             )}
           </ul>
         </div>
@@ -153,10 +179,18 @@ const Navbar: React.FC = () => {
             <li>
               <button onClick={() => handleNavigation('/news')}>News</button>
             </li>
+            <li>
+              <button onClick={() => handleNavigation('/contact')}>Contact</button>
+            </li>
             {canCreateEvent && (
-              <li>
-                <button onClick={() => handleNavigation('/createevent')}>Create Event</button>
-              </li>
+              <>
+                <li>
+                  <button onClick={() => handleNavigation('/createevent')}>Create Event</button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/createtraining')}>Create Training</button>
+                </li>
+              </>
             )}
           </ul>
           

@@ -113,7 +113,6 @@ const CallPage = ({ setPage }: { setPage: (page: string) => void }) => {
     return years;
   };
 
-  // Handle date changes
   const handleDateChange = (
     dateType: 'start' | 'expiration',
     field: 'hour' | 'day' | 'month' | 'year',
@@ -127,7 +126,6 @@ const CallPage = ({ setPage }: { setPage: (page: string) => void }) => {
   };
 
   const handlePublish = () => {
-    // Format dates to ISO string
     const formatDate = (date: typeof startDate) => {
       return new Date(
         Date.UTC(

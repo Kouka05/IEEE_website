@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './NewsAndEvents.css'; // Import the separated CSS file
+import './NewsAndEvents.css'; 
 
 // --- 1. TYPE DEFINITIONS ---
 export interface Event {
@@ -10,6 +10,8 @@ export interface Event {
   location: 'Online' | 'Offline';
   abstract: string;
   locationUrl: string;
+  guestFormUrl?: string;
+  speakerFormUrl?: string;
 }
 
 export interface NewsArticle {
@@ -22,15 +24,15 @@ export interface NewsArticle {
 
 // --- 2. MOCK DATA ---
 const eventsData: Event[] = [
-    { id: 1, date: new Date('2025-06-14T22:00:00'), title: 'SSCS Lorum Ipsum Event Place Holder', description: 'At vero eos et accusamus et iusto', location: 'Online', abstract: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse venenatis ipsum commodo enim vehicula, sit amet porttitor magna vehicula. In eget nulla quis enim pharetra venenatis fringilla eget ante. Mauris euismod odio dolor, in auctor nulla iaculis et. Duis convallis augue eget libero porttitor sollicitudin sit amet id justo.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9' },
-    { id: 2, date: new Date('2025-06-23T23:00:00'), title: 'SSCS Lorum Ipsum Event Place Holder', description: 'At vero eos et accusamus et iusto', location: 'Offline', abstract: 'This is the abstract for the second event. It provides a more detailed summary of what will be covered, who the speakers are, and what attendees can expect to learn. We look forward to seeing you there for this insightful session.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9' },
+    { id: 1, date: new Date('2025-06-14T22:00:00'), title: 'SSCS Lorum Ipsum Event Place Holder', description: 'At vero eos et accusamus et iusto', location: 'Online', abstract: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse venenatis ipsum commodo enim vehicula, sit amet porttitor magna vehicula. In eget nulla quis enim pharetra venenatis fringilla eget ante. Mauris euismod odio dolor, in auctor nulla iaculis et. Duis convallis augue eget libero porttitor sollicitudin sit amet id justo.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9', guestFormUrl: 'https://forms.gle/example-guest-form', speakerFormUrl: 'https://forms.gle/example-speaker-form' },
+    { id: 2, date: new Date('2025-06-23T23:00:00'), title: 'SSCS Lorum Ipsum Event Place Holder', description: 'At vero eos et accusamus et iusto', location: 'Offline', abstract: 'This is the abstract for the second event. It provides a more detailed summary of what will be covered, who the speakers are, and what attendees can expect to learn. We look forward to seeing you there for this insightful session.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9', guestFormUrl: 'https://forms.gle/example-guest-form-2' },
     { id: 3, date: new Date('2025-07-14T22:00:00'), title: 'SSCS Lorum Ipsum Event Place Holder', description: 'At vero eos et accusamus et iusto', location: 'Online', abstract: 'Join us for the third event in our series. This abstract covers the key topics of discussion, including emerging trends and future outlooks. A perfect opportunity for networking and professional development.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9' },
-    { id: 4, date: new Date('2025-07-28T20:00:00'), title: 'Another Awesome Tech Conference', description: 'Join us for a deep dive into modern web technologies.', location: 'Online', abstract: 'A deep dive into the latest advancements in web development. This conference will feature talks from industry leaders on topics like React, Vue, Svelte, and the future of the web. Bring your questions for the Q&A session.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9' },
+    { id: 4, date: new Date('2025-07-28T20:00:00'), title: 'Another Awesome Tech Conference', description: 'Join us for a deep dive into modern web technologies.', location: 'Online', abstract: 'A deep dive into the latest advancements in web development. This conference will feature talks from industry leaders on topics like React, Vue, Svelte, and the future of the web. Bring your questions for the Q&A session.', locationUrl: 'https://maps.app.goo.gl/Bqk4o1A489oFczgf9', guestFormUrl: 'https://forms.gle/example-guest-form-4', speakerFormUrl: 'https://forms.gle/example-speaker-form-4' },
 ];
 
 const newsData: NewsArticle[] = Array.from({ length: 15 }, (_, i) => ({
     id: i + 1,
-    imageUrl: '', // Placeholder
+    imageUrl: '', 
     title: 'Local Chapter. Global Impact.',
     content: `This is the full content for the news article titled "Local Chapter. Global Impact." Article number ${i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
 }));
@@ -91,13 +93,62 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
     );
 };
 
-const EventDescriptionPage: React.FC<{ event: Event; onBack: () => void; }> = ({ event, onBack }) => (
-    <div className="event-detail-container">
+const EventDescriptionPage: React.FC<{ event: Event; onBack: () => void; }> = ({ event, onBack }) => {
+    const [guestUrl, setGuestUrl] = React.useState<string | undefined>(event.guestFormUrl);
+    const [speakerUrl, setSpeakerUrl] = React.useState<string | undefined>(event.speakerFormUrl);
+
+    React.useEffect(() => {
+      let isMounted = true;
+      const fetchEventLinks = async () => {
+        try {
+          // Try to load live events from backend and match by title
+          const res = await fetch('http://localhost:8081/api/events/getevents');
+          if (!res.ok) return;
+          const data = await res.json();
+          const arr = Array.isArray(data) ? data : data.events;
+          const match = (arr || []).find((e: any) => e?.title === event.title);
+          if (!match) return;
+          const resolvedGuest = match?.googleForm?.formUrl || match?.eventForm;
+          const resolvedSpeaker = match?.speakerFormUrl || match?.googleFormSpeaker?.formUrl;
+          if (isMounted) {
+            if (resolvedGuest) setGuestUrl(resolvedGuest);
+            if (resolvedSpeaker) setSpeakerUrl(resolvedSpeaker);
+          }
+        } catch {}
+      };
+      // Only fetch if we don't already have URLs
+      if (!guestUrl || !speakerUrl) fetchEventLinks();
+      return () => { isMounted = false; };
+    }, [event.title]);
+
+    return (
+      <div className="event-detail-container">
         <button onClick={onBack} className="back-button">← Back to Events</button>
         <header className="event-detail-header"><div className="event-detail-header-content"><h1 className="event-detail-title">{event.title}</h1><p className="event-detail-time">{formatEventDate(event.date, true)}</p></div></header>
-        <main className="event-detail-body"><div className="event-detail-body-content"><p className="event-detail-abstract"><strong>Abstract:</strong> {event.abstract}</p><p className="event-detail-location"><strong>Location:</strong> <a href={event.locationUrl} target="_blank" rel="noopener noreferrer">{event.locationUrl}</a></p></div></main>
-    </div>
-);
+        <main className="event-detail-body">
+          <div className="event-detail-body-content">
+            <p className="event-detail-abstract"><strong>Abstract:</strong> {event.abstract}</p>
+            <p className="event-detail-location"><strong>Location:</strong> <a href={event.locationUrl} target="_blank" rel="noopener noreferrer">{event.locationUrl}</a></p>
+            <div className="event-reserve-block">
+              <h3>Reserve your spot</h3>
+              <div className="reserve-links">
+                {guestUrl ? (
+                  <a className="reserve-btn" href={guestUrl} target="_blank" rel="noopener noreferrer">Reserve as Guest</a>
+                ) : (
+                  <button className="reserve-btn disabled" disabled>Guest form not available</button>
+                )}
+                {speakerUrl ? (
+                  <a className="reserve-btn outline" href={speakerUrl} target="_blank" rel="noopener noreferrer">Reserve as Speaker</a>
+                ) : (
+                  <button className="reserve-btn outline disabled" disabled>Speaker form not available</button>
+                )}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+};
 
 const NewsCard: React.FC<{ article: NewsArticle; onSelect: (article: NewsArticle) => void; }> = ({ article, onSelect }) => (
     <div className="news-card" onClick={() => onSelect(article)}>

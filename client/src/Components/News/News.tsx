@@ -83,20 +83,24 @@ const NewsListPage: React.FC<{ onSelectArticle: (article: NewsArticle) => void; 
 
     return (
         <div className="news-page-container">
-            <header className="news-header">
+            <header className="news-header reveal reveal-slow">
                 <div className="news-header-content">
                     <h1 className="news-header-title">Latest News</h1>
                 </div>
             </header>
             <div className="news-grid">
                 {articles.length === 0 ? (
-                    <p style={{color:'black', textAlign:'center', width: '100%'}}>Loading news...</p>
+                    <p className="reveal reveal-slow" style={{textAlign:'center', width: '100%'}}>Loading news...</p>
                 ) : (
-                    paginatedArticles.map(article => <NewsCard key={article.id} article={article} onSelect={onSelectArticle} />)
+                    paginatedArticles.map((article, idx) => (
+                        <div key={article.id} className="reveal reveal-slow" style={{ '--reveal-delay': `${idx * 60}ms` } as React.CSSProperties}>
+                            <NewsCard article={article} onSelect={onSelectArticle} />
+                        </div>
+                    ))
                 )}
             </div>
             {articles.length > 0 && (
-                 <div className="pagination">
+                 <div className="pagination reveal reveal-slow">
                     <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
                     {[...Array(totalPages).keys()].map(num => (
                         <button key={num + 1} onClick={() => goToPage(num + 1)} className={currentPage === num + 1 ? 'active' : ''}>

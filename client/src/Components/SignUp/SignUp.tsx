@@ -23,7 +23,7 @@ const SignUp: React.FC = () => {
     return re.test(String(email).toLowerCase());
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
@@ -134,15 +134,18 @@ const SignUp: React.FC = () => {
             />
             {errors.password && <div className="error-message">{errors.password}</div>}
             
-            <input
-              type="text"
-              placeholder="Role"
+            <select
               className={`input-field ${errors.role ? 'error' : ''}`}
               name="role"
               value={formData.role}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="" disabled>Role</option>
+              <option value="Volunteer">Volunteer</option>
+              <option value="Chairman">Chairman</option>
+              <option value="Head">Head</option>
+            </select>
             {errors.role && <div className="error-message">{errors.role}</div>}
             
             <input

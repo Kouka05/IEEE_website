@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Events.css';
+import { getApiBaseUrl } from '../../utils/api';
 // --- 1. TYPE DEFINITIONS (Updated to match backend model) ---
 export interface Event {
   id: string;
@@ -15,7 +16,7 @@ export interface Event {
   // Other fields like participants, maxParticipants can be added if needed for the UI
 }
 
-// --- 2. HELPER FUNCTIONS (Unchanged) ---
+// --- 2. HELPER FUNCTIONS (Updated) ---
 const formatEventDate = (date: Date, includeDay: boolean = true): string => {
   if (!(date instanceof Date) || isNaN(date.getTime())) {
     return "Invalid Date";
@@ -76,11 +77,17 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('http://localhost:8081/api/events/getevents');
+        const apiBase = getApiBaseUrl();
+        const url = `${apiBase}/api/events/getevents`;
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await response.text();
+          throw new Error(`API did not return JSON. Received: ${text.slice(0,120)}...`);
+        }
         const data = await response.json();
         const eventsArray = Array.isArray(data) ? data : data.events;
 
@@ -94,7 +101,11 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
           date: new Date(event.date),
           registrationDeadline: event.registrationDeadline ? new Date(event.registrationDeadline) : null,
         }));
-        setEventsData(processedEvents);
+        // Filter out past events (hide events with a date before today)
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
+        const upcomingOnly = processedEvents.filter((e: any) => e.date && e.date.getTime() >= startOfToday.getTime());
+        setEventsData(upcomingOnly);
       } catch (e) {
         setError(e instanceof Error ? e.message : "An unknown error occurred");
         console.error("Failed to fetch events:", e);
@@ -105,34 +116,38 @@ const EventListPage: React.FC<{ onSelectEvent: (event: Event) => void; }> = ({ o
     fetchEvents();
   }, []);
 
-  if (loading) return <p>Loading events...</p>;
-  if (error) return <p>Error fetching events: {error}</p>;
+  if (loading) return (
+    <div className="loading-text">
+      <div className="loading-spinner"></div>
+      <p>Loading events...</p>
+    </div>
+  );
+  if (error) return <div className="error-text">Error fetching events: {error}</div>;
 
   const sortedEvents = [...eventsData].sort((a, b) => a.date.getTime() - b.date.getTime());
   const groupedEvents = groupEventsByMonth(sortedEvents);
 
   return (
     <div className="events-container">
-      <header className="events-header">
-        <div className="header-content">
-          <h1 className="header-title">Upcoming Events</h1>
-          <button className="header-button">Event Archive</button>
+      <header className="news-header reveal reveal-slow">
+        <div className="news-header-content">
+          <h1 className="news-header-title">Latest Events</h1>
         </div>
       </header>
       <main className="events-main">
-        <div className="events-list-card">
+        <div className="events-list-card reveal" style={{ '--reveal-delay': '40ms' } as React.CSSProperties}>
           {Object.keys(groupedEvents).length === 0 ? (
             <p className="no-events-message">No upcoming events.</p>
           ) : (
-            Object.entries(groupedEvents).map(([monthYear, eventsInMonth]) => (
-              <div key={monthYear} className={`month-group`}>
+            Object.entries(groupedEvents).map(([monthYear, eventsInMonth], groupIndex) => (
+              <div key={monthYear} className={`month-group reveal`} style={{ '--reveal-delay': `${(groupIndex + 1) * 60}ms` } as React.CSSProperties}>
                 <div className="month-header">
                   <h2 className="month-title">{monthYear}</h2>
                   <div className="month-divider"></div>
                 </div>
                 <div>
-                  {eventsInMonth.map((event) => (
-                    <div key={event.id}>
+                  {eventsInMonth.map((event, eventIndex) => (
+                    <div key={event.id} className="reveal" style={{ '--reveal-delay': `${(groupIndex + 1) * 60 + (eventIndex + 1) * 30}ms` } as React.CSSProperties}>
                       <EventItem event={event} onSelect={onSelectEvent} />
                       {eventsInMonth.indexOf(event) < eventsInMonth.length - 1 && <hr className="event-divider" />}
                     </div>
@@ -175,9 +190,14 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(`http://localhost:8081/api/events/${eventId}`);
+        const apiBase = getApiBaseUrl();
+        const response = await fetch(`${apiBase}/api/events/${eventId}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          const text = await response.text();
+          throw new Error(`API did not return JSON. Received: ${text.slice(0,120)}...`);
+        }
         const data = await response.json();
         const eventData = data.event || data;
 
@@ -198,44 +218,47 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
     fetchEventDetails();
   }, [eventId]);
   
-  const handleGuestReserve = () => {
-    setModalContent({ title: "Reserve as Guest", body: "This is where the guest registration form or confirmation would appear." });
-    setModalOpen(true);
-  };
-  
-  const handleSpeakerReserve = () => {
-    setModalContent({ title: "Reserve as Speaker", body: "This is where the speaker application form or confirmation would appear." });
-    setModalOpen(true);
-  };
+  const guestUrl = (event as any)?.googleForm?.formUrl || (event as any)?.eventForm || '';
+  const speakerUrl = (event as any)?.speakerFormUrl || '';
 
-  if (loading) return <p>Loading event details...</p>;
-  if (error) return <p>Error fetching event details: {error}</p>;
-  if (!event) return <p>Event not found.</p>;
+  if (loading) return (
+    <div className="loading-text">
+      <div className="loading-spinner"></div>
+      <p>Loading event details...</p>
+    </div>
+  );
+  if (error) return <div className="error-text">Error fetching event details: {error}</div>;
+  if (!event) return <div className="error-text">Event not found.</div>;
   
-  // This function will now always show the buttons, ignoring the event status and deadline.
   const renderRegistrationStatus = () => {
     return (
       <>
-        <button className="guest-button" onClick={handleGuestReserve}>Reserve as guest</button>
-        <button className="speaker-button" onClick={handleSpeakerReserve}>Reserve as speaker</button>
+        {guestUrl ? (
+          <a className="guest-button" href={guestUrl} target="_blank" rel="noopener noreferrer">Reserve as guest</a>
+        ) : (
+          <button className="guest-button" disabled>Guest form not available</button>
+        )}
+        {speakerUrl ? (
+          <a className="speaker-button" href={speakerUrl} target="_blank" rel="noopener noreferrer">Reserve as speaker</a>
+        ) : (
+          <button className="speaker-button" disabled>Speaker form not available</button>
+        )}
       </>
     );
   };
 
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title={modalContent.title}>
-        <p>{modalContent.body}</p>
-      </Modal>
+      {/* Modal removed for reservation; links open directly */}
       <div className="event-detail-container">
-        <button onClick={onBack} className="back-button">← Back to Events</button>
-        <header className="event-detail-header">
+        <button onClick={onBack} className="back-button reveal">← Back to Events</button>
+        <header className="event-detail-header reveal" style={{ '--reveal-delay': '100ms' } as React.CSSProperties}>
           <div className="event-detail-header-content">
             <h1 className="event-detail-title">{event.title}</h1>
             <p className="event-detail-time">{formatEventDate(event.date, true)}</p>
           </div>
         </header>
-        <main className="event-detail-body">
+        <main className="event-detail-body reveal" style={{ '--reveal-delay': '200ms' } as React.CSSProperties}>
           <div className="event-detail-body-content event-detail-time">
             <p className="event-detail-description">
               <strong>Description:</strong> {event.description}
@@ -255,7 +278,7 @@ const EventDescriptionPage: React.FC<{ eventId: string; onBack: () => void; }> =
                 <ul>{Object.entries(event.timeline).map(([time, details]) => <li key={time}><strong>{time}:</strong> {details}</li>)}</ul>
               </div>
             )} */}
-            <div className="button-container">
+            <div className="button-container reveal" style={{ '--reveal-delay': '300ms' } as React.CSSProperties}>
               {renderRegistrationStatus()}
             </div>
           </div>

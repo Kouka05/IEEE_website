@@ -3,6 +3,30 @@
   max-width: 80rem;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background: linear-gradient(to bottom, #1a0a0e 0%, #0a0a0a 100%);
+  border-top: 1px solid rgba(225, 24, 55, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Circuit board background effect */
+.call-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(225, 24, 55, 0.1) 0px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(225, 24, 55, 0.15) 0px, transparent 3px),
+    linear-gradient(135deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%),
+    linear-gradient(45deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%);
+  background-size: 100px 100px;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.call-header, .card, .form-grid, .date-grid {
+  position: relative;
+  z-index: 1;
 }
 
 .call-header {
@@ -203,4 +227,3 @@
 .date-section {
   margin-bottom: 20px;
 }
-

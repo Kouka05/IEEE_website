@@ -1,25 +1,23 @@
-/* Hero Section - Final Fix */
 .hero-section {
   position: relative;
-  width: 100vw; /* Use viewport width */
+  width: 100vw; 
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
   margin-top: 0;
-
-
-  /* Your existing styles below */
   min-height: 100vh;
   display: flex;
+  flex-direction: column; 
+  align-items: center; 
   padding: 70px 0 0;
-  overflow-x: hidden; /* Important for this technique */
+  overflow-x: hidden; 
   background-color: #0a0a0a;
   flex: 1;
 }
 
 /* Circuit board background effect */
-.circuit-overlay {
+.hero-circuit-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -45,6 +43,171 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* Welcome blurb between header and impact */
+.hero-welcome {
+  max-width: 900px;
+  margin: 100px auto; 
+  padding: 0 16px;
+  text-align: left;
+}
+
+.hero-welcome p {
+  font-size: 1.25rem; 
+  line-height: 1.8;
+  color: #ddd;
+  margin: 0;
+}
+
+/* Impact Section */
+.hero-impact {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 100px auto 24px;  
+  padding: 12px 16px 24px;
+  color: #fff;
+  text-align: center;
+}
+
+.impact-title {
+  margin: -100px 0 24px 0;
+  font-size: 1.4rem; 
+  font-weight: 800;
+  color: #fff;
+  padding-left: 8px;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+  justify-items: center;
+}
+
+.impact-item {
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.impact-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.impact-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.impact-number {
+  font-size: 1.6rem; 
+  font-weight: 800;
+  color: #b71c1c;
+  letter-spacing: 0.5px;
+}
+
+.impact-number .plus {
+  margin-right: 2px;
+}
+
+.impact-label {
+  font-size: 1.25rem; 
+  font-weight: 700;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.impact-sub {
+  margin-top: 6px;
+  color: #ddd;
+  font-size: 0.9rem; 
+}
+
+/* Partners slider */
+.partners-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto 80px;
+  text-align: center;
+  position: relative;
+}
+
+.partners-title {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.partners-marquee {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.partners-marquee::before,
+.partners-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px; 
+  pointer-events: none;
+  z-index: 2;
+}
+
+.partners-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%);
+}
+
+.partners-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(10,10,10,1) 0%, rgba(10,10,10,0) 100%);
+}
+
+.partners-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: scroll 40s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+@keyframes partners-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } 
+}
+
+.partners-group {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding-right: 48px;
+}
+
+.partner-logo {
+  height: 40px;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1) grayscale(1);
+  opacity: 0.9;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 .header-branding {
@@ -88,6 +251,7 @@
   font-size: 1.25rem;
   line-height: 1.7;
   color: #ddd;
+  text-align: left;
 }
 
 .hero-buttons {
@@ -165,6 +329,14 @@
   .hero-title {
     font-size: 2.5rem;
   }
+  .hero-welcome {
+    margin: 44px auto;
+    padding: 0 14px;
+  }
+  .hero-welcome p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
   
   .sscs-logo {
     font-size: 3rem;
@@ -193,6 +365,12 @@
   
   .hero-title {
     font-size: 2rem;
+  }
+  .hero-welcome {
+    margin: 36px auto;
+  }
+  .hero-welcome p {
+    font-size: 1rem;
   }
   
   .hero-buttons {

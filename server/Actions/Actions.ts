@@ -29,6 +29,5 @@ abstract class Actions{
     public getDate(): Date {
         return this.date;
     }
-
 }
 export default Actions;

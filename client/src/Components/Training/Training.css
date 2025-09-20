@@ -1,0 +1,177 @@
+.training-page {
+  background-color: #0a0a0a;
+  min-height: 100vh;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Circuit board background effect like hero */
+.training-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(225, 24, 55, 0.1) 0px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(225, 24, 55, 0.15) 0px, transparent 3px),
+    linear-gradient(135deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%),
+    linear-gradient(45deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%);
+  background-size: 100px 100px;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.training-header {
+  background-color: #b71c1c;
+  color: #fff;
+  padding: 2rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.training-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.training-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin: 0;
+}
+.training-sub {
+  color: #f3e8ea;
+  margin-top: 0.5rem;
+}
+
+.training-controls {
+  padding: 1rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.controls-row {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.control label {
+  display: block;
+  font-size: 0.85rem;
+  color: #ddd;
+  margin-bottom: 0.35rem;
+}
+.control-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: none;
+  outline: 1px solid #4d4d4d;
+  background-color: #181717;
+  color: #fff;
+  color-scheme: dark;
+}
+.control-input:focus,
+.control-input:hover,
+.control-input:active { 
+  outline: 2px solid #B3B3B3; 
+  background-color: #181717 !important; 
+  color: #fff !important; 
+  caret-color: #fff;
+}
+.control-input::placeholder { color: #B3B3B3; }
+.control-input:focus::placeholder { color: #B3B3B3; }
+
+.control-input:-webkit-autofill,
+.control-input:-webkit-autofill:hover,
+.control-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  box-shadow: 0 0 0px 1000px #181717 inset;
+  caret-color: #fff;
+  transition: background-color 9999s ease-out 0s;
+}
+
+/* Ensure dropdown options keep dark theme */
+.control-input option {
+  background-color: #181717 !important;
+  color: #fff !important;
+}
+
+.training-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+  position: relative;
+  z-index: 1;
+}
+.empty-text { color: #ddd; text-align: center; padding: 2rem 0; }
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.program-card {
+  background-color: #121212;
+  border-radius: 10px;
+  padding: 1rem;
+  outline: 1px solid #2a2a2a;
+  display: flex;
+  flex-direction: column;
+}
+.program-badge-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+.badge {
+  font-size: 0.75rem;
+  padding: .2rem .5rem;
+  border-radius: 999px;
+  background: #222;
+  color: #ddd;
+}
+.badge-dept { background: rgba(225, 24, 55, 0.15); color: #ffccd5; }
+.badge-level { background: rgba(255, 255, 255, 0.08); }
+.badge-hours { background: rgba(255, 255, 255, 0.08); }
+
+.program-title { margin: .6rem 0 .4rem; font-size: 1.1rem; font-weight: 700; }
+.program-summary { color: #ccc; font-size: .95rem; min-height: 48px; }
+.program-meta { display: flex; justify-content: space-between; margin-top: .75rem; color: #bbb; font-size: .9rem; }
+.program-actions { margin-top: auto; padding-top: .9rem; display: flex; gap: .5rem; }
+
+.btn-primary {
+  background: #b71c1c;
+  color: #fff;
+  border: none;
+  padding: .6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-primary:hover { background: #e11837; }
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: .55rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.btn-outline:hover { background: rgba(255,255,255,.1); }
+
+/* Modal */
+.training-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+.training-modal-content {
+  background: #0f0f0f; color: #fff; border-radius: 12px; width: min(720px, 92%);
+  padding: 1.25rem; outline: 1px solid #2a2a2a; position: relative;
+}
+.modal-close { position: absolute; right: 10px; top: 6px; background: transparent; color: #fff; border: none; font-size: 1.5rem; cursor: pointer; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.modal-sub { color: #ccc; margin-top: .3rem; }
+.modal-summary { color: #ddd; margin-top: .6rem; }
+.modal-list h4 { margin-top: 1rem; margin-bottom: .5rem; }
+.modal-list li { color: #ddd; margin-left: 1rem; list-style: disc; }
+.modal-actions { margin-top: 1rem; display: flex; gap: .5rem; }
+
+@media (max-width: 768px) {
+  .controls-row { grid-template-columns: 1fr; }
+}

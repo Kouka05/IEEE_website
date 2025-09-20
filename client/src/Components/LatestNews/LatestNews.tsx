@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./LatestNews.css"; // Make sure to import the CSS file
+import "./LatestNews.css"; 
 
 const LatestNews: React.FC = () => {
     const newsItems = [

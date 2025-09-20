@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import authRouter from '../routes/auth.route';
 import eventRouter from '../routes/event.route';
 import newsRouter from '../routes/news.route';
+import trainingRouter from '../routes/training.route';
 require('dotenv').config();
 
 
@@ -22,6 +23,7 @@ const initializeServer = () => {
   server.use('/api/auth', authRouter);
   server.use('/api/events', eventRouter);
   server.use('/api/newsfeed', newsRouter);
+  server.use('/api/trainings', trainingRouter);
 
   // Optional origin restriction middleware (when deployment)
   /*

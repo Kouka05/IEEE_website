@@ -1,6 +1,7 @@
 // src/services/GoogleFormsService.ts
 import { google } from 'googleapis';
 import EventModel from '../models/event.model';
+import TrainingModel from '../models/training.model';
  import path from 'path';
 interface FormQuestion {
   title: string;
@@ -43,13 +44,12 @@ class GoogleFormsService {
 
   private initializeAuth() {
     try {
-    
-const credentialsPath = path.join(__dirname, '../ieeewebsite-465312-25a039dc9010.json');
-const credentials = require(credentialsPath);
+      const envKeyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+      const fallbackKeyFile = path.join(__dirname, '../ieeewebsite-465312-25a039dc9010.json');
+      const keyFilename = envKeyFile && envKeyFile.trim().length > 0 ? envKeyFile : fallbackKeyFile;
 
-      
       this.auth = new google.auth.GoogleAuth({
-        credentials: credentials,
+        keyFilename,
         scopes: [
           'https://www.googleapis.com/auth/forms.body',
           'https://www.googleapis.com/auth/forms.responses.readonly',
@@ -106,6 +106,44 @@ async createEventForm(event: any, templateType: string = 'default'): Promise<str
     throw new Error('Failed to create event registration form');
   }
 }
+  /**
+   * Create a Google Form for a training
+   */
+  async createTrainingForm(training: any, templateType: string = 'default'): Promise<string> {
+    try {
+      const formTitle = `${training.title} - Training Registration`;
+      const formDescription = `Registration form for ${training.title}${training.summary ? `\n\n${training.summary}` : ''}`;
+
+      const baseQuestions: FormQuestion[] = [
+        { title: 'Full Name', type: 'text', required: true },
+        { title: 'Email Address', type: 'email', required: true },
+        { title: 'Department', type: 'dropdown', required: false, options: ['Analog', 'Digital', 'RF', 'VLSI', 'General'] },
+        { title: 'Experience Level', type: 'choice', required: true, options: ['Beginner', 'Intermediate', 'Advanced'] },
+      ];
+
+      const formData = await this.createForm(formTitle);
+      await this.addQuestions(formData.formId, baseQuestions);
+      await this.updateFormSettings(formData.formId, { collectEmailAddresses: true, requireSignIn: false, allowResponseEdits: true });
+
+      await TrainingModel.findByIdAndUpdate(training._id, {
+        $set: {
+          googleForm: {
+            formId: formData.formId,
+            formUrl: formData.formUrl,
+            editUrl: formData.editUrl,
+            isActive: true,
+            syncEnabled: true,
+            lastSyncAt: new Date(),
+          }
+        }
+      });
+
+      return formData.formUrl;
+    } catch (error) {
+      console.error('Error creating training form:', error);
+      throw new Error('Failed to create training registration form');
+    }
+  }
 
 
   /**

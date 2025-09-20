@@ -1,8 +1,30 @@
-body, .about-gradient-bg {
+.about-gradient-bg {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1.08rem;
-  color: #222;
+  color: #fff;
+  background-color: #0a0a0a;
+  position: relative;
 }
+
+/* Circuit board background effect like hero */
+.about-gradient-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(225, 24, 55, 0.1) 0px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(225, 24, 55, 0.15) 0px, transparent 3px),
+    linear-gradient(135deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%),
+    linear-gradient(45deg, transparent 49.5%, rgba(225, 24, 55, 0.1) 49.5%, rgba(225, 24, 55, 0.1) 50.5%, transparent 50.5%);
+  background-size: 100px 100px;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.about-hero-img-section,
+.about-vmv-section,
+.about-timeline-center,
+.about-history-title { position: relative; z-index: 1; }
 
 .about-hero-img-title, .about-vmv-title, .about-history-title {
   font-family: 'Inter', Arial, sans-serif;
@@ -35,14 +57,14 @@ body, .about-gradient-bg {
 .about-vmv-text {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1.08rem;
-  color: #fff;
+  color: #f0f0f0;
   line-height: 1.7;
 }
 
 .about-history-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #222;
+  color: #fff;
   margin: 32px 0 36px 0;
   text-align: center;
 }
@@ -51,14 +73,14 @@ body, .about-gradient-bg {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1.15rem;
   font-weight: 600;
-  color: #222;
+  color: #fff;
   margin-bottom: 7px;
 }
 
 .about-timeline-description {
   font-family: 'Inter', Arial, sans-serif;
   font-size: 1rem;
-  color: #333;
+  color: #ddd;
   margin-bottom: 0;
 }
 
@@ -85,7 +107,7 @@ body, .about-gradient-bg {
   top: 0;
   width: 4px;
   height: 100%;
-  background: #222;
+  background: rgba(255,255,255,0.25);
   transform: translateX(-50%);
   z-index: 0;
   border-radius: 2px;
@@ -116,8 +138,8 @@ body, .about-gradient-bg {
 }
 
 .about-timeline-card {
-  background: #fff;
-  border: 1px solid #bbb;
+  background: #121212;
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 7px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   padding: 18px 20px;
@@ -193,11 +215,20 @@ body, .about-gradient-bg {
   position: relative;
   width: 100vw;
   min-height: 220px;
-  background: url('/faculty_of_engineering_alexandria_university_egypt_cover.jpg') 50% 45% /100% no-repeat;
+  background: 
+    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),  
+    url('/faculty_of_engineering_alexandria_university_egypt_cover.jpg') 50% 45% / 110% no-repeat;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 1;
+  animation: about-hero-zoom-out 20s ease-out forwards;
+  will-change: background-size;
+}
+
+@keyframes about-hero-zoom-out {
+  from { background-size: 115%; }
+  to { background-size: 100%; }
 }
 
 .about-hero-img-overlay {

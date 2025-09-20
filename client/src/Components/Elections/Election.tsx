@@ -55,7 +55,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
   const [candidateCustomFields, setCandidateCustomFields] = useState<string[]>([]);
   const [newFieldName, setNewFieldName] = useState('');
 
-  // Handle date changes
   const handleDateChange = (
     dateType: 'start' | 'expiration',
     field: keyof DateState,
@@ -76,7 +75,6 @@ const ElectionPage: React.FC<ElectionPageProps> = ({ setPage }) => {
     }
   };
 
-  // Remove custom field
   const removeCustomField = (index: number) => {
     setCandidateCustomFields(candidateCustomFields.filter((_, i) => i !== index));
   };

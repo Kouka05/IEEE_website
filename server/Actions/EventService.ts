@@ -4,6 +4,7 @@ import EventModel from '../models/event.model';
 import Head from '../Factory/Head';
 import Chairman from '../Factory/Chairman';
 import { APP_ORIGIN } from '../constants/env';
+import GoogleFormsService from './GoogleFormsService';
 import { time } from 'console';
 import UserModel from '../models/user.model';
 
@@ -77,6 +78,20 @@ class EventService {
   };
 
   const savedEvent = await EventModel.create(eventDocument);
+
+  // Create Google Forms after event creation
+  try {
+    const gfs = new GoogleFormsService();
+    // Always create a guest form for public registration
+    await gfs.createEventForm(savedEvent, 'default');
+    // Optionally create a speaker form if speakers registration is implied
+    if (Array.isArray(speakers) && speakers.length > 0) {
+      // Reuse a template or customize differently; using 'conference' here
+      await gfs.createEventForm(savedEvent, 'conference');
+    }
+  } catch (e) {
+    console.error('Event form creation failed:', e);
+  }
   return savedEvent;
 }
 
